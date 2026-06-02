@@ -1,0 +1,187 @@
+{
+  "$schema": "./seed.schema.json",
+  "workspace": {
+    "id": "W001",
+    "name": "Phantom Inc.",
+    "domain": "phantominc",
+    "avatarUrl": "/avatars/phantom.png",
+    "supportedEmojis": [
+      { "name": "rocket", "emoji": "🚀" },
+      { "name": "thumbsup", "emoji": "👍" },
+      { "name": "heart", "emoji": "❤️" },
+      { "name": "white_check_mark", "emoji": "✅" },
+      { "name": "eyes", "emoji": "👀" },
+      { "name": "x", "emoji": "❌" }
+    ]
+  },
+  "users": [
+    {
+      "id": "U001",
+      "username": "ada",
+      "fullName": "Ada Lovelace",
+      "email": "ada@slacksim.test",
+      "avatarSeed": "adalovelace",
+      "avatarUrl": "/avatars/ada.png"
+    },
+    {
+      "id": "U002",
+      "username": "alan",
+      "fullName": "Alan Turing",
+      "email": "alan@slacksim.test",
+      "avatarSeed": "alan"
+    },
+    {
+      "id": "U003",
+      "username": "grace",
+      "fullName": "Grace Hopper",
+      "email": "grace@slacksim.test",
+      "avatarSeed": "gracehopper"
+    },
+    {
+      "id": "U004",
+      "username": "linus",
+      "fullName": "Linus Torvalds",
+      "email": "linus@slacksim.test",
+      "avatarSeed": "linus"
+    },
+    {
+      "id": "U005",
+      "username": "margaret",
+      "fullName": "Margaret Hamilton",
+      "email": "margaret@slacksim.test",
+      "avatarSeed": "margaret"
+    }
+  ],
+  "channels": [
+    {
+      "id": "C001",
+      "name": "general",
+      "type": "public",
+      "members": ["U001", "U002", "U003", "U004", "U005"]
+    },
+    {
+      "id": "C002",
+      "name": "random",
+      "type": "public",
+      "members": ["U001", "U002", "U003", "U004", "U005"]
+    },
+    {
+      "id": "C003",
+      "name": "dev",
+      "type": "public",
+      "members": ["U001", "U002", "U003"]
+    }
+  ],
+  "dms": [
+    { "id": "D001", "members": ["U001", "U002"] },
+    { "id": "D002", "members": ["U001", "U003"] },
+    { "id": "D003", "type": "mpim", "members": ["U001", "U003", "U005"] }
+  ],
+  "messages": [
+    {
+      "id": "M001",
+      "channel": "C001",
+      "user": "U001",
+      "text": "Welcome to the Slack Simulator! :rocket:",
+      "ts_offset": 0
+    },
+    {
+      "id": "M002",
+      "channel": "C001",
+      "user": "U002",
+      "text": "Looks great. Ready to test some bots?",
+      "ts_offset": 5
+    },
+    {
+      "id": "M003",
+      "channel": "C001",
+      "user": "U003",
+      "text": "Ship it!",
+      "ts_offset": 12,
+      "reactions": [{ "name": "rocket", "users": ["U001", "U002"] }]
+    },
+    {
+      "id": "M004",
+      "channel": "C001",
+      "user": "U001",
+      "text": "First thread test — reply in the thread pane →",
+      "ts_offset": 20,
+      "thread_reply": {
+        "user": "U002",
+        "text": "Roger that :thumbsup:",
+        "ts_offset": 25
+      }
+    },
+    {
+      "id": "M005",
+      "channel": "C002",
+      "user": "U004",
+      "text": "Random chatter goes here :eyes:",
+      "ts_offset": 0
+    },
+    {
+      "id": "M006",
+      "channel": "C002",
+      "user": "U005",
+      "text": "Indeed!",
+      "ts_offset": 3
+    },
+    {
+      "id": "M007",
+      "channel": "C003",
+      "user": "U001",
+      "text": "Dev channel — for engineering talk",
+      "ts_offset": 0
+    },
+    {
+      "id": "M008",
+      "channel": "D001",
+      "user": "U001",
+      "text": "Hey Alan, got a sec?",
+      "ts_offset": 0
+    },
+    {
+      "id": "M009",
+      "channel": "D001",
+      "user": "U002",
+      "text": "Sure, what's up?",
+      "ts_offset": 3
+    },
+    {
+      "id": "M010",
+      "channel": "D003",
+      "user": "U001",
+      "text": "Hey both — are we still on for the design review Thursday?",
+      "ts_offset": 0
+    },
+    {
+      "id": "M011",
+      "channel": "D003",
+      "user": "U003",
+      "text": "Yes! I'll have the mockups ready by Wednesday evening.",
+      "ts_offset": 8
+    },
+    {
+      "id": "M012",
+      "channel": "D003",
+      "user": "U005",
+      "text": "Thursday works for me. Should we loop in Linus too?",
+      "ts_offset": 15
+    },
+    {
+      "id": "M013",
+      "channel": "D003",
+      "user": "U001",
+      "text": "Let's keep it small for now, we can share notes with him after.",
+      "ts_offset": 22
+    },
+    {
+      "id": "M014",
+      "channel": "D003",
+      "user": "U003",
+      "text": "Agreed. I'll send a calendar invite.",
+      "ts_offset": 30,
+      "reactions": [{ "name": "white_check_mark", "users": ["U001", "U005"] }]
+    }
+  ]
+}

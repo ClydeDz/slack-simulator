@@ -1,0 +1,293 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "seed.schema.json",
+  "title": "Slack Appmulator Seed Data",
+  "description": "Schema for defining initial seed data for Slack simulator workspaces",
+  "type": "object",
+  "required": ["workspace", "users", "channels", "dms", "messages"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "workspace": {
+      "$ref": "#/definitions/Workspace"
+    },
+    "users": {
+      "type": "array",
+      "description": "List of users in the workspace",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/User"
+      }
+    },
+    "channels": {
+      "type": "array",
+      "description": "List of channels in the workspace",
+      "items": {
+        "$ref": "#/definitions/Channel"
+      }
+    },
+    "dms": {
+      "type": "array",
+      "description": "List of direct message and multi-party IM conversations",
+      "items": {
+        "$ref": "#/definitions/DirectMessage"
+      }
+    },
+    "messages": {
+      "type": "array",
+      "description": "List of messages across all conversations",
+      "items": {
+        "$ref": "#/definitions/Message"
+      }
+    }
+  },
+  "definitions": {
+    "Workspace": {
+      "type": "object",
+      "description": "Workspace configuration",
+      "required": ["id", "name", "domain", "supportedEmojis"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique workspace identifier",
+          "pattern": "^W[0-9]+$",
+          "examples": ["W001"]
+        },
+        "name": {
+          "type": "string",
+          "description": "Workspace display name",
+          "minLength": 1
+        },
+        "domain": {
+          "type": "string",
+          "description": "Workspace domain (used in URLs)",
+          "minLength": 1
+        },
+        "avatarUrl": {
+          "type": "string",
+          "description": "Path to workspace avatar image",
+          "pattern": "^/.*"
+        },
+        "supportedEmojis": {
+          "type": "array",
+          "description": "List of emojis available for reactions",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/Emoji"
+          }
+        }
+      }
+    },
+    "Emoji": {
+      "type": "object",
+      "description": "An emoji available for reactions",
+      "required": ["name", "emoji"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Emoji name (used in API calls)",
+          "minLength": 1
+        },
+        "emoji": {
+          "type": "string",
+          "description": "The emoji character",
+          "minLength": 1
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "description": "A user in the workspace",
+      "required": ["id", "username", "fullName", "email"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique user identifier",
+          "pattern": "^U[0-9]+$",
+          "examples": ["U001", "U002"]
+        },
+        "username": {
+          "type": "string",
+          "description": "Username (used in @mentions)",
+          "minLength": 1,
+          "pattern": "^[a-z0-9_-]+$"
+        },
+        "fullName": {
+          "type": "string",
+          "description": "User's full display name",
+          "minLength": 1
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address",
+          "format": "email"
+        },
+        "avatarSeed": {
+          "type": "string",
+          "description": "Seed for generating avatar images"
+        },
+        "avatarUrl": {
+          "type": "string",
+          "description": "Path to user's avatar image",
+          "pattern": "^/.*"
+        }
+      }
+    },
+    "Channel": {
+      "type": "object",
+      "description": "A channel in the workspace",
+      "required": ["id", "name", "type", "members"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique channel identifier",
+          "pattern": "^C[0-9]+$",
+          "examples": ["C001", "C002"]
+        },
+        "name": {
+          "type": "string",
+          "description": "Channel name",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "description": "Channel type",
+          "enum": ["public", "private"]
+        },
+        "members": {
+          "type": "array",
+          "description": "List of user IDs who are members of this channel",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^U[0-9]+$"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "DirectMessage": {
+      "type": "object",
+      "description": "A direct message or multi-party IM conversation",
+      "required": ["id", "members"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique conversation identifier",
+          "pattern": "^D[0-9]+$",
+          "examples": ["D001", "D002"]
+        },
+        "type": {
+          "type": "string",
+          "description": "Conversation type",
+          "enum": ["mpim"]
+        },
+        "members": {
+          "type": "array",
+          "description": "List of user IDs in this conversation",
+          "minItems": 2,
+          "items": {
+            "type": "string",
+            "pattern": "^U[0-9]+$"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "Message": {
+      "type": "object",
+      "description": "A message in a conversation",
+      "required": ["id", "channel", "user", "text", "ts_offset"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique message identifier",
+          "pattern": "^M[0-9]+$",
+          "examples": ["M001", "M002"]
+        },
+        "channel": {
+          "type": "string",
+          "description": "Channel or conversation ID where the message was sent",
+          "pattern": "^[CD][0-9]+$"
+        },
+        "user": {
+          "type": "string",
+          "description": "User ID who sent the message",
+          "pattern": "^U[0-9]+$"
+        },
+        "text": {
+          "type": "string",
+          "description": "Message content",
+          "minLength": 1
+        },
+        "ts_offset": {
+          "type": "number",
+          "description": "Time offset in seconds from the base timestamp"
+        },
+        "reactions": {
+          "type": "array",
+          "description": "Reactions to this message",
+          "items": {
+            "$ref": "#/definitions/Reaction"
+          }
+        },
+        "thread_reply": {
+          "$ref": "#/definitions/ThreadReply"
+        }
+      }
+    },
+    "Reaction": {
+      "type": "object",
+      "description": "A reaction to a message",
+      "required": ["name", "users"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Emoji name",
+          "minLength": 1
+        },
+        "users": {
+          "type": "array",
+          "description": "List of user IDs who reacted",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^U[0-9]+$"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "ThreadReply": {
+      "type": "object",
+      "description": "A thread reply to a message",
+      "required": ["user", "text", "ts_offset"],
+      "additionalProperties": false,
+      "properties": {
+        "user": {
+          "type": "string",
+          "description": "User ID who sent the reply",
+          "pattern": "^U[0-9]+$"
+        },
+        "text": {
+          "type": "string",
+          "description": "Reply content",
+          "minLength": 1
+        },
+        "ts_offset": {
+          "type": "number",
+          "description": "Time offset in seconds from the parent message timestamp"
+        }
+      }
+    }
+  }
+}

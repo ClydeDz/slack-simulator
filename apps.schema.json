@@ -1,0 +1,185 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "apps.schema.json",
+  "title": "Slack Appmulator Apps Configuration",
+  "description": "Schema for defining simulated Slack app configurations",
+  "type": "object",
+  "required": ["apps"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "apps": {
+      "type": "array",
+      "description": "List of simulated Slack app definitions",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/App"
+      }
+    }
+  },
+  "definitions": {
+    "App": {
+      "type": "object",
+      "description": "A simulated Slack app",
+      "required": [
+        "id",
+        "name",
+        "botUserId",
+        "botUserName",
+        "botToken",
+        "appToken",
+        "signingSecret",
+        "subscribedEvents",
+        "socketModeEnabled",
+        "description"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the app",
+          "pattern": "^A[0-9]+$",
+          "examples": ["A001", "A002"]
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable display name of the app",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "description": "Short description of the app's purpose",
+          "minLength": 1
+        },
+        "avatarUrl": {
+          "type": "string",
+          "description": "Path to the app's avatar image",
+          "pattern": "^/.*"
+        },
+        "botUserId": {
+          "type": "string",
+          "description": "Unique identifier for the bot user",
+          "pattern": "^B[0-9]+$",
+          "examples": ["B001", "B002"]
+        },
+        "botUserName": {
+          "type": "string",
+          "description": "Username of the bot (used in @mentions)",
+          "minLength": 1,
+          "pattern": "^[a-z0-9_-]+$"
+        },
+        "botToken": {
+          "type": "string",
+          "description": "Bot OAuth token (xoxb-) used for API calls",
+          "pattern": "^xoxb-"
+        },
+        "appToken": {
+          "type": "string",
+          "description": "App-level token (xapp-) used for Socket Mode",
+          "pattern": "^xapp-"
+        },
+        "signingSecret": {
+          "type": "string",
+          "description": "Secret used to verify incoming requests from Slack",
+          "minLength": 1
+        },
+        "requestUrl": {
+          "type": "string",
+          "description": "HTTP endpoint URL where Slack delivers event payloads (HTTP mode only)",
+          "format": "uri",
+          "pattern": "^https?://"
+        },
+        "socketModeEnabled": {
+          "type": "boolean",
+          "description": "When true, the app receives events over WebSocket (Socket Mode) instead of HTTP"
+        },
+        "subscribedEvents": {
+          "type": "array",
+          "description": "List of Slack event types the app listens to",
+          "items": {
+            "type": "string",
+            "description": "A Slack event type name",
+            "examples": [
+              "message",
+              "app_mention",
+              "member_joined_channel",
+              "channel_created",
+              "channel_deleted",
+              "channel_archive",
+              "channel_unarchive",
+              "reaction_added",
+              "reaction_removed",
+              "pin_added",
+              "pin_removed",
+              "link_shared"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "slashCommands": {
+          "type": "array",
+          "description": "Slash commands registered for this app",
+          "items": {
+            "$ref": "#/definitions/SlashCommand"
+          }
+        },
+        "incomingWebhooks": {
+          "type": "array",
+          "description": "List of channel IDs this app can post to via incoming webhooks",
+          "items": {
+            "type": "string",
+            "description": "A channel ID",
+            "pattern": "^C[A-Z0-9]+$"
+          },
+          "uniqueItems": true
+        },
+        "unfurlDomains": {
+          "type": "array",
+          "description": "Domains this app is authorized to unfurl links for",
+          "items": {
+            "type": "string",
+            "description": "A domain name",
+            "format": "hostname"
+          },
+          "uniqueItems": true
+        }
+      },
+      "if": {
+        "properties": { "socketModeEnabled": { "const": false } }
+      },
+      "then": {
+        "required": ["requestUrl"],
+        "properties": {
+          "requestUrl": {
+            "description": "Required when socketModeEnabled is false — the HTTP endpoint for event delivery"
+          }
+        }
+      }
+    },
+    "SlashCommand": {
+      "type": "object",
+      "description": "A slash command registered for the app",
+      "required": ["command", "description"],
+      "additionalProperties": false,
+      "properties": {
+        "command": {
+          "type": "string",
+          "description": "The slash command string including the leading slash",
+          "pattern": "^/[a-z0-9_-]+$",
+          "examples": ["/demo", "/echo", "/vote"]
+        },
+        "description": {
+          "type": "string",
+          "description": "Short description of what the command does",
+          "minLength": 1
+        },
+        "usage": {
+          "type": "string",
+          "description": "Usage hint shown to users (e.g. \"[text]\" or \"[question] [option1] [option2]\")"
+        }
+      }
+    }
+  }
+}

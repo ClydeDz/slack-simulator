@@ -1,0 +1,13 @@
+# Runtime state — regenerated on startup, contains local credentials
+.slack-simulator/
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment files
+.env
+.env.local
+.env.*.local
