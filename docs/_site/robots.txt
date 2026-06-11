@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://slack-simulator.dev/sitemap.xml

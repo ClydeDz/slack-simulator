@@ -1,0 +1,1672 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Open Graph -->
+    <meta
+      property="og:title"
+      content="Slack Developer Capabilities"
+    />
+    <meta
+      property="og:description"
+      content="A local, browser-based simulator for developing and testing Slack apps and bots. Build Slack apps faster with full control over your test environment."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://github.com" />
+    <meta property="og:image" content="images/workspace.png" />
+    <meta property="og:site_name" content="Slack Simulator" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Slack Developer Capabilities"
+    />
+    <meta
+      name="twitter:description"
+      content="A local, browser-based simulator for developing and testing Slack apps and bots. Build Slack apps faster with full control over your test environment."
+    />
+    <meta name="twitter:image" content="images/workspace.png" />
+
+    <title>
+      Slack Developer Capabilities
+    </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+    />
+    <style>
+      :root {
+        /* Sidebar — Slack's aubergine */
+        --slacksim-color-sidebar-bg: #3f0e40;
+        --slacksim-color-sidebar-fg: rgba(255, 255, 255, 0.7);
+        --slacksim-color-sidebar-fg-active: #ffffff;
+        --slacksim-color-sidebar-hover-bg: rgba(255, 255, 255, 0.1);
+        --slacksim-color-sidebar-active-bg: rgba(255, 255, 255, 0.9);
+        --slacksim-color-sidebar-active-fg: #3f0e40;
+        --slacksim-color-sidebar-badge-bg: #e01e5a;
+
+        /* Message pane */
+        --slacksim-color-bg: #ffffff;
+        --slacksim-color-bg-secondary: #f8f8f8;
+        --slacksim-color-bg-hover: #f8f8f8;
+        --slacksim-color-fg: #1d1c1d;
+        --slacksim-color-fg-muted: #616061;
+        --slacksim-color-fg-placeholder: #aaaaaa;
+        --slacksim-color-border: #e8e8e8;
+        --slacksim-color-divider: #dddddd;
+
+        /* Control bar */
+        --slacksim-color-bar-bg: #350d36;
+        --slacksim-color-control-bar-bg: #714077;
+        --slacksim-color-bar-border: rgba(255, 255, 255, 0.08);
+
+        /* Accent / interactive */
+        --slacksim-color-accent: #1264a3;
+        --slacksim-color-accent-hover: #0f4f8a;
+        --slacksim-color-mention-bg: #fef7cc;
+        --slacksim-color-mention-border: #f5c518;
+
+        /* Primary action (Slack green) */
+        --slacksim-color-primary: #007a5a;
+        --slacksim-color-primary-hover: #148567;
+        --slacksim-color-primary-disabled: #d1d1d1;
+
+        /* Typography */
+        --slacksim-font-body: "Lato", system-ui, -apple-system, sans-serif;
+        --slacksim-font-size-sm: 12px;
+        --slacksim-font-size-md: 14px;
+        --slacksim-font-size-lg: 16px;
+        --slacksim-font-size-xl: 18px;
+        --slacksim-font-weight-normal: 400;
+        --slacksim-font-weight-bold: 700;
+
+        /* Spacing */
+        --slacksim-space-1: 4px;
+        --slacksim-space-2: 8px;
+        --slacksim-space-3: 12px;
+        --slacksim-space-4: 16px;
+        --slacksim-space-5: 20px;
+        --slacksim-space-6: 24px;
+        --slacksim-space-7: 28px;
+        --slacksim-space-8: 32px;
+
+        /* Radii */
+        --slacksim-radius-sm: 4px;
+        --slacksim-radius-md: 8px;
+        --slacksim-radius-lg: 12px;
+        --slacksim-radius-pill: 9999px;
+
+        /* Shadows */
+        --slacksim-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+        --slacksim-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+        --slacksim-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: var(--slacksim-font-body);
+        font-size: var(--slacksim-font-size-md);
+        color: var(--slacksim-color-fg);
+        background: var(--slacksim-color-bg);
+        line-height: 1.6;
+      }
+
+      /* Header */
+      .header {
+        background: var(--slacksim-color-bar-bg);
+        color: white;
+        padding: var(--slacksim-space-6) var(--slacksim-space-6);
+      }
+
+      .header-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--slacksim-space-6);
+      }
+
+      .header-brand {
+        flex: 1;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        font-weight: var(--slacksim-font-weight-bold);
+        margin-bottom: var(--slacksim-space-2);
+        text-align: left;
+      }
+
+      .header p {
+        font-size: var(--slacksim-font-size-lg);
+        color: var(--slacksim-color-sidebar-fg);
+        text-align: left;
+        margin: 0;
+      }
+
+      .header-nav {
+        display: flex;
+        align-items: center;
+        gap: var(--slacksim-space-6);
+      }
+
+      .header-nav a {
+        color: var(--slacksim-color-sidebar-fg);
+        text-decoration: none;
+        font-size: var(--slacksim-font-size-md);
+        transition: color 0.2s ease;
+      }
+
+      .header-nav a:hover {
+        color: var(--slacksim-color-sidebar-fg-active);
+      }
+
+      .header-nav a svg {
+        width: 24px;
+        height: 24px;
+        vertical-align: middle;
+      }
+
+      /* Hero */
+      .hero {
+        background: var(--slacksim-color-bg-secondary);
+        padding: 80px 20px;
+        text-align: center;
+      }
+
+      .hero h2 {
+        font-size: 2rem;
+        color: var(--slacksim-color-fg);
+        margin-bottom: var(--slacksim-space-4);
+      }
+
+      .hero p {
+        font-size: var(--slacksim-font-size-lg);
+        color: var(--slacksim-color-fg-muted);
+        max-width: 600px;
+        margin: 0 auto var(--slacksim-space-6);
+      }
+
+      .cta-button {
+        display: inline-block;
+        background: var(--slacksim-color-primary);
+        color: white;
+        padding: var(--slacksim-space-3) var(--slacksim-space-6);
+        border-radius: var(--slacksim-radius-pill);
+        font-weight: var(--slacksim-font-weight-bold);
+        text-decoration: none;
+        transition: background 0.2s ease;
+      }
+
+      .cta-button:hover {
+        background: var(--slacksim-color-primary-hover);
+      }
+
+      /* Features */
+      .features {
+        padding: 80px 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .features h2 {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: var(--slacksim-space-6);
+        color: var(--slacksim-color-fg);
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: var(--slacksim-space-6);
+      }
+
+      .feature-card {
+        background: var(--slacksim-color-bg);
+        border: 1px solid var(--slacksim-color-border);
+        border-radius: var(--slacksim-radius-lg);
+        padding: var(--slacksim-space-6);
+        box-shadow: var(--slacksim-shadow-sm);
+      }
+
+      .feature-card h3 {
+        color: var(--slacksim-color-accent);
+        font-size: var(--slacksim-font-size-xl);
+        margin-bottom: var(--slacksim-space-3);
+        display: flex;
+        align-items: center;
+        gap: var(--slacksim-space-2);
+      }
+
+      .feature-card p {
+        color: var(--slacksim-color-fg-muted);
+      }
+
+      /* Capabilities */
+      .capabilities {
+        background: var(--slacksim-color-bg-secondary);
+        padding: 80px 20px;
+      }
+
+      .capabilities-container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .capabilities h2 {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: var(--slacksim-space-6);
+        color: var(--slacksim-color-fg);
+      }
+
+      .capabilities-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: var(--slacksim-space-4);
+      }
+
+      .capability-item {
+        display: flex;
+        align-items: center;
+        gap: var(--slacksim-space-3);
+        background: var(--slacksim-color-bg);
+        padding: var(--slacksim-space-4);
+        border-radius: var(--slacksim-radius-md);
+        border: 1px solid var(--slacksim-color-border);
+      }
+
+      .capability-icon {
+        width: 32px;
+        height: 32px;
+        background: var(--slacksim-color-sidebar-badge-bg);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        flex-shrink: 0;
+      }
+
+      .capability-text {
+        color: var(--slacksim-color-fg);
+        font-weight: 500;
+      }
+
+      .capability-marker {
+        font-size: var(--slacksim-font-size-sm);
+        color: var(--slacksim-color-accent);
+        margin-left: var(--slacksim-space-1);
+        vertical-align: super;
+      }
+
+      .capabilities-footnote {
+        margin-top: var(--slacksim-space-4);
+        font-size: var(--slacksim-font-size-sm);
+        color: var(--slacksim-color-fg-muted);
+        text-align: left;
+      }
+
+      .capabilities-footnote span {
+        color: var(--slacksim-color-accent);
+        font-weight: 500;
+      }
+
+      /* Footer */
+      .footer {
+        background: var(--slacksim-color-bar-bg);
+        color: var(--slacksim-color-sidebar-fg);
+        padding: var(--slacksim-space-6) var(--slacksim-space-6);
+      }
+
+      .footer-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: var(--slacksim-space-6);
+      }
+
+      .footer-brand {
+        flex: 1;
+      }
+
+      .footer-brand h3 {
+        font-size: 1.5rem;
+        font-weight: var(--slacksim-font-weight-bold);
+        margin-bottom: var(--slacksim-space-2);
+        color: var(--slacksim-color-sidebar-fg-active);
+      }
+
+      .footer-brand p {
+        font-size: var(--slacksim-font-size-md);
+        color: var(--slacksim-color-sidebar-fg);
+        margin-bottom: var(--slacksim-space-4);
+      }
+
+      .footer-disclaimer {
+        font-size: var(--slacksim-font-size-sm);
+        color: var(--slacksim-color-sidebar-fg);
+        opacity: 0.8;
+        max-width: 500px;
+        line-height: 1.5;
+      }
+
+      .footer-nav {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: var(--slacksim-space-4);
+        padding-top: 10px;
+      }
+
+      .footer-nav-links {
+        display: flex;
+        gap: var(--slacksim-space-6);
+      }
+
+      .footer-nav a {
+        color: var(--slacksim-color-sidebar-fg);
+        text-decoration: none;
+        font-size: var(--slacksim-font-size-md);
+        transition: color 0.2s ease;
+      }
+
+      .footer-nav a:hover {
+        color: var(--slacksim-color-sidebar-fg-active);
+      }
+
+      .footer-developer {
+        font-size: var(--slacksim-font-size-md);
+        color: var(--slacksim-color-sidebar-fg);
+        opacity: 0.8;
+      }
+
+      .footer-developer a {
+        color: var(--slacksim-color-sidebar-fg);
+        text-decoration: none;
+      }
+
+      .footer-developer a:hover {
+        text-decoration: underline;
+      }
+
+      /* Carousel */
+      .carousel {
+        padding: 80px 20px;
+        background: var(--slacksim-color-bg);
+      }
+
+      .carousel-container {
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+
+      .carousel h2 {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: var(--slacksim-space-6);
+        color: var(--slacksim-color-fg);
+      }
+
+      .carousel-viewport {
+        position: relative;
+        background: var(--slacksim-color-bg-secondary);
+        border-radius: var(--slacksim-radius-lg);
+        overflow: hidden;
+      }
+
+      .carousel-track {
+        display: flex;
+        transition: transform 0.3s ease;
+      }
+
+      .carousel-slide {
+        flex: 0 0 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        background: var(--slacksim-color-bg);
+      }
+
+      .carousel-image-container {
+        aspect-ratio: 16/9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+      }
+
+      .carousel-image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+      }
+
+      .carousel-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--slacksim-color-fg-muted);
+        font-size: var(--slacksim-font-size-lg);
+        background: var(--slacksim-color-bg-secondary);
+      }
+
+      .carousel-caption {
+        text-align: center;
+        padding: var(--slacksim-space-2);
+        color: var(--slacksim-color-fg);
+        font-size: var(--slacksim-font-size-md);
+        background: var(--slacksim-color-bg);
+      }
+
+      .carousel-controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--slacksim-space-6);
+        padding: var(--slacksim-space-4);
+        background: var(--slacksim-color-bg);
+      }
+
+      .carousel-nav {
+        width: 48px;
+        height: 48px;
+        background: var(--slacksim-color-bar-bg);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          background 0.2s ease,
+          opacity 0.2s ease;
+      }
+
+      .carousel-nav:hover {
+        background: var(--slacksim-color-control-bar-bg);
+      }
+
+      .carousel-nav:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+
+      .carousel-dots {
+        display: flex;
+        gap: var(--slacksim-space-2);
+      }
+
+      .carousel-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--slacksim-color-border);
+        border: none;
+        cursor: pointer;
+        transition: background 0.2s ease;
+      }
+
+      .carousel-dot:hover {
+        background: var(--slacksim-color-fg-muted);
+      }
+
+      .carousel-dot--active {
+        background: var(--slacksim-color-accent);
+      }
+
+      /* Content styles for markdown pages */
+      .content {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 60px 20px;
+      }
+
+      .content h1,
+      .content h2,
+      .content h3,
+      .content h4,
+      .content h5,
+      .content h6 {
+        color: var(--slacksim-color-fg);
+        margin-bottom: var(--slacksim-space-4);
+        margin-top: var(--slacksim-space-6);
+      }
+
+      .content h1 {
+        font-size: 2.5rem;
+      }
+
+      .content h2 {
+        font-size: 2rem;
+      }
+
+      .content h3 {
+        font-size: 1.5rem;
+      }
+
+      .content p {
+        margin-bottom: var(--slacksim-space-4);
+      }
+
+      .content a {
+        color: var(--slacksim-color-accent);
+        text-decoration: none;
+      }
+
+      .content a:hover {
+        text-decoration: underline;
+      }
+
+      .content ul,
+      .content ol {
+        margin-bottom: var(--slacksim-space-4);
+        padding-left: var(--slacksim-space-6);
+      }
+
+      .content li {
+        margin-bottom: var(--slacksim-space-2);
+      }
+
+      .content code {
+        background: var(--slacksim-color-bg-secondary);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 0.9em;
+      }
+
+      .content pre {
+        background: var(--slacksim-color-bg-secondary);
+        padding: var(--slacksim-space-4);
+        border-radius: var(--slacksim-radius-md);
+        overflow-x: auto;
+        margin-bottom: var(--slacksim-space-4);
+      }
+
+      .content pre code {
+        background: none;
+        padding: 0;
+      }
+
+      .content blockquote {
+        border-left: 4px solid var(--slacksim-color-accent);
+        padding-left: var(--slacksim-space-4);
+        margin-bottom: var(--slacksim-space-4);
+        color: var(--slacksim-color-fg-muted);
+      }
+
+      .content table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: var(--slacksim-space-4);
+      }
+
+      .content th,
+      .content td {
+        border: 1px solid var(--slacksim-color-border);
+        padding: var(--slacksim-space-3);
+        text-align: left;
+      }
+
+      .content th {
+        background: var(--slacksim-color-bg-secondary);
+        font-weight: var(--slacksim-font-weight-bold);
+      }
+
+      /* Docs Layout (conditional) */
+      .docs-wrapper {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: var(--slacksim-space-6) 0;
+        flex: 1;
+        display: flex;
+        gap: var(--slacksim-space-6);
+      }
+
+      .docs-sidebar {
+        width: 280px;
+        flex-shrink: 0;
+        position: sticky;
+        top: var(--slacksim-space-6);
+        height: fit-content;
+        max-height: calc(100vh - 120px);
+        overflow-y: auto;
+      }
+
+      .docs-sidebar h3 {
+        font-size: var(--slacksim-font-size-lg);
+        font-weight: var(--slacksim-font-weight-bold);
+        margin-bottom: var(--slacksim-space-4);
+        color: var(--slacksim-color-fg);
+      }
+
+      .toc-list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--slacksim-space-2);
+      }
+
+      .toc-item {
+        padding: var(--slacksim-space-2) var(--slacksim-space-3);
+        border-radius: var(--slacksim-radius-sm);
+        color: var(--slacksim-color-fg-muted);
+        text-decoration: none;
+        font-size: var(--slacksim-font-size-md);
+        transition: all 0.2s ease;
+      }
+
+      .toc-item:hover {
+        background: var(--slacksim-color-bg-hover);
+        color: var(--slacksim-color-fg);
+      }
+
+      .toc-item.level-2 {
+        padding-left: var(--slacksim-space-2);
+      }
+
+      .toc-item.level-3 {
+        padding-left: var(--slacksim-space-5);
+      }
+
+      .toc-item.level-4 {
+        padding-left: var(--slacksim-space-8);
+      }
+
+      .toc-item.active {
+        background: var(--slacksim-color-accent);
+        color: white;
+      }
+
+      .docs-content {
+        flex: 1;
+        background: var(--slacksim-color-bg);
+        min-width: 0;
+      }
+
+      .docs-content h1,
+      .docs-content h2,
+      .docs-content h3,
+      .docs-content h4,
+      .docs-content h5,
+      .docs-content h6 {
+        color: var(--slacksim-color-fg);
+        margin-bottom: var(--slacksim-space-4);
+        margin-top: var(--slacksim-space-6);
+        scroll-margin-top: 100px;
+      }
+
+      .docs-content h1 {
+        font-size: 2.5rem;
+        margin-block-start: 0;
+      }
+
+      .docs-content h2 {
+        font-size: 2rem;
+      }
+
+      .docs-content h3 {
+        font-size: 1.5rem;
+      }
+
+      .docs-content p {
+        margin-bottom: var(--slacksim-space-4);
+      }
+
+      .docs-content a {
+        color: var(--slacksim-color-accent);
+        text-decoration: none;
+      }
+
+      .docs-content a:hover {
+        text-decoration: underline;
+      }
+
+      .docs-content ul,
+      .docs-content ol {
+        margin-bottom: var(--slacksim-space-4);
+        padding-left: var(--slacksim-space-6);
+      }
+
+      .docs-content li {
+        margin-bottom: var(--slacksim-space-2);
+      }
+
+      .docs-content code {
+        background: var(--slacksim-color-bg-secondary);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 0.9em;
+      }
+
+      .docs-content pre {
+        background: var(--slacksim-color-bg-secondary);
+        padding: var(--slacksim-space-4);
+        border-radius: var(--slacksim-radius-md);
+        overflow-x: auto;
+        margin-bottom: var(--slacksim-space-4);
+      }
+
+      .docs-content pre code {
+        background: none;
+        padding: 0;
+      }
+
+      .docs-content blockquote {
+        border-left: 4px solid var(--slacksim-color-accent);
+        padding-left: var(--slacksim-space-4);
+        margin-bottom: var(--slacksim-space-4);
+        color: var(--slacksim-color-fg-muted);
+      }
+
+      .docs-content hr {
+        border: 0;
+        text-align: center;
+        margin: 2rem 0;
+      }
+
+      .docs-content hr::after {
+        content: "•••";
+        color: var(--slacksim-color-control-bar-bg);
+        font-size: 0.8rem;
+        letter-spacing: 0.5rem;
+      }
+
+      .docs-content table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: var(--slacksim-space-4);
+      }
+
+      .docs-content th,
+      .docs-content td {
+        border: 1px solid var(--slacksim-color-border);
+        padding: var(--slacksim-space-3);
+        text-align: left;
+      }
+
+      .docs-content th {
+        background: var(--slacksim-color-bg-secondary);
+        font-weight: var(--slacksim-font-weight-bold);
+      }
+
+      @media (max-width: 1024px) {
+        .docs-wrapper {
+          flex-direction: column;
+        }
+
+        .docs-sidebar {
+          display: none;
+        }
+
+        .header-container {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: var(--slacksim-space-4);
+        }
+
+        .header-nav {
+          align-items: flex-start;
+          gap: var(--slacksim-space-6);
+        }
+
+        .footer {
+          padding: var(--slacksim-space-6);
+        }
+
+        .footer-container {
+          flex-direction: column-reverse;
+          max-width: 100%;
+          margin: 0;
+        }
+
+        .footer-brand {
+          width: 100%;
+          flex: none;
+        }
+
+        .footer-disclaimer {
+          max-width: 100% !important;
+        }
+
+        .footer-nav {
+          align-items: flex-start !important;
+        }
+
+        .footer-developer {
+          text-align: left !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+  <div class="header-container">
+    <div class="header-brand">
+      <a href="/" style="text-decoration: none; color: inherit">
+        <h1>Slack Simulator</h1>
+      </a>
+      <p>
+        A local, browser-based simulator for developing and testing Slack apps
+        and bots
+      </p>
+    </div>
+    <nav class="header-nav">
+      <a href="/get-started/">Get Started</a>
+      <a href="/product-spec/">Product Spec</a>
+      <a href="/tech-spec/">Tech Spec</a>
+      <a href="/capabilities/">Capabilities</a>
+      <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          <path
+            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+          />
+        </svg>
+      </a>
+      <a href="https://discord.com" target="_blank" rel="noopener noreferrer">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          <path
+            d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"
+          />
+        </svg>
+      </a>
+    </nav>
+  </div>
+</header>
+ 
+    <div class="docs-wrapper">
+      <aside class="docs-sidebar">
+        <h3>On this page</h3>
+        <nav class="toc-list"><a href="#messaging-posting" class="toc-item level-2">Messaging & Posting</a><a href="#ui-surfaces-block-kit" class="toc-item level-2">UI Surfaces (Block Kit)</a><a href="#interactivity" class="toc-item level-2">Interactivity</a><a href="#events-event-subscriptions" class="toc-item level-2">Events (Event Subscriptions)</a><a href="#slash-commands" class="toc-item level-2">Slash Commands</a><a href="#link-unfurling" class="toc-item level-2">Link Unfurling</a><a href="#files-canvases" class="toc-item level-2">Files & Canvases</a><a href="#users-presence" class="toc-item level-2">Users & Presence</a><a href="#workflow-builder-steps-from-apps" class="toc-item level-2">Workflow Builder (Steps from Apps)</a><a href="#slack-next-gen-platform-deno-based" class="toc-item level-2">Slack Next-Gen Platform (Deno-based)</a><a href="#auth-distribution" class="toc-item level-2">Auth & Distribution</a><a href="#enterprise-admin-apis" class="toc-item level-2">Enterprise / Admin APIs</a><a href="#simulator-coverage-summary" class="toc-item level-2">Simulator Coverage Summary</a><a href="#medium-demand-gaps-worth-considering" class="toc-item level-3">Medium demand gaps worth considering</a></nav>
+      </aside>
+
+      <main class="docs-content"><h1 id="slack-developer-capabilities" tabindex="-1">Slack Developer Capabilities</h1>
+<p>A comprehensive breakdown of everything Slack's platform exposes to developers.</p>
+<p><strong>Simulator support legend:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Icon</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>✅</td>
+<td>Supported — works in the simulator today</td>
+</tr>
+<tr>
+<td>🔲</td>
+<td>Planned — on the roadmap in <code>SPEC.md</code></td>
+</tr>
+<tr>
+<td>❌</td>
+<td>Not supported — out of scope or deliberately excluded</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Developer demand legend:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Icon</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔥</td>
+<td>High demand — used by the majority of marketplace apps</td>
+</tr>
+<tr>
+<td>🟡</td>
+<td>Medium demand — used by a significant subset of apps</td>
+</tr>
+<tr>
+<td>🟢</td>
+<td>Low demand — niche or specialised use cases</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="messaging-posting" tabindex="-1">Messaging &amp; Posting</h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>What it does</th>
+<th>Example app</th>
+<th>Simulator</th>
+<th>Developer demand</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Bot messages</strong></td>
+<td>Post as a bot user into any channel</td>
+<td>Virtually every bot</td>
+<td>✅ <code>chat.postMessage</code></td>
+<td>🔥 High — the baseline capability; every bot that posts anything uses this</td>
+</tr>
+<tr>
+<td><strong>Incoming Webhooks</strong></td>
+<td>Simple one-way HTTP POST to a channel, no bot token needed</td>
+<td>Grafana alerts, GitHub PR notifications</td>
+<td>✅ <code>POST /hooks/:token</code> — declare channels in <code>apps.json</code>, URLs shown in Admin page</td>
+<td>🔥 High — the most common integration pattern for monitoring, CI/CD, and alerting tools that don't need bidirectional interaction</td>
+</tr>
+<tr>
+<td><strong>Scheduled messages</strong></td>
+<td>Post a message at a future time via <code>chat.scheduleMessage</code></td>
+<td>Reminder bots</td>
+<td>🔲 Planned (Phase 5 / medium priority)</td>
+<td>🟡 Medium — reminder bots, digest bots, and scheduled report tools; common but not universal</td>
+</tr>
+<tr>
+<td><strong>Ephemeral messages</strong></td>
+<td>Visible only to one user in a channel (<code>chat.postEphemeral</code>)</td>
+<td>Polly (private vote confirmations)</td>
+<td>✅ <code>chat.postEphemeral</code></td>
+<td>🟡 Medium — useful for confirmations, private feedback, and permission-gated responses; used by a meaningful slice of interactive bots</td>
+</tr>
+<tr>
+<td><strong>Message updates</strong></td>
+<td>Edit a posted message in-place (<code>chat.update</code>)</td>
+<td>Live scoreboards, poll tallies</td>
+<td>✅ <code>chat.update</code> (text + blocks)</td>
+<td>🟡 Medium — essential for live-updating UIs like polls and scorecards, but not needed by simpler post-and-forget bots</td>
+</tr>
+<tr>
+<td><strong>Message deletion</strong></td>
+<td>Delete a message (<code>chat.delete</code>)</td>
+<td>Moderation bots</td>
+<td>✅ <code>chat.delete</code></td>
+<td>🟢 Low — mainly moderation and housekeeping bots; most apps never need to delete their own messages</td>
+</tr>
+<tr>
+<td><strong>Threaded replies</strong></td>
+<td>Reply inside a thread (<code>thread_ts</code>)</td>
+<td>Support ticket bots</td>
+<td>✅ Full thread support with reply counts and avatars</td>
+<td>🟡 Medium — important for support and Q&amp;A bots that need to keep conversations organised; less relevant for notification-only bots</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="ui-surfaces-block-kit" tabindex="-1">UI Surfaces (Block Kit)</h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>What it does</th>
+<th>Example app</th>
+<th>Simulator</th>
+<th>Developer demand</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Block Kit messages</strong></td>
+<td>Rich layouts — headers, fields, images, buttons</td>
+<td>Almost all modern bots</td>
+<td>✅ <code>section</code>, <code>header</code>, <code>divider</code>, <code>context</code>, <code>image</code>, <code>actions</code></td>
+<td>🔥 High — the standard for any bot that needs more than plain text; used by the vast majority of modern marketplace apps</td>
+</tr>
+<tr>
+<td><strong>Modals / Views</strong></td>
+<td>Pop-up forms with inputs, validation, submission</td>
+<td>Jira issue creator, expense submission</td>
+<td>✅ <code>views.open</code>, <code>views.update</code>, <code>views.push</code>, modal stack</td>
+<td>🔥 High — the primary pattern for any bot that needs to collect structured input from a user; Jira, Asana, expense tools, HR bots all depend on this</td>
+</tr>
+<tr>
+<td><strong>App Home tab</strong></td>
+<td>Persistent tab inside the app's DM — like a mini dashboard</td>
+<td>Workato, Statsig</td>
+<td>🔲 Planned (Phase 9 — <code>views.publish</code> + <code>app_home_opened</code>)</td>
+<td>🟡 Medium — popular for apps that want a persistent settings or dashboard surface; less relevant for event-driven bots</td>
+</tr>
+<tr>
+<td><strong>Message shortcuts</strong></td>
+<td>Right-click a message → trigger an action</td>
+<td>&quot;Create Jira ticket from message&quot;</td>
+<td>🔲 Planned (Phase 11 — investigation)</td>
+<td>🟡 Medium — a very natural UX pattern for productivity apps (&quot;create ticket from this message&quot;); used heavily by Jira, Linear, and task-management integrations</td>
+</tr>
+<tr>
+<td><strong>Global shortcuts</strong></td>
+<td>Lightning bolt ⚡ menu → trigger an action from anywhere</td>
+<td>&quot;New standup&quot;, &quot;Log time&quot;</td>
+<td>❌ Not planned for v1</td>
+<td>🟡 Medium — useful for apps that need a quick-launch affordance not tied to a specific message or channel; common in time-tracking and standup tools</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="interactivity" tabindex="-1">Interactivity</h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>What it does</th>
+<th>Example app</th>
+<th>Simulator</th>
+<th>Developer demand</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Buttons</strong> (<code>block_actions</code>)</td>
+<td>Clickable buttons fire payloads to your bot</td>
+<td>Approvals bots, poll bots</td>
+<td>✅ Full <code>block_actions</code> dispatch — HTTP + Socket Mode</td>
+<td>🔥 High — the most widely used interactive element; approve/deny workflows, poll votes, and navigation all rely on buttons</td>
+</tr>
+<tr>
+<td><strong>Select menus</strong></td>
+<td>Dropdown — static, user list, channel list, external data</td>
+<td>Assign-to-user dropdowns</td>
+<td>✅ <code>static_select</code> in actions blocks and modal inputs; user/channel/external variants not yet supported</td>
+<td>🔥 High — extremely common in forms and action menus; <code>users_select</code> and <code>channels_select</code> variants are heavily used by project management and assignment bots</td>
+</tr>
+<tr>
+<td><strong>Overflow menus</strong></td>
+<td><code>⋮</code> menu on a message</td>
+<td>Options menus on cards</td>
+<td>❌ Explicitly excluded — not part of the bot API simulation loop</td>
+<td>🟢 Low — rarely used by bots; mostly a Slack host-UI affordance for built-in actions (edit, delete, share) rather than a developer touchpoint</td>
+</tr>
+<tr>
+<td><strong>Date / time pickers</strong></td>
+<td>Calendar picker in a modal or message</td>
+<td>Scheduling bots</td>
+<td>❌ Excluded for now — can be added as a targeted slice if needed</td>
+<td>🟡 Medium — essential for scheduling and reminder bots; a meaningful slice of calendar and time-management integrations depend on this</td>
+</tr>
+<tr>
+<td><strong>Checkboxes &amp; radio buttons</strong></td>
+<td>Multi-select or single-select in modals</td>
+<td>Survey bots</td>
+<td>❌ Not yet implemented — not on current roadmap</td>
+<td>🟡 Medium — used heavily by survey, feedback, and preference-collection bots; a natural complement to modals</td>
+</tr>
+<tr>
+<td><strong>Plain text input</strong></td>
+<td>Free-text field in modals</td>
+<td>Form bots</td>
+<td>✅ Single-line and multiline <code>plain_text_input</code> in modal <code>input</code> blocks</td>
+<td>🔥 High — nearly every modal-based bot needs at least one free-text field</td>
+</tr>
+<tr>
+<td><strong>Rich text input</strong></td>
+<td>Formatted text input</td>
+<td>Note-taking bots</td>
+<td>❌ Explicitly excluded — bots send <code>mrkdwn</code>; <code>rich_text</code> is a user-compose format</td>
+<td>🟢 Low — only relevant for note-taking or editor-style bots that need to capture formatted user content; a small niche</td>
+</tr>
+<tr>
+<td><strong>File input</strong></td>
+<td>File upload field inside a modal</td>
+<td>Document submission bots</td>
+<td>❌ Excluded — file handling adds infrastructure complexity without improving the bot-API loop</td>
+<td>🟢 Low — document submission and compliance bots use this, but it's a specialised need; most bots never require file uploads in modals</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="events-event-subscriptions" tabindex="-1">Events (Event Subscriptions)</h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>What it does</th>
+<th>Example app</th>
+<th>Simulator</th>
+<th>Developer demand</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>message.*</code></strong></td>
+<td>React to messages posted in channels/DMs</td>
+<td>Auto-responders, keyword monitors</td>
+<td>✅ <code>message</code> event dispatched on every post — HTTP + Socket Mode</td>
+<td>🔥 High — the most fundamental event; practically every bot that responds to user input subscribes to this</td>
+</tr>
+<tr>
+<td><strong><code>app_mention</code></strong></td>
+<td>Triggered when <code>@bot</code> is mentioned</td>
+<td>Q&amp;A bots, assistants</td>
+<td>✅ Dispatched whenever bot's <code>@handle</code> or <code>&lt;@botUserId&gt;</code> appears in a message</td>
+<td>🔥 High — the standard pattern for assistants, Q&amp;A bots, and any bot that responds to direct address; extremely common</td>
+</tr>
+<tr>
+<td><strong><code>reaction_added/removed</code></strong></td>
+<td>Someone adds/removes an emoji reaction</td>
+<td>Kudos bots, content savers (&quot;⭐ to save&quot;)</td>
+<td>✅ Both events dispatched on reaction toggle</td>
+<td>🟡 Medium — a popular pattern for kudos, content bookmarking, and lightweight voting; used by a significant subset of apps</td>
+</tr>
+<tr>
+<td><strong><code>member_joined_channel</code></strong></td>
+<td>User joins a channel</td>
+<td>Onboarding welcome bots</td>
+<td>✅ Dispatched when a user joins via the &quot;Join Channel&quot; button — Phase 4</td>
+<td>🟡 Medium — onboarding and welcome bots are very common; this is among the most-used lifecycle events</td>
+</tr>
+<tr>
+<td><strong><code>app_home_opened</code></strong></td>
+<td>User opens your app's Home tab</td>
+<td>Dashboard rendering</td>
+<td>🔲 Planned (Phase 9)</td>
+<td>🟡 Medium — required for any app that uses the App Home surface; demand tied to App Home adoption</td>
+</tr>
+<tr>
+<td><strong><code>channel_created/renamed/archived</code></strong></td>
+<td>Channel lifecycle events</td>
+<td>Governance/compliance bots</td>
+<td>🔶 Partial — <code>channel_created</code> dispatched on creation; <code>channel_archive</code>/<code>channel_unarchive</code> dispatched from SPA; <code>channel_rename</code> deferred — Phase 7</td>
+<td>🟢 Low — mainly compliance, governance, and IT automation bots; a specialised subset of enterprise apps</td>
+</tr>
+<tr>
+<td><strong><code>file_shared</code></strong></td>
+<td>A file is posted</td>
+<td>Virus scanner, auto-archiver</td>
+<td>❌ Excluded — file handling out of scope</td>
+<td>🟢 Low — security and compliance tooling only; rarely needed by typical product bots</td>
+</tr>
+<tr>
+<td><strong><code>pin_added/removed</code></strong></td>
+<td>Someone pins a message</td>
+<td>Knowledge base bots</td>
+<td>✅ Dispatched on pin/unpin from the message hover menu — Phase 6</td>
+<td>🟢 Low — knowledge base and documentation bots only; a niche pattern</td>
+</tr>
+<tr>
+<td><strong><code>team_join</code></strong></td>
+<td>New user joins the workspace</td>
+<td>HR onboarding bots</td>
+<td>❌ Not planned for v1</td>
+<td>🟡 Medium — HR onboarding bots are extremely common in enterprise; this event is the trigger for a whole category of &quot;new hire&quot; automation</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="slash-commands" tabindex="-1">Slash Commands</h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>What it does</th>
+<th>Example app</th>
+<th>Simulator</th>
+<th>Developer demand</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Custom slash commands</strong></td>
+<td><code>/yourcommand args</code> fires a payload to your bot</td>
+<td><code>/jira</code>, <code>/giphy</code>, <code>/polly</code>, <code>/remind</code></td>
+<td>✅ Full slash command dispatch — autocomplete in composer, HTTP + Socket Mode, <code>response_url</code> tokens</td>
+<td>🔥 High — one of the most discoverable bot interaction patterns; used by nearly every utility bot</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="link-unfurling" tabindex="-1">Link Unfurling</h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>What it does</th>
+<th>Example app</th>
+<th>Simulator</th>
+<th>Developer demand</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>URL unfurling</strong></td>
+<td>When a user posts a link, your app intercepts it and renders a rich preview card</td>
+<td>GitHub (PR previews), Figma (design previews), Notion</td>
+<td>✅ <code>link_shared</code> dispatched to apps with matching <code>unfurlDomains</code>; <code>chat.unfurl</code> renders attachment or Block Kit previews; OG scraping auto-previews unclaimed URLs — Phase 8</td>
+<td>🟡 Medium — very high impact when your app has a web presence users link to frequently (GitHub PRs, Jira tickets, Figma files); less relevant for bots without a URL surface</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="files-canvases" tabindex="-1">Files &amp; Canvases</h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>What it does</th>
+<th>Example app</th>
+<th>Simulator</th>
+<th>Developer demand</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Files API</strong></td>
+<td>Upload/download/list files (<code>files.upload</code>)</td>
+<td>Document bots, screenshot sharing</td>
+<td>❌ Excluded — adds blob storage/MIME complexity without improving the bot-API loop</td>
+<td>🟡 Medium — a meaningful portion of bots share generated content (PDFs, CSVs, screenshots); not universal but common enough in reporting and export bots</td>
+</tr>
+<tr>
+<td><strong>Canvases</strong></td>
+<td>Create/read/update collaborative Slack Canvases</td>
+<td>Notion-like integrations, meeting notes bots</td>
+<td>❌ Non-goal for v1</td>
+<td>🟢 Low — a relatively new Slack feature with limited marketplace adoption so far; few bots currently depend on it</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="users-presence" tabindex="-1">Users &amp; Presence</h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>What it does</th>
+<th>Example app</th>
+<th>Simulator</th>
+<th>Developer demand</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>User status</strong></td>
+<td>Set a user's status emoji + text (<code>users.profile.set</code>)</td>
+<td>&quot;On a call 🎧&quot; bots, vacation bots</td>
+<td>❌ Not implemented — no presence/status surface in v1</td>
+<td>🟢 Low — niche category; mainly calendar and focus-mode integrations (Google Calendar &quot;on a call&quot; bots)</td>
+</tr>
+<tr>
+<td><strong>User presence</strong></td>
+<td>Get/set active or away (<code>users.setPresence</code>)</td>
+<td>Focus mode bots</td>
+<td>❌ Not implemented — no presence/status surface in v1</td>
+<td>🟢 Low — focus and do-not-disturb tools only; rarely a primary feature of marketplace apps</td>
+</tr>
+<tr>
+<td><strong>DMs / <code>im.open</code></strong></td>
+<td>Open a direct message channel with a user</td>
+<td>Any bot that slides into DMs</td>
+<td>✅ <code>conversations.open</code> — bot can open/find DMs with users; auto-creates DM if none exists</td>
+<td>🔥 High — bots that notify individual users (approvals, alerts, onboarding) all open DMs; extremely common</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="workflow-builder-steps-from-apps" tabindex="-1">Workflow Builder (Steps from Apps)</h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>What it does</th>
+<th>Example app</th>
+<th>Simulator</th>
+<th>Developer demand</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Custom workflow steps</strong></td>
+<td>Your app adds a step into Slack's no-code Workflow Builder</td>
+<td>Salesforce, PagerDuty, Zapier steps</td>
+<td>❌ Out of scope — Slack is deprecating this model anyway in favour of next-gen Functions</td>
+<td>🟡 Medium — historically popular for no-code enterprise automation; declining demand as Slack deprecates it in favour of the next-gen platform</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️ Note: Slack is deprecating &quot;Steps from Apps&quot; in favour of <strong>Workflow Steps for Bolt</strong> (the newer <code>functions</code> + <code>workflows</code> system in the next-gen platform).</p>
+</blockquote>
+<hr>
+<h2 id="slack-next-gen-platform-deno-based" tabindex="-1">Slack Next-Gen Platform (Deno-based)</h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>What it does</th>
+<th>Example app</th>
+<th>Simulator</th>
+<th>Developer demand</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Functions</strong></td>
+<td>Serverless functions hosted by Slack's infra</td>
+<td>Custom steps in Workflow Builder</td>
+<td>❌ Out of scope — next-gen platform requires Slack hosting</td>
+<td>🟢 Low — adoption is still early; most existing apps are on the classic platform. Growing but not yet mainstream</td>
+</tr>
+<tr>
+<td><strong>Triggers</strong></td>
+<td>Link events/schedules/shortcuts to functions</td>
+<td>Scheduled digests, form triggers</td>
+<td>❌ Out of scope</td>
+<td>🟢 Low — tied to next-gen Functions adoption</td>
+</tr>
+<tr>
+<td><strong>Datastores</strong></td>
+<td>Built-in key-value storage per app</td>
+<td>Storing poll results without external DB</td>
+<td>❌ Out of scope — bots can use their own DB</td>
+<td>🟢 Low — only relevant for next-gen apps that want zero-infrastructure storage; most bots bring their own DB</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="auth-distribution" tabindex="-1">Auth &amp; Distribution</h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>What it does</th>
+<th>Example app</th>
+<th>Simulator</th>
+<th>Developer demand</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>OAuth 2.0 flow</strong></td>
+<td>&quot;Add to Slack&quot; button — multi-workspace installation</td>
+<td>Every marketplace app</td>
+<td>❌ Excluded from scope — static pre-configured tokens cover all local dev workflows; no OAuth dance needed</td>
+<td>🔥 High — essential for any app distributed beyond a single workspace; every public marketplace app uses this. Less critical for inner-loop bot dev where static tokens suffice</td>
+</tr>
+<tr>
+<td><strong>Token rotation</strong></td>
+<td>Auto-rotating bot tokens for security</td>
+<td>Enterprise apps</td>
+<td>❌ Not applicable — static pre-configured tokens are the design (no rotation needed locally)</td>
+<td>🟢 Low — an enterprise security requirement rather than a developer feature; transparent to most app code</td>
+</tr>
+<tr>
+<td><strong>Granular permissions/scopes</strong></td>
+<td>Request only the permissions your app needs</td>
+<td>All apps</td>
+<td>❌ Not applicable — token-to-app mapping is pre-configured; no OAuth scope enforcement</td>
+<td>🟡 Medium — matters at distribution time (marketplace review, enterprise security review), but not during inner-loop development</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="enterprise-admin-apis" tabindex="-1">Enterprise / Admin APIs</h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>What it does</th>
+<th>Example app</th>
+<th>Simulator</th>
+<th>Developer demand</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Admin API</strong></td>
+<td>Manage users, channels, workspaces at org level</td>
+<td>IT provisioning tools</td>
+<td>❌ Explicitly out of scope</td>
+<td>🟢 Low — enterprise IT tooling only; irrelevant for typical product bots</td>
+</tr>
+<tr>
+<td><strong>SCIM API</strong></td>
+<td>Sync users/groups from identity providers (Okta, etc.)</td>
+<td>Okta, OneLogin integrations</td>
+<td>❌ Explicitly out of scope</td>
+<td>🟢 Low — identity provider integrations only; a very specialised niche</td>
+</tr>
+<tr>
+<td><strong>Audit Logs API</strong></td>
+<td>Stream security events for compliance</td>
+<td>Splunk, Panther</td>
+<td>❌ Explicitly out of scope</td>
+<td>🟢 Low — compliance and SIEM tooling only</td>
+</tr>
+<tr>
+<td><strong>Discovery API</strong></td>
+<td>Export messages for e-discovery/compliance</td>
+<td>Aware, Theta Lake</td>
+<td>❌ Explicitly out of scope</td>
+<td>🟢 Low — legal/compliance tooling only</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="simulator-coverage-summary" tabindex="-1">Simulator Coverage Summary</h2>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Count</th>
+<th>Capabilities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>✅ Supported</td>
+<td>18</td>
+<td>Bot messages, ephemeral messages, <code>chat.update</code>, <code>chat.delete</code>, threaded replies, Block Kit rendering, modals + modal stack, buttons, static select, plain text input, slash commands (with usage hints), reaction events, <code>message</code> / <code>app_mention</code> events, <code>conversations.open</code> (DMs), <code>member_joined_channel</code>, incoming webhooks, <code>pin_added/removed</code>, link unfurling (<code>link_shared</code> + <code>chat.unfurl</code> + OG auto-preview)</td>
+</tr>
+<tr>
+<td>🔶 Partial</td>
+<td>1</td>
+<td><code>channel_created/renamed/archived</code> — created + archive/unarchive dispatched; channel rename deferred (Phase 7)</td>
+</tr>
+<tr>
+<td>🔲 Planned</td>
+<td>6</td>
+<td>App Home tab (Phase 9), <code>app_home_opened</code> (Phase 9), scheduled messages, <code>team_join</code>, message shortcuts (Phase 11 investigation), accessibility / keyboard navigation (Phase 13)</td>
+</tr>
+<tr>
+<td>❌ Not supported</td>
+<td>15</td>
+<td>OAuth 2.0 flow (excluded from scope), global shortcuts, overflow menus, datepicker, checkboxes, rich text input, file input, <code>file_shared</code>, Files API, Canvases, user status/presence, Workflow Builder steps, Next-Gen Platform, token rotation, Enterprise/Admin/SCIM/Audit APIs</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note:</strong> OAuth 2.0 flow is <strong>excluded from scope entirely</strong> — static pre-configured tokens are the design. If you need to test an install flow, use a real Slack Developer Sandbox.</p>
+</blockquote>
+<blockquote>
+<p>There are currently no 🔥 high-demand gaps — Incoming Webhooks (✅), Link Unfurling (✅), and OAuth (deliberately excluded) were the only ones.</p>
+</blockquote>
+<h3 id="medium-demand-gaps-worth-considering" tabindex="-1">Medium demand gaps worth considering</h3>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Why it matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Message shortcuts</strong></td>
+<td>A very natural UX pattern (&quot;create ticket from this message&quot;) used by Jira, Linear, and many productivity bots</td>
+</tr>
+<tr>
+<td><strong>Date / time pickers</strong></td>
+<td>Needed for any scheduling or reminder bot</td>
+</tr>
+<tr>
+<td><strong>Checkboxes &amp; radio buttons</strong></td>
+<td>Survey and preference-collection bots rely on these; a natural complement to <code>plain_text_input</code> already supported</td>
+</tr>
+<tr>
+<td><strong><code>team_join</code></strong></td>
+<td>HR onboarding automation — very common in enterprise</td>
+</tr>
+<tr>
+<td><strong><code>users_select</code> / <code>channels_select</code></strong></td>
+<td>The other <code>static_select</code> variants; used heavily in assignment and routing bots</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>The simulator targets <strong>the inner dev loop for bot developers</strong>: the surfaces a Bolt app actually uses when receiving events, posting messages, and driving modal interactions. Capabilities that exist for human Slack users (presence, file previews, workflow builder) or for enterprise IT (Admin/SCIM APIs) are deliberately out of scope.</p>
+</blockquote>
+</main>
+    </div>
+     <footer class="footer">
+  <div class="footer-container">
+    <div class="footer-brand">
+      <a href="/" style="text-decoration: none; color: inherit">
+        <h3>Slack Simulator</h3>
+      </a>
+      <p>The inner dev loop for Slack bot developers</p>
+      <p class="footer-disclaimer">
+        Slack Simulator is an independent project and is not affiliated with,
+        endorsed by, or sponsored by Slack Technologies, Inc. The Slack name and
+        logos are trademarks of Slack Technologies, Inc.
+      </p>
+    </div>
+    <nav class="footer-nav">
+      <div class="footer-nav-links">
+        <a href="/get-started/">Get Started</a>
+        <a href="/product-spec/">Product Spec</a>
+        <a href="/tech-spec/">Tech Spec</a>
+        <a href="/capabilities/">Capabilities</a>
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path
+              d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+            />
+          </svg>
+        </a>
+        <a href="https://discord.com" target="_blank" rel="noopener noreferrer">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path
+              d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"
+            />
+          </svg>
+        </a>
+      </div>
+      <p class="footer-developer">Developed by <a href="#">Your Name</a></p>
+    </nav>
+  </div>
+</footer>
+ 
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const tocLinks = document.querySelectorAll(".toc-item");
+        const headings = document.querySelectorAll(
+          ".docs-content h1, .docs-content h2, .docs-content h3, .docs-content h4",
+        );
+
+        // Function to set active TOC link based on scroll position
+        function setActiveTocLink() {
+          let currentHeading = null;
+          const scrollPosition = window.scrollY + 100;
+
+          headings.forEach((heading) => {
+            const headingTop = heading.offsetTop;
+            const headingBottom = headingTop + heading.offsetHeight;
+
+            // Check if heading is currently in view
+            if (
+              scrollPosition >= headingTop &&
+              scrollPosition < headingBottom
+            ) {
+              currentHeading = heading;
+            }
+          });
+
+          // Fallback: if no heading is in view, use the last one above scroll position
+          if (!currentHeading) {
+            headings.forEach((heading) => {
+              if (heading.offsetTop <= scrollPosition) {
+                currentHeading = heading;
+              }
+            });
+          }
+
+          // Remove active class from all links
+          tocLinks.forEach((link) => link.classList.remove("active"));
+
+          // Add active class to current heading's link
+          if (currentHeading) {
+            const id = currentHeading.getAttribute("id");
+            const activeLink = document.querySelector(
+              `.toc-item[href="#${id}"]`,
+            );
+            if (activeLink) {
+              activeLink.classList.add("active");
+            }
+          }
+        }
+
+        // Set active link on scroll
+        window.addEventListener("scroll", setActiveTocLink);
+        setActiveTocLink(); // Initial call
+
+        // Handle initial hash on page load
+        if (window.location.hash) {
+          const targetId = window.location.hash.substring(1);
+          const targetHeading = document.getElementById(targetId);
+          if (targetHeading) {
+            setTimeout(() => {
+              targetHeading.scrollIntoView({ behavior: "smooth" });
+            }, 100);
+          }
+        }
+      });
+    </script>
+    
+  </body>
+</html>
