@@ -4,7 +4,7 @@
     "id": "W001",
     "name": "Phantom Inc.",
     "domain": "phantominc",
-    "avatarUrl": "/avatars/phantom.png",
+    "avatarUrl": "/config/avatars/phantom.png",
     "supportedEmojis": [
       { "name": "rocket", "emoji": "🚀" },
       { "name": "thumbsup", "emoji": "👍" },
@@ -21,7 +21,7 @@
       "fullName": "Ada Lovelace",
       "email": "ada@slacksim.test",
       "avatarSeed": "adalovelace",
-      "avatarUrl": "/avatars/ada.png"
+      "avatarUrl": "/config/avatars/ada.png"
     },
     {
       "id": "U002",

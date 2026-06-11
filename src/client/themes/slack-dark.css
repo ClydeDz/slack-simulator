@@ -1,55 +1,55 @@
-body[data-theme="light"] {
-  /* Sidebar — Slack's aubergine */
-  --slacksim-color-sidebar-bg: #3f0e40;
-  --slacksim-color-sidebar-fg: rgba(255, 255, 255, 0.7);
+body[data-theme="dark"] {
+  /* Sidebar — Slack's aubergine (darker for dark mode) */
+  --slacksim-color-sidebar-bg: #1a1d21;
+  --slacksim-color-sidebar-fg: rgba(255, 255, 255, 0.65);
   --slacksim-color-sidebar-fg-active: #ffffff;
-  --slacksim-color-sidebar-hover-bg: rgba(255, 255, 255, 0.1);
-  --slacksim-color-sidebar-active-bg: rgba(255, 255, 255, 0.9);
-  --slacksim-color-sidebar-active-fg: #3f0e40;
+  --slacksim-color-sidebar-hover-bg: rgba(255, 255, 255, 0.08);
+  --slacksim-color-sidebar-active-bg: rgba(255, 255, 255, 0.15);
+  --slacksim-color-sidebar-active-fg: #ffffff;
   --slacksim-color-sidebar-badge-bg: #e01e5a;
 
   /* Message pane */
-  --slacksim-color-bg: #ffffff;
-  --slacksim-color-bg-secondary: #f8f8f8;
-  --slacksim-color-bg-hover: #f8f8f8;
-  --slacksim-color-fg: #1d1c1d;
-  --slacksim-color-fg-muted: #616061;
-  --slacksim-color-fg-placeholder: #aaaaaa;
-  --slacksim-color-border: #e8e8e8;
-  --slacksim-color-divider: #dddddd;
+  --slacksim-color-bg: #1a1d21;
+  --slacksim-color-bg-secondary: #23272a;
+  --slacksim-color-bg-hover: #2a2e33;
+  --slacksim-color-fg: #dcddde;
+  --slacksim-color-fg-muted: #94999c;
+  --slacksim-color-fg-placeholder: #6d6f72;
+  --slacksim-color-border: #3f4144;
+  --slacksim-color-divider: #3f4144;
 
   /* Control bar */
-  --slacksim-color-bar-bg: #350d36;
-  --slacksim-color-control-bar-bg: #714077;
+  --slacksim-color-bar-bg: #1164a3;
+  --slacksim-color-control-bar-bg: #1164a3;
   --slacksim-color-bar-border: rgba(255, 255, 255, 0.08);
 
   /* Accent / interactive */
-  --slacksim-color-accent: #1264a3;
-  --slacksim-color-accent-hover: #0f4f8a;
-  --slacksim-color-mention-bg: #fef7cc;
-  --slacksim-color-mention-border: #f5c518;
+  --slacksim-color-accent: #5bc5de;
+  --slacksim-color-accent-hover: #4ab3cc;
+  --slacksim-color-mention-bg: #2a2e33;
+  --slacksim-color-mention-border: #5bc5de;
 
   /* Reactions */
-  --slacksim-color-reaction-bg: #f2f2f2;
-  --slacksim-color-reaction-bg-mine: #d7eafb;
-  --slacksim-color-reaction-border: #e0e0e0;
-  --slacksim-color-reaction-border-mine: #a9d4f5;
+  --slacksim-color-reaction-bg: #2a2e33;
+  --slacksim-color-reaction-bg-mine: #1f3a4f;
+  --slacksim-color-reaction-border: #3f4144;
+  --slacksim-color-reaction-border-mine: #5bc5de;
 
   /* Tab switcher */
-  --slacksim-color-tab-container-bg: rgba(0, 0, 0, 0.25);
-  --slacksim-color-tab-active-bg: rgba(255, 255, 255, 0.22);
-  --slacksim-color-tab-fg: rgba(255, 255, 255, 0.6);
+  --slacksim-color-tab-container-bg: rgba(0, 0, 0, 0.2);
+  --slacksim-color-tab-active-bg: rgba(255, 255, 255, 0.15);
+  --slacksim-color-tab-fg: rgba(255, 255, 255, 0.55);
   --slacksim-color-tab-fg-active: #ffffff;
 
   /* Modals */
-  --slacksim-color-modal-bg: #ffffff;
-  --slacksim-color-modal-overlay: rgba(0, 0, 0, 0.5);
-  --slacksim-color-modal-border: #e8e8e8;
+  --slacksim-color-modal-bg: #23272a;
+  --slacksim-color-modal-overlay: rgba(0, 0, 0, 0.65);
+  --slacksim-color-modal-border: #3f4144;
 
   /* Composer */
-  --slacksim-color-composer-bg: #ffffff;
-  --slacksim-color-composer-border: #c6c6c6;
-  --slacksim-color-composer-border-focus: #1264a3;
+  --slacksim-color-composer-bg: #23272a;
+  --slacksim-color-composer-border: #3f4144;
+  --slacksim-color-composer-border-focus: #5bc5de;
 
   /* Typography */
   --slacksim-font-body: "Lato", system-ui, -apple-system, sans-serif;
@@ -76,14 +76,14 @@ body[data-theme="light"] {
   --slacksim-radius-pill: 9999px;
 
   /* Shadows */
-  --slacksim-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
-  --slacksim-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
-  --slacksim-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
+  --slacksim-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --slacksim-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --slacksim-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
 
   /* Primary action (Slack green) */
   --slacksim-color-primary: #007a5a;
   --slacksim-color-primary-hover: #148567;
-  --slacksim-color-primary-disabled: #d1d1d1;
+  --slacksim-color-primary-disabled: #4a4a4a;
 
   /* Misc */
   --slacksim-channel-header-height: 30px;
@@ -93,7 +93,7 @@ body[data-theme="light"] {
   --slacksim-thread-width: 360px;
 
   /* @mention highlight */
-  --slacksim-colour-mention-highlight-bg: #d7eafb
+  --slacksim-colour-mention-highlight-bg: #1f3a4f;
 }
 
 * {
@@ -191,7 +191,7 @@ body {
 /* ── @mention highlight ─────────────────────────────────────── */
 .ss-mention {
   color: var(--slacksim-color-accent);
- background-color: var(--slacksim-colour-mention-highlight-bg);
+  background-color: var(--slacksim-colour-mention-highlight-bg);
   border-radius: 2px;
   padding: 0 2px;
   font-weight: var(--slacksim-font-weight-bold);
@@ -213,7 +213,7 @@ body {
 /* ── Sidebar scrollbar ──────────────────────────────────────────── */
 .ss-sidebar-scroll {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
 }
 .ss-sidebar-scroll::-webkit-scrollbar {
   width: 6px;
@@ -222,9 +222,9 @@ body {
   background: transparent;
 }
 .ss-sidebar-scroll::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.15);
   border-radius: var(--slacksim-radius-pill);
 }
 .ss-sidebar-scroll::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(255, 255, 255, 0.25);
 }

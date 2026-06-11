@@ -17,39 +17,89 @@ function renderText(
   onChannelClick: (id: string) => void,
 ) {
   // Split on <#C001>, <@U001>, plain @username, plain #channelname
-  const parts = text.split(/(<#\w+(?:\|\S*)?>|<@\w+>|@[\w-]+|#[\w-]+|:[a-z0-9_+\-]+:)/g);
+  const parts = text.split(
+    /(<#\w+(?:\|\S*)?>|<@\w+>|@[\w-]+|#[\w-]+|:[a-z0-9_+\-]+:)/g,
+  );
   return parts.map((part, i) => {
     // Channel mention: <#C001> or <#C001|general>
     const channelMention = part.match(/^<#(\w+)(?:\|(\S+))?>$/);
     if (channelMention) {
       const channelId = channelMention[1];
-      const channel = channels.find(c => c.id === channelId);
-      const label = channel ? `#${channel.name}` : channelMention[2] ? `#${channelMention[2]}` : part;
+      const channel = channels.find((c) => c.id === channelId);
+      const label = channel
+        ? `#${channel.name}`
+        : channelMention[2]
+          ? `#${channelMention[2]}`
+          : part;
       if (channel) {
-        return <ChannelChip key={i} label={label} channel={channel} users={users} onClick={() => onChannelClick(channelId)} />;
+        return (
+          <ChannelChip
+            key={i}
+            label={label}
+            channel={channel}
+            users={users}
+            onClick={() => onChannelClick(channelId)}
+          />
+        );
       }
-      return <span key={i} className="ss-mention" style={{ cursor: 'default' }}>{label}</span>;
+      return (
+        <span key={i} className="ss-mention" style={{ cursor: "default" }}>
+          {label}
+        </span>
+      );
     }
     // Plain #channelname format
-    if (part.startsWith('#')) {
+    if (part.startsWith("#")) {
       const name = part.slice(1);
-      const channel = channels.find(c => c.name === name);
+      const channel = channels.find((c) => c.name === name);
       if (channel) {
-        return <ChannelChip key={i} label={part} channel={channel} users={users} onClick={() => onChannelClick(channel.id)} />;
+        return (
+          <ChannelChip
+            key={i}
+            label={part}
+            channel={channel}
+            users={users}
+            onClick={() => onChannelClick(channel.id)}
+          />
+        );
       }
     }
     // User/bot mention: <@U001>
     const slackMention = part.match(/^<@(\w+)>$/);
     if (slackMention) {
       const user = users.find((u) => u.id === slackMention[1]);
-      const bot = !user ? apps.find((a) => a.botUserId === slackMention[1]) : undefined;
+      const bot = !user
+        ? apps.find((a) => a.botUserId === slackMention[1])
+        : undefined;
       if (user) {
-        return <MentionChip key={i} label={`@${user.username}`} seed={user.avatarSeed} fullName={user.fullName} username={user.username} url={user.avatarUrl} />;
+        return (
+          <MentionChip
+            key={i}
+            label={`@${user.username}`}
+            seed={user.avatarSeed}
+            fullName={user.fullName}
+            username={user.username}
+            url={user.avatarUrl}
+          />
+        );
       }
       if (bot) {
-        return <MentionChip key={i} label={`@${bot.botUserName}`} seed={bot.botUserName} fullName={bot.name} username={bot.botUserName} url={bot.avatarUrl} />;
+        return (
+          <MentionChip
+            key={i}
+            label={`@${bot.botUserName}`}
+            seed={bot.botUserName}
+            fullName={bot.name}
+            username={bot.botUserName}
+            url={bot.avatarUrl}
+          />
+        );
       }
-      return <span key={i} className="ss-mention">@{slackMention[1]}</span>;
+      return (
+        <span key={i} className="ss-mention">
+          @{slackMention[1]}
+        </span>
+      );
     }
     // Plain @username format
     if (part.startsWith("@")) {
@@ -57,10 +107,28 @@ function renderText(
       const user = users.find((u) => u.username === username);
       const bot = apps.find((a) => a.botUserName === username);
       if (user) {
-        return <MentionChip key={i} label={part} seed={user.avatarSeed} fullName={user.fullName} username={user.username} url={user.avatarUrl} />;
+        return (
+          <MentionChip
+            key={i}
+            label={part}
+            seed={user.avatarSeed}
+            fullName={user.fullName}
+            username={user.username}
+            url={user.avatarUrl}
+          />
+        );
       }
       if (bot) {
-        return <MentionChip key={i} label={part} seed={bot.botUserName} fullName={bot.name} username={bot.botUserName} url={bot.avatarUrl} />;
+        return (
+          <MentionChip
+            key={i}
+            label={part}
+            seed={bot.botUserName}
+            fullName={bot.name}
+            username={bot.botUserName}
+            url={bot.avatarUrl}
+          />
+        );
       }
     }
     // Emoji shortcode: :rocket:, :thumbsup:, etc.
@@ -68,17 +136,27 @@ function renderText(
       const name = part.slice(1, -1);
       const emojiMap = useStore.getState().workspace?.emojiMap ?? {};
       const char = emojiMap[name];
-      if (char) return <span key={i} title={part}>{char}</span>;
+      if (char)
+        return (
+          <span key={i} title={part}>
+            {char}
+          </span>
+        );
       return (
-        <span key={i} style={{
-          fontFamily: 'var(--slacksim-font-mono)',
-          fontSize: '0.85em',
-          background: 'var(--slacksim-color-bg-secondary)',
-          border: '1px solid var(--slacksim-color-border)',
-          borderRadius: 'var(--slacksim-radius-sm)',
-          padding: '1px 4px',
-          color: 'var(--slacksim-color-fg-muted)',
-        }}>{part}</span>
+        <span
+          key={i}
+          style={{
+            fontFamily: "var(--slacksim-font-mono)",
+            fontSize: "0.85em",
+            background: "var(--slacksim-color-bg-secondary)",
+            border: "1px solid var(--slacksim-color-border)",
+            borderRadius: "var(--slacksim-radius-sm)",
+            padding: "1px 4px",
+            color: "var(--slacksim-color-fg-muted)",
+          }}
+        >
+          {part}
+        </span>
       );
     }
     return <span key={i}>{part}</span>;
@@ -108,7 +186,14 @@ function formatReplyTime(ts: string): string {
 }
 
 export default function Message({ message, inThread = false }: Props) {
-  const { users, apps, channels, actingUserId, setActiveThread, setActiveChannel } = useStore();
+  const {
+    users,
+    apps,
+    channels,
+    actingUserId,
+    setActiveThread,
+    setActiveChannel,
+  } = useStore();
   const [showActions, setShowActions] = useState(false);
   const [showReactionPicker, setShowReactionPicker] = useState(false);
   const [pickerPos, setPickerPos] = useState<{
@@ -137,11 +222,12 @@ export default function Message({ message, inThread = false }: Props) {
       if (
         reactionBtnRef.current?.contains(e.target as Node) ||
         pickerRef.current?.contains(e.target as Node)
-      ) return;
+      )
+        return;
       setShowReactionPicker(false);
     }
-    document.addEventListener('mousedown', handleOutside);
-    return () => document.removeEventListener('mousedown', handleOutside);
+    document.addEventListener("mousedown", handleOutside);
+    return () => document.removeEventListener("mousedown", handleOutside);
   }, [showReactionPicker]);
 
   const author = users.find((u) => u.id === message.user);
@@ -177,36 +263,65 @@ export default function Message({ message, inThread = false }: Props) {
   }
 
   // Render system join/leave/archive messages like a regular message but faint
-  const isSystemMsg = message.subtype === 'channel_join' || message.subtype === 'channel_leave'
-    || message.subtype === 'channel_archive' || message.subtype === 'channel_unarchive'
+  const isSystemMsg =
+    message.subtype === "channel_join" ||
+    message.subtype === "channel_leave" ||
+    message.subtype === "channel_archive" ||
+    message.subtype === "channel_unarchive";
   if (isSystemMsg) {
     return (
       <div
         onMouseEnter={() => setShowActions(true)}
         onMouseLeave={() => setShowActions(false)}
         style={{
-          display: 'flex',
-          gap: 'var(--slacksim-space-3)',
-          padding: 'var(--slacksim-space-1) var(--slacksim-space-5)',
-          background: showActions ? 'var(--slacksim-color-bg-hover)' : 'transparent',
+          display: "flex",
+          gap: "var(--slacksim-space-3)",
+          padding: "var(--slacksim-space-1) var(--slacksim-space-5)",
+          background: showActions
+            ? "var(--slacksim-color-bg-hover)"
+            : "transparent",
         }}
       >
         <Avatar seed={seed} size={36} alt={name} url={avatarUrl} />
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--slacksim-space-2)', marginBottom: 'var(--slacksim-space-1)' }}>
-            <span style={{ fontWeight: 'var(--slacksim-font-weight-bold)', fontSize: 'var(--slacksim-font-size-md)', color: 'var(--slacksim-color-fg)' }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "baseline",
+              gap: "var(--slacksim-space-2)",
+              marginBottom: "var(--slacksim-space-1)",
+            }}
+          >
+            <span
+              style={{
+                fontWeight: "var(--slacksim-font-weight-bold)",
+                fontSize: "var(--slacksim-font-size-md)",
+                color: "var(--slacksim-color-fg)",
+              }}
+            >
               {name}
             </span>
-            <span style={{ fontSize: 'var(--slacksim-font-size-sm)', color: 'var(--slacksim-color-fg-muted)' }}>
+            <span
+              style={{
+                fontSize: "var(--slacksim-font-size-sm)",
+                color: "var(--slacksim-color-fg-muted)",
+              }}
+            >
               {formatTs(message.ts)}
             </span>
           </div>
-          <span style={{ fontSize: 'var(--slacksim-font-size-md)', color: 'var(--slacksim-color-fg-muted)', lineHeight: 1.46 }}>
+          <span
+            style={{
+              fontSize: "var(--slacksim-font-size-md)",
+              color: "var(--slacksim-color-fg-muted)",
+              lineHeight: 1.46,
+            }}
+          >
             {message.text}
           </span>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -278,7 +393,7 @@ export default function Message({ message, inThread = false }: Props) {
               Pinned
             </span>
           )}
-          {message.subtype === 'ephemeral' && (
+          {message.subtype === "ephemeral" && (
             <span
               style={{
                 fontSize: 10,
@@ -306,12 +421,12 @@ export default function Message({ message, inThread = false }: Props) {
 
         {/* Message body — blocks take priority; fall back to plain text */}
         {message.blocks?.length ? (
-          <div style={{ marginTop: 'var(--slacksim-space-1)' }}>
+          <div style={{ marginTop: "var(--slacksim-space-1)" }}>
             <BlockKit
               blocks={message.blocks}
               channelId={message.channel}
               messageTs={message.ts}
-              appId={message.appId ?? botApp?.id ?? ''}
+              appId={message.appId ?? botApp?.id ?? ""}
             />
           </div>
         ) : (
@@ -329,48 +444,87 @@ export default function Message({ message, inThread = false }: Props) {
 
         {/* Unfurl previews */}
         {message.unfurls && Object.keys(message.unfurls).length > 0 && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--slacksim-space-2)', marginTop: 'var(--slacksim-space-2)' }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "var(--slacksim-space-2)",
+              marginTop: "var(--slacksim-space-2)",
+            }}
+          >
             {Object.entries(message.unfurls).map(([url, attachment]) => (
-              <div key={url} style={{
-                borderLeft: `4px solid ${(attachment as { color?: string }).color ?? 'var(--slacksim-color-border)'}`,
-                paddingLeft: 'var(--slacksim-space-3)',
-                paddingTop: 'var(--slacksim-space-2)',
-                paddingBottom: 'var(--slacksim-space-2)',
-                maxWidth: 500,
-              }}>
+              <div
+                key={url}
+                style={{
+                  borderLeft: `4px solid ${(attachment as { color?: string }).color ?? "var(--slacksim-color-border)"}`,
+                  paddingLeft: "var(--slacksim-space-3)",
+                  paddingTop: "var(--slacksim-space-2)",
+                  paddingBottom: "var(--slacksim-space-2)",
+                  maxWidth: 500,
+                }}
+              >
                 {(attachment as { blocks?: unknown[] }).blocks?.length ? (
                   <BlockKit
-                    blocks={(attachment as { blocks: unknown[] }).blocks as Message['blocks']}
+                    blocks={
+                      ((attachment as { blocks: unknown[] })
+                        .blocks as MessageType["blocks"]) || []
+                    }
                     channelId={message.channel}
                     messageTs={message.ts}
-                    appId={message.appId ?? botApp?.id ?? ''}
+                    appId={message.appId ?? botApp?.id ?? ""}
                   />
                 ) : (
                   <>
-                    {(attachment as { title?: string; title_link?: string }).title && (
-                      <div style={{ fontWeight: 'var(--slacksim-font-weight-bold)', fontSize: 'var(--slacksim-font-size-md)', marginBottom: 2 }}>
+                    {(attachment as { title?: string; title_link?: string })
+                      .title && (
+                      <div
+                        style={{
+                          fontWeight: "var(--slacksim-font-weight-bold)",
+                          fontSize: "var(--slacksim-font-size-md)",
+                          marginBottom: 2,
+                        }}
+                      >
                         {(attachment as { title_link?: string }).title_link ? (
                           <a
-                            href={(attachment as { title_link: string }).title_link}
+                            href={
+                              (attachment as { title_link: string }).title_link
+                            }
                             target="_blank"
                             rel="noopener noreferrer"
-                            style={{ color: 'var(--slacksim-color-accent)', textDecoration: 'none' }}
+                            style={{
+                              color: "var(--slacksim-color-accent)",
+                              textDecoration: "none",
+                            }}
                           >
                             {(attachment as { title: string }).title}
                           </a>
-                        ) : (attachment as { title: string }).title}
+                        ) : (
+                          (attachment as { title: string }).title
+                        )}
                       </div>
                     )}
                     {(attachment as { text?: string }).text && (
-                      <div style={{ fontSize: 'var(--slacksim-font-size-sm)', color: 'var(--slacksim-color-fg-muted)', lineHeight: 1.46 }}>
+                      <div
+                        style={{
+                          fontSize: "var(--slacksim-font-size-sm)",
+                          color: "var(--slacksim-color-fg-muted)",
+                          lineHeight: 1.46,
+                        }}
+                      >
                         {(attachment as { text: string }).text}
                       </div>
                     )}
                     {(attachment as { image_url?: string }).image_url && (
                       <img
                         src={(attachment as { image_url: string }).image_url}
-                        alt={(attachment as { title?: string }).title ?? ''}
-                        style={{ maxWidth: 360, maxHeight: 200, marginTop: 'var(--slacksim-space-2)', borderRadius: 'var(--slacksim-radius-sm)', display: 'block' }}
+                        alt={(attachment as { title?: string }).title ?? ""}
+                        style={{
+                          maxWidth: 360,
+                          maxHeight: 200,
+                          marginTop: "var(--slacksim-space-2)",
+                          borderRadius: "var(--slacksim-radius-sm)",
+                          display: "block",
+                        }}
                       />
                     )}
                   </>
@@ -415,7 +569,10 @@ export default function Message({ message, inThread = false }: Props) {
                     lineHeight: 1,
                   }}
                 >
-                  <span>{useStore.getState().workspace?.emojiMap?.[reaction.name] ?? `:${reaction.name}:`}</span>
+                  <span>
+                    {useStore.getState().workspace?.emojiMap?.[reaction.name] ??
+                      `:${reaction.name}:`}
+                  </span>
                   <span
                     style={{
                       fontWeight: "var(--slacksim-font-weight-bold)",
@@ -452,7 +609,9 @@ export default function Message({ message, inThread = false }: Props) {
             <div style={{ display: "flex", alignItems: "center" }}>
               {(message.replyUsers ?? []).map((uid, i) => {
                 const u = users.find((u) => u.id === uid);
-                const bot = !u ? apps.find(a => a.botUserId === uid) : undefined;
+                const bot = !u
+                  ? apps.find((a) => a.botUserId === uid)
+                  : undefined;
                 const seed = u?.avatarSeed ?? bot?.botUserName ?? uid;
                 const url = u?.avatarUrl ?? bot?.avatarUrl;
                 const label = u?.fullName ?? bot?.name;
@@ -512,33 +671,63 @@ export default function Message({ message, inThread = false }: Props) {
             zIndex: 10,
           }}
         >
-          {!inThread && <button
-            onClick={handlePinToggle}
-            title={message.pinned ? "Unpin message" : "Pin message"}
-            className="ss-action-btn"
-            style={{
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-              padding: "4px 6px",
-              borderRadius: "var(--slacksim-radius-sm)",
-              color: message.pinned ? "var(--slacksim-color-primary)" : "var(--slacksim-color-fg-muted)",
-              lineHeight: 1,
-              transition: "background 0.1s ease",
-              display: "inline-flex",
-              alignItems: "center",
-            }}
-          >
-            {message.pinned ? (
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M12 17v5"/><path d="M15 9.34V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H7.89"/><path d="m2 2 20 20"/><path d="M9 9v1.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h11"/>
-              </svg>
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/>
-              </svg>
-            )}
-          </button>}
+          {!inThread && (
+            <button
+              onClick={handlePinToggle}
+              title={message.pinned ? "Unpin message" : "Pin message"}
+              className="ss-action-btn"
+              style={{
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                padding: "4px 6px",
+                borderRadius: "var(--slacksim-radius-sm)",
+                color: message.pinned
+                  ? "var(--slacksim-color-primary)"
+                  : "var(--slacksim-color-fg-muted)",
+                lineHeight: 1,
+                transition: "background 0.1s ease",
+                display: "inline-flex",
+                alignItems: "center",
+              }}
+            >
+              {message.pinned ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M12 17v5" />
+                  <path d="M15 9.34V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H7.89" />
+                  <path d="m2 2 20 20" />
+                  <path d="M9 9v1.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h11" />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M12 17v5" />
+                  <path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z" />
+                </svg>
+              )}
+            </button>
+          )}
           <div style={{ position: "relative" }}>
             <button
               ref={reactionBtnRef}
@@ -573,37 +762,39 @@ export default function Message({ message, inThread = false }: Props) {
               </svg>
             </button>
           </div>
-          {!inThread && <button
-            onClick={() => setActiveThread(message.ts)}
-            title="Reply in thread"
-            className="ss-action-btn"
-            style={{
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-              padding: "4px 6px",
-              borderRadius: "var(--slacksim-radius-sm)",
-              color: "var(--slacksim-color-fg-muted)",
-              lineHeight: 1,
-              transition: "background 0.1s ease",
-              display: "inline-flex",
-              alignItems: "center",
-            }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              aria-hidden="true"
-              style={{ width: 16, height: 16 }}
+          {!inThread && (
+            <button
+              onClick={() => setActiveThread(message.ts)}
+              title="Reply in thread"
+              className="ss-action-btn"
+              style={{
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                padding: "4px 6px",
+                borderRadius: "var(--slacksim-radius-sm)",
+                color: "var(--slacksim-color-fg-muted)",
+                lineHeight: 1,
+                transition: "background 0.1s ease",
+                display: "inline-flex",
+                alignItems: "center",
+              }}
             >
-              <path
-                fill="currentColor"
-                fillRule="evenodd"
-                d="M10 3a7 7 0 1 0 3.394 13.124.75.75 0 0 1 .542-.074l2.794.68-.68-2.794a.75.75 0 0 1 .073-.542A7 7 0 0 0 10 3m-8.5 7a8.5 8.5 0 1 1 16.075 3.859l.904 3.714a.75.75 0 0 1-.906.906l-3.714-.904A8.5 8.5 0 0 1 1.5 10M6 8.25a.75.75 0 0 1 .75-.75h6.5a.75.75 0 0 1 0 1.5h-6.5A.75.75 0 0 1 6 8.25M6.75 11a.75.75 0 0 0 0 1.5h4.5a.75.75 0 0 0 0-1.5z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </button>}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                aria-hidden="true"
+                style={{ width: 16, height: 16 }}
+              >
+                <path
+                  fill="currentColor"
+                  fillRule="evenodd"
+                  d="M10 3a7 7 0 1 0 3.394 13.124.75.75 0 0 1 .542-.074l2.794.68-.68-2.794a.75.75 0 0 1 .073-.542A7 7 0 0 0 10 3m-8.5 7a8.5 8.5 0 1 1 16.075 3.859l.904 3.714a.75.75 0 0 1-.906.906l-3.714-.904A8.5 8.5 0 0 1 1.5 10M6 8.25a.75.75 0 0 1 .75-.75h6.5a.75.75 0 0 1 0 1.5h-6.5A.75.75 0 0 1 6 8.25M6.75 11a.75.75 0 0 0 0 1.5h4.5a.75.75 0 0 0 0-1.5z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          )}
         </div>
       )}
 

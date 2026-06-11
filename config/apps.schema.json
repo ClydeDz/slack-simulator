@@ -31,9 +31,7 @@
         "botToken",
         "appToken",
         "signingSecret",
-        "subscribedEvents",
-        "socketModeEnabled",
-        "description"
+        "socketModeEnabled"
       ],
       "additionalProperties": false,
       "properties": {

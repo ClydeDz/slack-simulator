@@ -13,7 +13,8 @@ import { registerHooks } from "./routes/hooks";
 import { registerResponseUrlRoute } from "./slashCommands";
 
 const PORT = 4500;
-export const SIMULATOR_BASE_URL = process.env.SIMULATOR_BASE_URL ?? `http://localhost:${PORT}`;
+export const SIMULATOR_BASE_URL =
+  process.env.SIMULATOR_BASE_URL ?? `http://localhost:${PORT}`;
 
 async function main() {
   // Ensure .slack-simulator dir exists
@@ -47,12 +48,12 @@ async function main() {
   await registerHooks(app);
   registerResponseUrlRoute(app);
 
-  // Serve bot avatar images from ./avatars/ (always, dev + prod)
-  const avatarsDir = path.join(process.cwd(), "avatars");
+  // Serve bot avatar images from ./config/avatars/ (always, dev + prod)
+  const avatarsDir = path.join(process.cwd(), "config/avatars");
   if (fs.existsSync(avatarsDir)) {
     await app.register(fastifyStatic, {
       root: avatarsDir,
-      prefix: "/avatars/",
+      prefix: "/config/avatars/",
       decorateReply: false,
     });
   }
@@ -77,7 +78,7 @@ async function main() {
       appToken: string;
     }>;
   } = JSON.parse(
-    fs.readFileSync(path.join(process.cwd(), "apps.json"), "utf8"),
+    fs.readFileSync(path.join(process.cwd(), "config/apps.json"), "utf8"),
   );
   console.log("\n=== Slack Simulator credentials ===");
   console.log(`  SLACK_API_URL=http://localhost:${PORT}/api/`);
