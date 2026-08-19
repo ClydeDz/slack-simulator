@@ -20,8 +20,7 @@
       "username": "ada",
       "fullName": "Ada Lovelace",
       "email": "ada@slacksim.test",
-      "avatarSeed": "adalovelace",
-      "avatarUrl": "/config/avatars/ada.png"
+      "avatarSeed": "adalovelace"
     },
     {
       "id": "U002",
@@ -49,7 +48,8 @@
       "username": "margaret",
       "fullName": "Margaret Hamilton",
       "email": "margaret@slacksim.test",
-      "avatarSeed": "margaret"
+      "avatarSeed": "margaret",
+      "avatarUrl": "/config/avatars/margaret.png"
     }
   ],
   "channels": [

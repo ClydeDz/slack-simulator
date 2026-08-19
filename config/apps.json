@@ -4,58 +4,40 @@
     {
       "id": "A001",
       "botUserId": "B001",
-      "botUserName": "default-bot",
-      "name": "Default WebApi Bot",
-      "description": "Posts a message via @slack/web-api when the app is installed, and can post a message in channels via incoming webhook",
-      "socketModeEnabled": false,
-      "requestUrl": "http://localhost:4001/slack/events",
-      "botToken": "xoxb-slacksim-default",
-      "appToken": "xapp-slacksim-default",
-      "signingSecret": "slacksim-secret-default",
-      "subscribedEvents": ["message"],
-      "slashCommands": [],
-      "incomingWebhooks": ["C001", "C002"]
-    },
-    {
-      "id": "A002",
-      "botUserId": "B002",
-      "botUserName": "second-bot",
+      "botUserName": "demo",
       "name": "Demo Bot",
-      "description": "Responds to a 'hello' and 'app_mention' events via socket mode1",
+      "description": "Responds to a 'hello' with a reply in channel, responds to a 'ping' with a reply in thread, and responds to a 'ghost' message with an ephemeral reply in channel visible only to the sender. Send '/echo hey' to echo your message back to the channel. Also responds to 'app_mention' events.",
       "socketModeEnabled": true,
       "requestUrl": "http://localhost:4002/slack/events",
-      "botToken": "xoxb-slacksim-second",
-      "appToken": "xapp-slacksim-second",
-      "signingSecret": "slacksim-secret-second",
+      "botToken": "xoxb-slacksim-demo",
+      "appToken": "xapp-slacksim-demo",
+      "signingSecret": "slacksim-secret-demo",
       "subscribedEvents": ["message", "app_mention"],
       "slashCommands": [
-        { "command": "/demo", "description": "Run a Block Kit demo" },
         {
           "command": "/echo",
           "description": "Echo your message back to the channel",
           "usage": "[text]"
-        },
-        { "command": "/viewspush", "description": "Push a view" },
-        { "command": "/viewsupdate", "description": "Update a view" }
+        }
       ]
     },
     {
-      "id": "A003",
-      "botUserId": "B003",
+      "id": "A002",
+      "botUserId": "B002",
       "botUserName": "http",
       "name": "Http Bot",
       "description": "Responds to a 'hello' and 'app_mention' events via HTTP",
       "socketModeEnabled": false,
       "requestUrl": "http://localhost:4003/slack/events",
-      "botToken": "xoxb-slacksim-third",
-      "appToken": "xapp-slacksim-third",
-      "signingSecret": "slacksim-secret-third",
+      "botToken": "xoxb-slacksim-http",
+      "appToken": "xapp-slacksim-http",
+      "signingSecret": "slacksim-secret-http",
       "subscribedEvents": ["message", "app_mention"],
       "slashCommands": []
     },
     {
-      "id": "A004",
-      "botUserId": "B004",
+      "id": "A003",
+      "botUserId": "B003",
       "botUserName": "vote",
       "name": "Vote Bot",
       "description": "Create a simple poll triggered by a slash command",
@@ -74,45 +56,8 @@
       ]
     },
     {
-      "id": "A005",
-      "botUserId": "B005",
-      "botUserName": "ack",
-      "name": "Acknowledge Bot",
-      "description": "Acknowledges new members joining a channel, channel creation, deletion, archiving, and unarchiving",
-      "avatarUrl": "/config/avatars/welcome.png",
-      "socketModeEnabled": true,
-      "botToken": "xoxb-slacksim-ack",
-      "appToken": "xapp-slacksim-ack",
-      "signingSecret": "slacksim-secret-ack",
-      "subscribedEvents": [
-        "member_joined_channel",
-        "channel_created",
-        "channel_deleted",
-        "channel_archive",
-        "channel_unarchive"
-      ]
-    },
-    {
-      "id": "A006",
-      "botUserId": "B006",
-      "botUserName": "save",
-      "name": "Save Bot",
-      "description": "DMs you the content of any message you react to with 👀 or any message you pin",
-      "avatarUrl": "/config/avatars/save.png",
-      "socketModeEnabled": true,
-      "botToken": "xoxb-slacksim-save",
-      "appToken": "xapp-slacksim-save",
-      "signingSecret": "slacksim-secret-save",
-      "subscribedEvents": [
-        "reaction_added",
-        "reaction_removed",
-        "pin_added",
-        "pin_removed"
-      ]
-    },
-    {
-      "id": "A007",
-      "botUserId": "B007",
+      "id": "A004",
+      "botUserId": "B004",
       "botUserName": "gif",
       "name": "GIF Bot",
       "description": "Unfurls Giphy links when they appear in messages",
@@ -122,55 +67,6 @@
       "signingSecret": "slacksim-secret-gif",
       "subscribedEvents": ["link_shared"],
       "unfurlDomains": ["giphy.com"]
-    },
-    {
-      "id": "A008",
-      "botUserId": "B008",
-      "botUserName": "form",
-      "name": "Form Bot",
-      "description": "Demonstrates a form being triggered by a slash command, and on submission, the form data sent as a DM to the user who submitted the form",
-      "socketModeEnabled": true,
-      "botToken": "xoxb-slacksim-form",
-      "appToken": "xapp-slacksim-form",
-      "signingSecret": "slacksim-secret-form",
-      "subscribedEvents": [],
-      "slashCommands": [
-        {
-          "command": "/form",
-          "description": "Triggers a pre-built form"
-        }
-      ]
-    },
-    {
-      "id": "A009",
-      "botUserId": "B009",
-      "botUserName": "jokes",
-      "name": "Jokes Bot",
-      "description": "Calls the Chuck Norris API to get a random joke",
-      "socketModeEnabled": true,
-      "botToken": "xoxb-slacksim-jokes",
-      "appToken": "xapp-slacksim-jokes",
-      "signingSecret": "slacksim-secret-jokes",
-      "subscribedEvents": [],
-      "slashCommands": [
-        {
-          "command": "/joke",
-          "description": "Get a random Chuck Norris joke"
-        }
-      ]
-    },
-    {
-      "id": "A010",
-      "botUserId": "B010",
-      "botUserName": "dictionary",
-      "name": "Dictionary Bot",
-      "description": "Uses LLM to provide the definition for a word",
-      "socketModeEnabled": true,
-      "botToken": "xoxb-slacksim-dictionary",
-      "appToken": "xapp-slacksim-dictionary",
-      "signingSecret": "slacksim-secret-dictionary",
-      "subscribedEvents": ["app_mention"],
-      "slashCommands": []
     }
   ]
 }

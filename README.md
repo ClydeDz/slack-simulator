@@ -12,4 +12,4 @@ A local, browser-based simulator for developing and testing Slack apps and bots 
 
 # Credits
 
-Developed by [Name](./URL)
+Developed by [Clyde D'Souza](https://clydedsouza.net/)
