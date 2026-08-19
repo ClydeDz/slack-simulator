@@ -26,6 +26,10 @@ vi.mock("./AppList", () => ({
   default: () => <div data-testid="app-list">App List</div>,
 }));
 
+vi.mock("./SidebarAd", () => ({
+  default: () => <div data-testid="sidebar-ad">Sidebar Ad</div>,
+}));
+
 vi.mock("../modals/CreateChannelModal", () => ({
   default: ({ onClose }: { onClose: () => void }) => (
     <div data-testid="create-channel-modal">
@@ -111,6 +115,12 @@ describe("Sidebar Component", () => {
       renderSidebar();
 
       expect(screen.getByTestId("app-list")).toBeInTheDocument();
+    });
+
+    it("should render SidebarAd pinned above identity switcher", () => {
+      renderSidebar();
+
+      expect(screen.getByTestId("sidebar-ad")).toBeInTheDocument();
     });
 
     it("should render IdentitySwitcher at bottom", () => {

@@ -1,4 +1,4 @@
-body[data-theme="light"] {
+body[data-theme='light'] {
   /* Sidebar — Slack's aubergine */
   --slacksim-color-sidebar-bg: #3f0e40;
   --slacksim-color-sidebar-fg: rgba(255, 255, 255, 0.7);
@@ -52,8 +52,8 @@ body[data-theme="light"] {
   --slacksim-color-composer-border-focus: #1264a3;
 
   /* Typography */
-  --slacksim-font-body: "Lato", system-ui, -apple-system, sans-serif;
-  --slacksim-font-mono: "Monaco", "Menlo", monospace;
+  --slacksim-font-body: 'Lato', system-ui, -apple-system, sans-serif;
+  --slacksim-font-mono: 'Monaco', 'Menlo', monospace;
   --slacksim-font-size-sm: 12px;
   --slacksim-font-size-md: 14px;
   --slacksim-font-size-lg: 16px;
@@ -93,7 +93,7 @@ body[data-theme="light"] {
   --slacksim-thread-width: 360px;
 
   /* @mention highlight */
-  --slacksim-colour-mention-highlight-bg: #d7eafb
+  --slacksim-colour-mention-highlight-bg: #d7eafb;
 }
 
 * {
@@ -191,7 +191,7 @@ body {
 /* ── @mention highlight ─────────────────────────────────────── */
 .ss-mention {
   color: var(--slacksim-color-accent);
- background-color: var(--slacksim-colour-mention-highlight-bg);
+  background-color: var(--slacksim-colour-mention-highlight-bg);
   border-radius: 2px;
   padding: 0 2px;
   font-weight: var(--slacksim-font-weight-bold);
@@ -211,20 +211,71 @@ body {
 }
 
 /* ── Sidebar scrollbar ──────────────────────────────────────────── */
-.ss-sidebar-scroll {
+.ss-sidebar-scroll-content {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
 }
-.ss-sidebar-scroll::-webkit-scrollbar {
+.ss-sidebar-scroll-content::-webkit-scrollbar {
   width: 6px;
 }
-.ss-sidebar-scroll::-webkit-scrollbar-track {
+.ss-sidebar-scroll-content::-webkit-scrollbar-track {
   background: transparent;
 }
-.ss-sidebar-scroll::-webkit-scrollbar-thumb {
+.ss-sidebar-scroll-content::-webkit-scrollbar-thumb {
   background-color: rgba(255, 255, 255, 0.25);
   border-radius: var(--slacksim-radius-pill);
 }
-.ss-sidebar-scroll::-webkit-scrollbar-thumb:hover {
+.ss-sidebar-scroll-content::-webkit-scrollbar-thumb:hover {
   background-color: rgba(255, 255, 255, 0.4);
+}
+
+/* ── Sidebar ad ─────────────────────────────────────────────────── */
+.ss-sidebar-ad {
+  flex-shrink: 0;
+  padding: var(--slacksim-space-3) var(--slacksim-space-4);
+  border-top: 1px solid var(--slacksim-color-bar-border);
+  background: var(--slacksim-color-sidebar-bg);
+}
+.ss-sidebar-ad-label {
+  display: block;
+  font-size: 11px;
+  font-weight: var(--slacksim-font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--slacksim-color-sidebar-fg);
+  opacity: 0.55;
+  margin-bottom: var(--slacksim-space-1);
+}
+.ss-sidebar-ad-link {
+  display: block;
+  font-size: var(--slacksim-font-size-sm);
+  line-height: 1.45;
+  color: var(--slacksim-color-sidebar-fg);
+  text-decoration: none;
+}
+.ss-sidebar-ad-text {
+  display: inline;
+}
+.ss-sidebar-ad-icon {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-left: 4px;
+  vertical-align: -0.15em;
+  flex-shrink: 0;
+  position: relative;
+  top: 1px;
+}
+.ss-sidebar-ad-link:hover {
+  color: var(--slacksim-color-sidebar-fg-active);
+}
+.ss-sidebar-ad-link:hover .ss-sidebar-ad-text {
+  text-decoration: underline;
+  text-underline-offset: 1.5px;
+  text-underline-position: under;
+}
+.ss-sidebar-ad-link:focus-visible {
+  outline: 2px solid var(--slacksim-color-sidebar-fg-active);
+  outline-offset: 2px;
+  border-radius: var(--slacksim-radius-sm);
 }

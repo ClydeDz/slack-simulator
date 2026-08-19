@@ -5,6 +5,7 @@ import DmList from "./DmList";
 import AppList from "./AppList";
 import CreateChannelModal from "../modals/CreateChannelModal";
 import IdentitySwitcher from "../ControlBar/IdentitySwitcher";
+import SidebarAd from "./SidebarAd";
 
 export default function Sidebar() {
   const { workspace } = useStore();
@@ -71,11 +72,26 @@ export default function Sidebar() {
           {workspace?.name ?? "Workspace"}
         </div>
 
-        {/* Scrollable channel/DM list */}
-        <div className="ss-sidebar-scroll" style={{ flex: 1, overflowY: "auto", overflowX: "hidden" }}>
-          <ChannelList onCreateChannel={() => setShowCreateChannel(true)} />
-          <DmList />
-          <AppList />
+        {/* Scrollable channel/DM list with pinned ad */}
+        <div
+          className="ss-sidebar-scroll"
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+            minHeight: 0,
+          }}
+        >
+          <div
+            className="ss-sidebar-scroll-content"
+            style={{ flex: 1, overflowY: "auto", overflowX: "hidden", minHeight: 0 }}
+          >
+            <ChannelList onCreateChannel={() => setShowCreateChannel(true)} />
+            <DmList />
+            <AppList />
+          </div>
+          <SidebarAd />
         </div>
 
         {/* Identity switcher — pinned to bottom of sidebar */}

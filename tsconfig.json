@@ -9,6 +9,7 @@
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "allowJs": true,
     "noEmit": true,
     "jsx": "react-jsx",
     "strict": true,
@@ -17,5 +18,5 @@
       "@client/*": ["./src/client/*"]
     }
   },
-  "include": ["src/client", "src/shared", "src/test", "vite.config.ts"]
+  "include": ["src/client", "src/shared", "src/test", "vite.config.ts", "ads.js", "ads.d.ts"]
 }
