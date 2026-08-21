@@ -1,4 +1,11 @@
-const ADS = [
+export interface Ad {
+  id: number;
+  name: string;
+  description: string;
+  link: string;
+}
+
+const ADS: Ad[] = [
   {
     id: 1,
     name: "Plesk",

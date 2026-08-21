@@ -3,6 +3,7 @@ import { useStore } from "../store";
 import { controlApi } from "../lib/api";
 import Avatar from "../components/Avatar";
 import type { App } from "@shared/types";
+import SidebarAd from "../components/Sidebar/SidebarAd";
 
 const ALL_EVENTS = [
   "message",
@@ -411,7 +412,7 @@ export default function AdminView() {
       {/* Left sidebar */}
       <div
         style={{
-          width: 250,
+          width: "var(--slacksim-sidebar-width)",
           flexShrink: 0,
           borderRight: "1px solid var(--slacksim-color-border)",
           padding: "var(--slacksim-space-5) var(--slacksim-space-4)",
@@ -490,6 +491,20 @@ export default function AdminView() {
             </button>
           ))}
         </nav>
+
+        <div style={{ flex: 1 }} />
+
+        <div
+          style={{
+            marginTop: "var(--slacksim-space-5)",
+            marginLeft: "calc(-1 * var(--slacksim-space-4))",
+            marginRight: "calc(-1 * var(--slacksim-space-4))",
+            marginBottom: "calc(-1 * var(--slacksim-space-5))",
+            flexShrink: 0,
+          }}
+        >
+          <SidebarAd />
+        </div>
       </div>
 
       {/* Main pane */}

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import ADS from "../../../../ads.js";
+import ADS from "../../data/ads";
 
 function pickAd() {
   return ADS[Math.floor(Math.random() * ADS.length)];

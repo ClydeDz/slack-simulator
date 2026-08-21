@@ -18,5 +18,5 @@
       "@client/*": ["./src/client/*"]
     }
   },
-  "include": ["src/client", "src/shared", "src/test", "vite.config.ts", "ads.js", "ads.d.ts"]
+  "include": ["src/client", "src/shared", "src/test", "vite.config.ts"]
 }

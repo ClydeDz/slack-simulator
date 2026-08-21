@@ -48,6 +48,11 @@ describe("DatabaseView Component", () => {
 
       expect(screen.getByText("Select a table")).toBeInTheDocument();
     });
+
+    it("should render SidebarAd in the database sidebar", () => {
+      renderDatabaseView();
+      expect(screen.getByLabelText("Advertisement")).toBeInTheDocument();
+    });
   });
 
   describe("Header", () => {

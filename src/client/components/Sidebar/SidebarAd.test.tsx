@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import SidebarAd from "./SidebarAd";
 
-vi.mock("../../../../ads.js", () => ({
+vi.mock("../../data/ads", () => ({
   default: [
     {
       id: 1,

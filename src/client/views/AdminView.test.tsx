@@ -91,6 +91,11 @@ describe("AdminView Component", () => {
       const appButtons = screen.getAllByText("Test App");
       expect(appButtons.length).toBeGreaterThan(0);
     });
+
+    it("should render SidebarAd in the left sidebar", () => {
+      renderAdminView();
+      expect(screen.getByLabelText("Advertisement")).toBeInTheDocument();
+    });
   });
 
   describe("Empty State", () => {

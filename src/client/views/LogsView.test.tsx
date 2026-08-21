@@ -100,6 +100,11 @@ describe("LogsView Component", () => {
       expect(screen.getByText("bot offline")).toBeInTheDocument();
     });
 
+    it("should render SidebarAd as a footer", () => {
+      renderLogsView();
+      expect(screen.getByLabelText("Advertisement")).toBeInTheDocument();
+    });
+
     it("should render refresh button", () => {
       renderLogsView();
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { controlApi } from "../lib/api";
+import SidebarAd from "../components/Sidebar/SidebarAd";
 
 interface ColumnMeta {
   name: string;
@@ -250,7 +251,7 @@ export default function DatabaseView() {
   const currentPage = Math.floor(offset / PAGE_SIZE) + 1;
 
   const sidebarStyle: React.CSSProperties = {
-    width: 200,
+    width: "var(--slacksim-sidebar-width)",
     flexShrink: 0,
     borderRight: "1px solid var(--slacksim-color-border)",
     overflowY: "auto",
@@ -437,6 +438,11 @@ export default function DatabaseView() {
             </button>
           ))
         )}
+
+        <div style={{ flex: 1 }} />
+        <div style={{ marginTop: "var(--slacksim-space-5)", flexShrink: 0 }}>
+          <SidebarAd />
+        </div>
       </div>
 
       {/* Right pane — table data */}

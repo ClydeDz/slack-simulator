@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useStore } from "../store";
 import { controlApi } from "../lib/api";
 import type { LogEntry } from "@shared/types";
+import SidebarAd from "../components/Sidebar/SidebarAd";
 
 function badge(entry: LogEntry) {
   if (entry.direction === "inbound")
@@ -312,6 +313,7 @@ export default function LogsView() {
           filtered.map((entry) => <LogRow key={entry.id} entry={entry} />)
         )}
       </div>
+      <SidebarAd />
     </div>
   );
 }
