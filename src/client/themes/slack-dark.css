@@ -89,6 +89,7 @@ body[data-theme='dark'] {
   --slacksim-channel-header-height: 30px;
   --slacksim-composer-height: 60px;
   --slacksim-control-bar-height: 38px;
+  --slacksim-header-height: 47px;
   --slacksim-sidebar-width: 260px;
   --slacksim-thread-width: 360px;
 

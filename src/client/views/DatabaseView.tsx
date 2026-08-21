@@ -288,7 +288,8 @@ export default function DatabaseView() {
         <div
           style={{
             padding: "10px 12px 6px",
-            fontSize: "var(--slacksim-font-size-sm)",
+            fontSize: "var(--slacksim-font-size-md)",
+            height: "var(--slacksim-header-height)",
             fontWeight: "var(--slacksim-font-weight-bold)",
             color: "var(--slacksim-color-fg-muted)",
             borderBottom: "1px solid var(--slacksim-color-border)",
@@ -471,6 +472,7 @@ export default function DatabaseView() {
             {/* Header */}
             <div
               style={{
+                height: "var(--slacksim-header-height)",
                 padding: "10px 16px",
                 borderBottom: "1px solid var(--slacksim-color-border)",
                 flexShrink: 0,
