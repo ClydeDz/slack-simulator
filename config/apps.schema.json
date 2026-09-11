@@ -29,8 +29,6 @@
         "botUserId",
         "botUserName",
         "botToken",
-        "appToken",
-        "signingSecret",
         "socketModeEnabled"
       ],
       "additionalProperties": false,
@@ -75,17 +73,17 @@
         },
         "appToken": {
           "type": "string",
-          "description": "App-level token (xapp-) used for Socket Mode",
+          "description": "App-level token (xapp-) used for Socket Mode.  Required when socketModeEnabled is true",
           "pattern": "^xapp-"
         },
         "signingSecret": {
           "type": "string",
-          "description": "Secret used to verify incoming requests from Slack",
+          "description": "Secret used to verify incoming requests from Slack. Required when socketModeEnabled is false",
           "minLength": 1
         },
         "requestUrl": {
           "type": "string",
-          "description": "HTTP endpoint URL where Slack delivers event payloads (HTTP mode only)",
+          "description": "HTTP endpoint URL where Slack delivers event payloads (HTTP mode only). Required when socketModeEnabled is false",
           "format": "uri",
           "pattern": "^https?://"
         },
@@ -145,15 +143,13 @@
         }
       },
       "if": {
-        "properties": { "socketModeEnabled": { "const": false } }
+        "properties": { "socketModeEnabled": { "const": true } }
       },
       "then": {
-        "required": ["requestUrl"],
-        "properties": {
-          "requestUrl": {
-            "description": "Required when socketModeEnabled is false — the HTTP endpoint for event delivery"
-          }
-        }
+        "required": ["appToken"]
+      },
+      "else": {
+        "required": ["requestUrl", "signingSecret"]
       }
     },
     "SlashCommand": {
