@@ -17,8 +17,8 @@ toc: true
 
 ```bash
 # Clone the repository
-git clone <repo-url>
-cd experiment-slack-appmulator
+git clone https://github.com/clydedz/slack-simulator.git
+cd slack-simulator
 
 # Install dependencies
 yarn install
@@ -102,14 +102,14 @@ The simulator starts both the API server (port 4500) and the SPA dev server (por
 ### Bolt configuration
 
 ```ts
-import { App } from "@slack/bolt";
+import { App } from '@slack/bolt';
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
   signingSecret: process.env.SLACK_SIGNING_SECRET,
   socketMode: true,
   appToken: process.env.SLACK_APP_TOKEN,
-  clientOptions: { slackApiUrl: "http://localhost:4500/api/" },
+  clientOptions: { slackApiUrl: 'http://localhost:4500/api/' },
 });
 ```
 

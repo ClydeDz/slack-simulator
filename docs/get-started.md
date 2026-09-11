@@ -11,7 +11,7 @@ toc: true
 Clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/your-org/slack-simulator.git
+git clone https://github.com/clydedz/slack-simulator.git
 cd slack-simulator
 yarn install
 ```
@@ -33,7 +33,7 @@ The simulator comes pre-seeded with a sample workspace, users, and channels so y
 - **Channels**: Public and private channels where users can post messages and bots can respond
 - **Direct Messages**: Private conversations between two or more users
 - **Apps**: Private conversations between users and bots
-- **Identity Switcher**: At the bottom-left of the screen, use this to switch between different users to test multi-user scenarios
+- **Identity Switcher**: At the bottom-left of the screen, use this to switch between locally mocked users for testing multi-user scenarios. No email signup or external accounts are required.
 - **Tabs**: At the top-center of the screen, navigation to switch between Workspace, API, Logs, and Database views
 - **Theme Switcher**: At the top-right of the screen, use this to switch between Slack Light and Slack Dark themes
 - **Reset workspace**: At the top-right of the screen, use this to reset the workspace to its initial state
@@ -135,17 +135,17 @@ This file defines the apps that can connect to the simulator. You can have a sin
     // Required: Whether the app uses Socket Mode (true) or HTTP mode (false)
     "socketModeEnabled": true,
 
-    // Required when socketModeEnabled is false
+    // Required in http mode i.e. when socketModeEnabled is false
     // Your app's endpoint URL for receiving events
     "requestUrl": "http://localhost:4003/slack/events",
 
     // Required: Bot user token (starts with xoxb-)
     "botToken": "xoxb-slacksim-mybot",
 
-    // Required: App-level token for Socket Mode (starts with xapp-)
+    // Required in socket mode: App-level token for Socket Mode (starts with xapp-)
     "appToken": "xapp-slacksim-mybot",
 
-    // Required: App signing secret for request verification
+    // Required in http mode: App signing secret for request verification
     "signingSecret": "slacksim-secret-mybot",
 
     // Optional: Events your app listens to
@@ -183,19 +183,19 @@ This file defines the apps that can connect to the simulator. You can have a sin
 2. Update your Bolt app configuration to uses those tokens and secrets. It may look something like this:
 
 ```javascript
-import { App } from "@slack/bolt";
+import { App } from '@slack/bolt';
 
 const app = new App({
-  token: "xoxb-slacksim-mybot", // From apps.json
-  signingSecret: "slacksim-secret-mybot", // From apps.json
+  token: 'xoxb-slacksim-mybot', // From apps.json
+  signingSecret: 'slacksim-secret-mybot', // From apps.json
   socketMode: true,
-  appToken: "xapp-slacksim-mybot", // From apps.json
+  appToken: 'xapp-slacksim-mybot', // From apps.json
   clientOptions: {
-    slackApiUrl: "http://localhost:4500/api/", // Critical: Point to simulator
+    slackApiUrl: 'http://localhost:4500/api/', // Critical: Point to simulator
   },
 });
 
-app.message("hello", async ({ message, say }) => {
+app.message('hello', async ({ message, say }) => {
   await say(`Hello, <@${message.user}>!`);
 });
 
@@ -205,16 +205,16 @@ app.start();
 3. Or if you're using the `@slack/web-api` directly, it may look something like this:
 
 ```javascript
-import { WebClient } from "@slack/web-api";
+import { WebClient } from '@slack/web-api';
 
-const botToken = "xoxb-slacksim-default"; // From apps.json
+const botToken = 'xoxb-slacksim-default'; // From apps.json
 
 const slack = new WebClient(botToken, {
-  slackApiUrl: "http://localhost:4500/api/", // Critical: Point to simulator
+  slackApiUrl: 'http://localhost:4500/api/', // Critical: Point to simulator
 });
 
 const posted = await slack.chat.postMessage({
-  channel: "C001", // #general
+  channel: 'C001', // #general
   text: "Hey everyone! How's it going?",
 });
 ```
