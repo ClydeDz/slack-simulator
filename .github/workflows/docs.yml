@@ -27,6 +27,8 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Build docs
+        env:
+          ELEVENTY_BASE_PATH: /slack-simulator
         run: yarn docs:build
 
       - name: Deploy to GitHub Pages

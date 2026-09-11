@@ -46,8 +46,8 @@ interface SeedApp {
   botUserId: string;
   botUserName: string;
   botToken: string;
-  appToken: string;
-  signingSecret: string;
+  appToken?: string;
+  signingSecret?: string;
   requestUrl?: string;
   subscribedEvents?: string[];
   socketModeEnabled: boolean;
@@ -210,8 +210,8 @@ export async function seedDatabase(): Promise<void> {
         app.botUserId,
         app.botUserName,
         app.botToken,
-        app.appToken,
-        app.signingSecret,
+        app.appToken ?? "",
+        app.signingSecret ?? "",
         app.requestUrl ?? null,
         JSON.stringify(app.subscribedEvents ?? []),
         app.socketModeEnabled ? 1 : 0,
