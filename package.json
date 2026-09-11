@@ -13,6 +13,7 @@
     "docs:dev": "cd docs && eleventy --serve",
     "docs:build": "cd docs && eleventy",
     "test": "vitest",
+    "test:ci": "vitest run",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage --run"
   },

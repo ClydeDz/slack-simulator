@@ -12,3 +12,4 @@ docs/_site/
 .env
 .env.local
 .env.*.local
+coverage
