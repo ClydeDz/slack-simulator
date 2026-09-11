@@ -1,17 +1,20 @@
-name: Deploy Docs
+name: CI
 
 on:
   push:
     branches: [main]
-    paths:
+    paths-ignore:
+      - 'docs/**'
+  pull_request:
+    paths-ignore:
       - 'docs/**'
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  deploy:
+  verify:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -26,12 +29,11 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Build docs
-        run: yarn docs:build
+      - name: Typecheck
+        run: yarn typecheck
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/_site
-          enable_jekyll: false
+      - name: Test
+        run: yarn test:ci
+
+      - name: Build
+        run: yarn build
