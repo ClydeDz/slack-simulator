@@ -17,10 +17,10 @@ The simulator provides a local development environment for Slack app developers 
 - Built-in debugging tools (logs, database inspector)
 
 ## Documentation
-- Get Started: https://slack-simulator.dev/get-started/
-- Product Spec: https://slack-simulator.dev/product-spec/
-- Tech Spec: https://slack-simulator.dev/tech-spec/
-- Capabilities: https://slack-simulator.dev/capabilities/
+- Get Started: https://clydedz.github.io/slack-simulator/get-started/
+- Product Spec: https://clydedz.github.io/slack-simulator/product-spec/
+- Tech Spec: https://clydedz.github.io/slack-simulator/tech-spec/
+- Capabilities: https://clydedz.github.io/slack-simulator/capabilities/
 
 ## Stack
 - Backend: Node.js, TypeScript, Fastify, SQLite
