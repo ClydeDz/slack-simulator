@@ -14,7 +14,10 @@
       content="A local, browser-based simulator for developing and testing Slack apps and bots. Build Slack apps faster with full control over your test environment."
     />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://github.com" />
+    <meta
+      property="og:url"
+      content="https://clydedz.github.io/slack-simulator/"
+    />
     <meta property="og:image" content="images/workspace.png" />
     <meta property="og:site_name" content="Slack Simulator" />
 
@@ -81,7 +84,7 @@
         --slacksim-color-primary-disabled: #d1d1d1;
 
         /* Typography */
-        --slacksim-font-body: "Lato", system-ui, -apple-system, sans-serif;
+        --slacksim-font-body: 'Lato', system-ui, -apple-system, sans-serif;
         --slacksim-font-size-sm: 12px;
         --slacksim-font-size-md: 14px;
         --slacksim-font-size-lg: 16px;
@@ -185,7 +188,7 @@
       /* Hero */
       .hero {
         background: var(--slacksim-color-bg-secondary);
-        padding: 80px 20px;
+        padding: 60px 20px;
         text-align: center;
       }
 
@@ -219,7 +222,7 @@
 
       /* Features */
       .features {
-        padding: 80px 20px;
+        padding: 60px 20px;
         max-width: 1200px;
         margin: 0 auto;
       }
@@ -261,7 +264,7 @@
       /* Capabilities */
       .capabilities {
         background: var(--slacksim-color-bg-secondary);
-        padding: 80px 20px;
+        padding: 60px 20px;
       }
 
       .capabilities-container {
@@ -411,7 +414,7 @@
 
       /* Carousel */
       .carousel {
-        padding: 80px 20px;
+        padding: 60px 20px;
         background: var(--slacksim-color-bg);
       }
 
@@ -790,7 +793,7 @@
       }
 
       .docs-content hr::after {
-        content: "•••";
+        content: '•••';
         color: var(--slacksim-color-control-bar-bg);
         font-size: 0.8rem;
         letter-spacing: 0.5rem;
@@ -880,7 +883,11 @@
       <a href="/slack-simulator/product-spec/">Product Spec</a>
       <a href="/slack-simulator/tech-spec/">Tech Spec</a>
       <a href="/slack-simulator/capabilities/">Capabilities</a>
-      <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+      <a
+        href="https://github.com/ClydeDz/slack-simulator/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -893,7 +900,11 @@
           />
         </svg>
       </a>
-      <a href="https://discord.com" target="_blank" rel="noopener noreferrer">
+      <a
+        href="https://discord.gg/jBfYWyf6xB"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -1013,7 +1024,11 @@ Recommendation is to use the Slack Developer Sandbox for <strong>final integrati
         <a href="/slack-simulator/product-spec/">Product Spec</a>
         <a href="/slack-simulator/tech-spec/">Tech Spec</a>
         <a href="/slack-simulator/capabilities/">Capabilities</a>
-        <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+        <a
+          href="https://github.com/ClydeDz/slack-simulator/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -1026,7 +1041,11 @@ Recommendation is to use the Slack Developer Sandbox for <strong>final integrati
             />
           </svg>
         </a>
-        <a href="https://discord.com" target="_blank" rel="noopener noreferrer">
+        <a
+          href="https://discord.gg/jBfYWyf6xB"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -1049,10 +1068,10 @@ Recommendation is to use the Slack Developer Sandbox for <strong>final integrati
 </footer>
  
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const tocLinks = document.querySelectorAll(".toc-item");
+      document.addEventListener('DOMContentLoaded', function () {
+        const tocLinks = document.querySelectorAll('.toc-item');
         const headings = document.querySelectorAll(
-          ".docs-content h1, .docs-content h2, .docs-content h3, .docs-content h4",
+          '.docs-content h1, .docs-content h2, .docs-content h3, .docs-content h4'
         );
 
         // Function to set active TOC link based on scroll position
@@ -1083,22 +1102,22 @@ Recommendation is to use the Slack Developer Sandbox for <strong>final integrati
           }
 
           // Remove active class from all links
-          tocLinks.forEach((link) => link.classList.remove("active"));
+          tocLinks.forEach((link) => link.classList.remove('active'));
 
           // Add active class to current heading's link
           if (currentHeading) {
-            const id = currentHeading.getAttribute("id");
+            const id = currentHeading.getAttribute('id');
             const activeLink = document.querySelector(
-              `.toc-item[href="#${id}"]`,
+              `.toc-item[href="#${id}"]`
             );
             if (activeLink) {
-              activeLink.classList.add("active");
+              activeLink.classList.add('active');
             }
           }
         }
 
         // Set active link on scroll
-        window.addEventListener("scroll", setActiveTocLink);
+        window.addEventListener('scroll', setActiveTocLink);
         setActiveTocLink(); // Initial call
 
         // Handle initial hash on page load
@@ -1107,7 +1126,7 @@ Recommendation is to use the Slack Developer Sandbox for <strong>final integrati
           const targetHeading = document.getElementById(targetId);
           if (targetHeading) {
             setTimeout(() => {
-              targetHeading.scrollIntoView({ behavior: "smooth" });
+              targetHeading.scrollIntoView({ behavior: 'smooth' });
             }, 100);
           }
         }
