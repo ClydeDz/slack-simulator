@@ -17,39 +17,39 @@
   "users": [
     {
       "id": "U001",
-      "username": "ada",
-      "fullName": "Ada Lovelace",
-      "email": "ada@slacksim.test",
-      "avatarSeed": "adalovelace"
+      "username": "clara",
+      "fullName": "Clara Lovelace",
+      "email": "clara@slacksim.test",
+      "avatarSeed": "claralovelace"
     },
     {
       "id": "U002",
       "username": "alan",
-      "fullName": "Alan Turing",
+      "fullName": "Alan Byron",
       "email": "alan@slacksim.test",
       "avatarSeed": "alan"
     },
     {
       "id": "U003",
       "username": "grace",
-      "fullName": "Grace Hopper",
+      "fullName": "Grace Borg",
       "email": "grace@slacksim.test",
       "avatarSeed": "gracehopper"
     },
     {
       "id": "U004",
-      "username": "linus",
-      "fullName": "Linus Torvalds",
-      "email": "linus@slacksim.test",
-      "avatarSeed": "linus"
+      "username": "harriet",
+      "fullName": "Harriet Hayes",
+      "email": "harriet@slacksim.test",
+      "avatarSeed": "harriethayes"
     },
     {
       "id": "U005",
-      "username": "margaret",
-      "fullName": "Margaret Hamilton",
-      "email": "margaret@slacksim.test",
-      "avatarSeed": "margaret",
-      "avatarUrl": "/config/avatars/margaret.png"
+      "username": "elena",
+      "fullName": "Elena Pendelton",
+      "email": "elena@slacksim.test",
+      "avatarSeed": "elena",
+      "avatarUrl": "/config/avatars/elena.png"
     }
   ],
   "channels": [
@@ -165,7 +165,7 @@
       "id": "M012",
       "channel": "D003",
       "user": "U005",
-      "text": "Thursday works for me. Should we loop in Linus too?",
+      "text": "Thursday works for me. Should we loop in Harriet too?",
       "ts_offset": 15
     },
     {

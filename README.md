@@ -6,10 +6,10 @@ A local, browser-based simulator for developing and testing Slack apps and bots 
 
 # Documentation
 
-- [Website](./URL)
-- [Getting started](./URL)
-- [Product specification](./URL)
-- [Technical specification](./URL)
+- [Website](https://clydedz.github.io/slack-simulator/)
+- [Getting started](https://clydedz.github.io/slack-simulator/get-started/)
+- [Product specification](https://clydedz.github.io/slack-simulator/product-spec/)
+- [Technical specification](https://clydedz.github.io/slack-simulator/tech-spec/)
 - [View complementary demo slack apps](https://github.com/ClydeDz/slack-app-showcase)
 - [Discord](https://discord.gg/jBfYWyf6xB)
 

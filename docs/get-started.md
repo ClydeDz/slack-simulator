@@ -66,12 +66,11 @@ Add more users:
 ```json
 "users": [
   {
-    "id": "U004",
-    "username": "grace",
-    "fullName": "Grace Hopper",
-    "email": "grace@slacksim.test",
-    "avatarSeed": "gracehopper",
-    "avatarUrl": "/config/avatars/custom-avatar.png"
+    "id": "U001",
+    "username": "clara",
+    "fullName": "Clara Lovelace",
+    "email": "clara@slacksim.test",
+    "avatarSeed": "claralovelace"
   }
 ]
 ```
@@ -229,4 +228,4 @@ Finally, start the simulator, then start your app. If you haven't already reset 
 
 ## Sample Apps
 
-The `apps.json` file comes with a few sample apps configured already. These apps correspond to the example apps in the [Slack Apps Showcase](https://github.com/) repository. Feel free to clone that repository and try it along with the simulator.
+The `apps.json` file comes with a few sample apps configured already. These apps correspond to the example apps in the [Slack Apps Showcase](https://github.com/ClydeDz/slack-app-showcase/) repository. Feel free to clone that repository and try it along with the simulator.
