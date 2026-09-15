@@ -575,14 +575,18 @@ export default function AdminView() {
               label="Bot Token  (SLACK_BOT_TOKEN)"
               value={app.botToken}
             />
-            <CopyField
-              label="App Token  (SLACK_APP_TOKEN)"
-              value={app.appToken}
-            />
-            <CopyField
-              label="Signing Secret  (SLACK_SIGNING_SECRET)"
-              value={app.signingSecret}
-            />
+            {app.appToken && (
+              <CopyField
+                label="App Token  (SLACK_APP_TOKEN)"
+                value={app.appToken}
+              />
+            )}
+            {app.signingSecret && (
+              <CopyField
+                label="Signing Secret  (SLACK_SIGNING_SECRET)"
+                value={app.signingSecret}
+              />
+            )}
             <CopyField
               label="API Base URL  (slackApiUrl)"
               value="http://localhost:4500/api/"
