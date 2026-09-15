@@ -424,7 +424,6 @@
       .carousel-viewport {
         position: relative;
         background: var(--slacksim-color-bg-secondary);
-        border-radius: var(--slacksim-radius-lg);
         overflow: hidden;
       }
 
@@ -442,7 +441,7 @@
       }
 
       .carousel-image-container {
-        aspect-ratio: 16/9;
+        aspect-ratio: auto;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1200,36 +1199,115 @@
               <div class="carousel-image-container">
                 <img
                   class="carousel-image"
-                  src="images/workspace.png"
+                  src="images/workspace-tab.png"
                   alt="Description"
                 />
               </div>
               <div class="carousel-caption">
-                Workspace view showing channel list and message pane
+                Workspace tab showing the channel list and conversations in a
+                channel including threads, direct messages, and apps.
               </div>
             </div>
             <div class="carousel-slide">
               <div class="carousel-image-container">
                 <img
                   class="carousel-image"
-                  src="images/api.png"
+                  src="images/apps-tab.png"
                   alt="Description"
                 />
               </div>
               <div class="carousel-caption">
-                API/Admin console with credentials and event delivery
+                Apps tab showing what the app configuration page looks like.
               </div>
             </div>
             <div class="carousel-slide">
               <div class="carousel-image-container">
                 <img
                   class="carousel-image"
-                  src="images/database.png"
+                  src="images/logs-tab.png"
                   alt="Description"
                 />
               </div>
               <div class="carousel-caption">
-                Database inspector for debugging state
+                Logs tab showing a list of different type of events logged in
+                the simulator.
+              </div>
+            </div>
+            <div class="carousel-slide">
+              <div class="carousel-image-container">
+                <img
+                  class="carousel-image"
+                  src="images/database-tab.png"
+                  alt="Description"
+                />
+              </div>
+              <div class="carousel-caption">
+                Database tab showing a visualisation of the tables and the
+                underlying data used by the simulator.
+              </div>
+            </div>
+            <div class="carousel-slide">
+              <div class="carousel-image-container">
+                <img
+                  class="carousel-image"
+                  src="images/block-kit.png"
+                  alt="Description"
+                />
+              </div>
+              <div class="carousel-caption">
+                Slack Simulator supports Block Kit blocks, conditional elements,
+                multi-step modals, and more.
+              </div>
+            </div>
+            <div class="carousel-slide">
+              <div class="carousel-image-container">
+                <img
+                  class="carousel-image"
+                  src="images/app-dm.png"
+                  alt="Description"
+                />
+              </div>
+              <div class="carousel-caption">
+                Slack Simulator also supports receiving a direct message from a
+                Slack App.
+              </div>
+            </div>
+            <div class="carousel-slide">
+              <div class="carousel-image-container">
+                <img
+                  class="carousel-image"
+                  src="images/group-dm.png"
+                  alt="Description"
+                />
+              </div>
+              <div class="carousel-caption">
+                Image showing group messages and link unfurling.
+              </div>
+            </div>
+            <div class="carousel-slide">
+              <div class="carousel-image-container">
+                <img
+                  class="carousel-image"
+                  src="images/slash-cmds.png"
+                  alt="Description"
+                />
+              </div>
+              <div class="carousel-caption">
+                The Slack Simulator input supports slash commands, tagging users
+                and apps, emoji and hashtags for channels.
+              </div>
+            </div>
+            <div class="carousel-slide">
+              <div class="carousel-image-container">
+                <img
+                  class="carousel-image"
+                  src="images/ephemeral-msgs.png"
+                  alt="Description"
+                />
+              </div>
+              <div class="carousel-caption">
+                Slack Simulator also supports ephemeral messages sent from the
+                App.
               </div>
             </div>
           </div>
@@ -1257,6 +1335,12 @@
             ></button>
             <button class="carousel-dot" data-index="1"></button>
             <button class="carousel-dot" data-index="2"></button>
+            <button class="carousel-dot" data-index="3"></button>
+            <button class="carousel-dot" data-index="4"></button>
+            <button class="carousel-dot" data-index="5"></button>
+            <button class="carousel-dot" data-index="6"></button>
+            <button class="carousel-dot" data-index="7"></button>
+            <button class="carousel-dot" data-index="8"></button>
           </div>
           <button class="carousel-nav carousel-nav--next">
             <svg
