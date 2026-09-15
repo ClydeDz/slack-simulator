@@ -8,6 +8,7 @@
       "name": "Demo Bot",
       "description": "Responds to a 'hello' with a reply in channel, responds to a 'ping' with a reply in thread, and responds to a 'ghost' message with an ephemeral reply in channel visible only to the sender. Send '/echo hey' to echo your message back to the channel. Also responds to 'app_mention' events.",
       "socketModeEnabled": true,
+      "requestUrl": "http://localhost:4002/slack/events",
       "botToken": "xoxb-slacksim-demo",
       "appToken": "xapp-slacksim-demo",
       "subscribedEvents": ["message", "app_mention"],
