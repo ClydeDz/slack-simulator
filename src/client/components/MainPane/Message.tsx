@@ -546,11 +546,19 @@ export default function Message({ message, inThread = false }: Props) {
           >
             {message.reactions.map((reaction) => {
               const isMine = reaction.users.includes(actingUserId);
+              const reactionUserNames = reaction.users
+                .map((userId) => {
+                  const user = users.find((candidate) => candidate.id === userId);
+                  if (user) return user.fullName;
+                  const app = apps.find((candidate) => candidate.botUserId === userId);
+                  return app?.name ?? userId;
+                })
+                .join(", ");
               return (
                 <button
                   key={reaction.name}
                   onClick={() => handleReactionPillClick(reaction.name)}
-                  title={reaction.users.join(", ")}
+                  title={reactionUserNames}
                   style={{
                     display: "inline-flex",
                     alignItems: "center",

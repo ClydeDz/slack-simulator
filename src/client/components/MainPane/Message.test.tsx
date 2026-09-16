@@ -6,7 +6,7 @@ import type { Message as MessageType } from "@shared/types";
 
 // Mock dependencies
 vi.mock("../../store", () => ({
-  useStore: vi.fn(),
+  useStore: Object.assign(vi.fn(), { getState: vi.fn() }),
 }));
 
 vi.mock("../../lib/api", () => ({
@@ -118,6 +118,9 @@ describe("Message Component", () => {
       setActiveChannel: mockSetActiveChannel,
       workspace: mockWorkspace,
     } as any);
+    vi.mocked(useStore).getState.mockReturnValue({
+      workspace: mockWorkspace,
+    } as any);
     return render(<Message message={message} />);
   };
 
@@ -168,9 +171,20 @@ describe("Message Component", () => {
       expect(screen.getByText(/\d{1,2}:\d{2}/)).toBeInTheDocument();
     });
 
-    it("should render reactions", () => {
-      // Skip this test - emoji rendering requires complex getState mocking
-      expect(true).toBe(true);
+    it("should show full names in reaction tooltip", () => {
+      const message: MessageType = {
+        id: "M001",
+        ts: "1234567890.000000",
+        user: "U001",
+        channel: "C001",
+        text: "Hello",
+        reactions: [{ name: "thumbsup", users: ["U001", "U002"] }],
+      };
+
+      renderMessage(message);
+
+      expect(screen.getByTitle("Alice, Bob")).toBeInTheDocument();
+      expect(screen.queryByTitle("U001, U002")).not.toBeInTheDocument();
     });
 
     it("should render thread indicators", () => {
