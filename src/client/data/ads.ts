@@ -155,7 +155,7 @@ const ADS: Ad[] = [
     id: 22,
     name: 'Canva',
     description:
-      'Design anything—presentations, posters, logos—no experience needed. Try Canva',
+      'Design anything—presentations, posters, websites, t-shirts, logos—no experience needed. Try Canva',
     link: 'https://www.canva.com/join/goldfish-dices-knapsack',
   },
   {
@@ -169,7 +169,7 @@ const ADS: Ad[] = [
     id: 24,
     name: 'Glide Agentic AI',
     description:
-      "Deploy AI agents that handle your team's busywork for you. Explore Glide Agentic AI",
+      "Deploy AI agents that handle your team's busywork for you with human-level performance. Explore Glide Agentic AI",
     link: 'https://join.glideapps.com/agentic-ai',
   },
   {
@@ -185,6 +185,145 @@ const ADS: Ad[] = [
     description:
       'Hire and pay global talent without the payroll complexity. Explore Deel',
     link: 'https://get.deel.com/npzwes7107vh',
+  },
+  {
+    id: 27,
+    name: "Clyde's Canva Marketplace",
+    description:
+      'Bring my design assets into your Canva presentations, posters, and creative projects',
+    link: 'https://www.canva.com/p/clydedsouza/',
+  },
+  {
+    id: 28,
+    name: 'Mama Tell Me A Story (Amazon)',
+    description:
+      "Twelve engaging bedtime stories designed to spark your child's imagination",
+    link: 'https://bit.ly/MamaTellMeAStoryKindle',
+  },
+  {
+    id: 29,
+    name: 'Mama Tell Me A Story (Google)',
+    description:
+      "Twelve engaging bedtime stories designed to spark your child's imagination",
+    link: 'http://bit.ly/MamaTellMeAStoryGoogleBooks',
+  },
+  {
+    id: 30,
+    name: 'Mama Tell Me A Story (Apple Books)',
+    description:
+      "Twelve engaging bedtime stories designed to spark your child's imagination",
+    link: 'https://bit.ly/MamaTellMeAStoryApple',
+  },
+  {
+    id: 31,
+    name: 'AI Tell Me A Story (Amazon)',
+    description:
+      'Fifty captivating stories, each with a life lesson to inspire young imaginations',
+    link: 'https://bit.ly/aitellmeastory',
+  },
+  {
+    id: 32,
+    name: "Clyde's YouTube Channel",
+    description:
+      'Follow along as I explore products, tools, and practical how-tos. Subscribe to my YouTube channel',
+    link: 'https://www.youtube.com/@clydedz',
+  },
+  {
+    id: 33,
+    name: '4-7-8 Breathing',
+    description:
+      'A simple 4-7-8 breathing exercise, right in your new tab, whenever you need a moment to reset',
+    link: 'https://bit.ly/478breathing-ext',
+  },
+  {
+    id: 34,
+    name: 'Figma Chrome Extension Template',
+    description:
+      'Design your Chrome extension assets faster with ready-made Figma frames and components',
+    link: 'https://www.figma.com/community/file/1127061326249481158',
+  },
+  {
+    id: 35,
+    name: 'Retrospective in the Island of Golocans',
+    description:
+      'Take your team on a fun island adventure with this award-winning retrospective template',
+    link: 'https://miro.com/miroverse/retrospective-in-the-island-of-golocans/',
+  },
+  {
+    id: 36,
+    name: 'Whatchya Looking At? Dot Grid Notebook',
+    description:
+      'A bold dotted notebook for writing, sketching, doodling, and capturing ideas. Buy my book from Amazon',
+    link: 'https://www.amazon.com/Whatchya-Looking-Dot-Grid-Notebook/dp/B0948LNSWL',
+  },
+  {
+    id: 37,
+    name: 'The Ultimate Sudoku Book',
+    description:
+      'Challenge yourself with 240 Sudoku puzzles and earn badges as you level up. Buy my book from Amazon',
+    link: 'https://www.amazon.com/Ultimate-Sudoku-Puzzles-Badges-After/dp/B088VYT3BH',
+  },
+  {
+    id: 38,
+    name: 'Tic-Tac-Toe 1,000 Games',
+    description:
+      'Keep the classic game going with 1,000 Tic-Tac-Toe games for friends and family. Buy my book from Amazon',
+    link: 'https://www.amazon.com/Tic-Tac-Toe-Games-Play-Friends-Family/dp/B088N5HR9G',
+  },
+  {
+    id: 39,
+    name: 'A Coffee and Chocolate Sketchbook',
+    description:
+      'A blank canvas for drawing, sketching, doodling, writing, or painting. Buy my book from Amazon',
+    link: 'https://www.amazon.com/Coffee-Chocolate-Sketchbook-Notebook-Sketching/dp/B088N93LDR',
+  },
+  {
+    id: 40,
+    name: 'Clyde on Amazon',
+    description:
+      'Explore my collection of bedtime stories, sketchbooks, activity books, colouring books, and more',
+    link: 'http://bit.ly/clyde-amzn',
+  },
+  {
+    id: 41,
+    name: 'Loyalty Cards Template',
+    description:
+      'Simplify loyalty card management with a ready-to-use Glide app',
+    link: 'https://www.glideapps.com/templates/loyalty-cards-ll',
+  },
+  {
+    id: 42,
+    name: 'Feedback Template',
+    description:
+      'Collect and organise valuable customer feedback with a ready-to-use Glide app',
+    link: 'https://www.glideapps.com/templates/feedback-fy',
+  },
+  {
+    id: 43,
+    name: 'Ultimate Wealth Distribution Template',
+    description:
+      'Track your investments, assets, debts, and expenses in one powerful Glide app',
+    link: 'https://www.glideapps.com/templates/ultimate-wealth-distribution-jd',
+  },
+  {
+    id: 44,
+    name: "Clyde's newsletter",
+    description: 'Sign up for a freebie and get the occasional email from me',
+    link: 'https://clyde-dsouza.kit.com/newsletter',
+  },
+  {
+    id: 45,
+    name: 'ThorData',
+    description:
+      'Access scalable proxy infrastructure for reliable global web data collection and AI data workflows. Try ThorData',
+    link: 'https://affiliate.thordata.com/3d50l61160s0',
+  },
+  {
+    id: 46,
+    name: 'Wegic',
+    description:
+      'Build websites with conversational AI, payments, lead capture, and automated optimisation. Try Wegic',
+    link: 'https://try.wegic.ai/8wlhdjr92v60',
   },
 ];
 
