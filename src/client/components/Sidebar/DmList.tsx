@@ -1,6 +1,6 @@
-import React from "react";
-import { useStore } from "../../store";
-import Avatar from "../Avatar";
+import React from 'react';
+import { useStore } from '../../store';
+import Avatar from '../Avatar';
 
 export default function DmList() {
   const {
@@ -17,10 +17,10 @@ export default function DmList() {
 
   const dms = channels.filter(
     (c) =>
-      (c.type === "im" || c.type === "mpim") &&
+      (c.type === 'im' || c.type === 'mpim') &&
       c.members.includes(actingUserId) &&
       // Exclude DMs where the only other member is a bot — those live in the Apps section
-      c.members.some((id) => id !== actingUserId && !botUserIds.has(id)),
+      c.members.some((id) => id !== actingUserId && !botUserIds.has(id))
   );
 
   function resolveIdentity(uid: string): {
@@ -46,8 +46,8 @@ export default function DmList() {
     if (otherMembers.length === 0) {
       const self = users.find((u) => u.id === actingUserId);
       return {
-        label: self?.fullName ?? "You",
-        seed: self?.avatarSeed ?? "default",
+        label: self?.fullName ?? 'You',
+        seed: self?.avatarSeed ?? 'default',
         url: self?.avatarUrl,
       };
     }
@@ -57,24 +57,24 @@ export default function DmList() {
     // Multiple members — label all, avatar from first
     const names = otherMembers
       .map((uid) => resolveIdentity(uid).label)
-      .join(", ");
+      .join(', ');
     const { seed, url } = resolveIdentity(otherMembers[0]);
     return { label: names, seed, url };
   }
 
   return (
-    <div style={{ marginTop: "var(--slacksim-space-4)" }}>
+    <div style={{ marginTop: 'var(--slacksim-space-4)' }}>
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "var(--slacksim-space-2)",
-          margin: "1px 8px",
-          padding: "5px 8px",
-          fontSize: "var(--slacksim-font-size-sm)",
-          fontWeight: "var(--slacksim-font-weight-bold)",
-          color: "var(--slacksim-color-sidebar-fg)",
-          letterSpacing: "0.01em",
+          display: 'flex',
+          alignItems: 'center',
+          gap: 'var(--slacksim-space-2)',
+          margin: '1px 8px',
+          padding: '5px 8px',
+          fontSize: 'var(--slacksim-font-size-sm)',
+          fontWeight: 'var(--slacksim-font-weight-bold)',
+          color: 'var(--slacksim-color-sidebar-fg)',
+          letterSpacing: '0.01em',
         }}
       >
         <svg
@@ -86,7 +86,7 @@ export default function DmList() {
             height: 16,
             flexShrink: 0,
             opacity: 0.75,
-            color: "var(--slacksim-color-sidebar-fg)",
+            color: 'var(--slacksim-color-sidebar-fg)',
           }}
         >
           <path
@@ -107,25 +107,25 @@ export default function DmList() {
           <button
             key={channel.id}
             onClick={() => setActiveChannel(channel.id)}
-            className={`ss-sidebar-item${isActive ? " ss-sidebar-item--active" : ""}`}
+            className={`ss-sidebar-item${isActive ? ' ss-sidebar-item--active' : ''}`}
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "var(--slacksim-space-2)",
-              width: "calc(100% - 16px)",
-              margin: "1px 8px",
-              padding: "5px 8px 5px 28px",
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--slacksim-space-2)',
+              width: 'calc(100% - 16px)',
+              margin: '1px 8px',
+              padding: '5px 8px 5px 28px',
               background: isActive
-                ? "var(--slacksim-color-sidebar-active-bg)"
-                : "transparent",
-              border: "none",
-              cursor: "pointer",
-              textAlign: "left",
+                ? 'var(--slacksim-color-sidebar-active-bg)'
+                : 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              textAlign: 'left',
               color: isActive
-                ? "var(--slacksim-color-sidebar-active-fg)"
-                : "var(--slacksim-color-sidebar-fg)",
-              fontSize: "var(--slacksim-font-size-md)",
-              borderRadius: "var(--slacksim-radius-sm)",
+                ? 'var(--slacksim-color-sidebar-active-fg)'
+                : 'var(--slacksim-color-sidebar-fg)',
+              fontSize: 'var(--slacksim-font-size-md)',
+              borderRadius: 'var(--slacksim-radius-sm)',
             }}
           >
             <Avatar seed={seed} size={20} url={url} />
@@ -133,10 +133,10 @@ export default function DmList() {
               style={{
                 flex: 1,
                 fontWeight: hasUnread
-                  ? "var(--slacksim-font-weight-bold)"
+                  ? 'var(--slacksim-font-weight-bold)'
                   : undefined,
                 color: hasUnread
-                  ? "var(--slacksim-color-sidebar-fg-active)"
+                  ? 'var(--slacksim-color-sidebar-fg-active)'
                   : undefined,
               }}
             >
@@ -148,19 +148,19 @@ export default function DmList() {
                   flexShrink: 0,
                   minWidth: 18,
                   height: 18,
-                  padding: "0 5px",
-                  background: "var(--slacksim-color-sidebar-badge-bg)",
-                  color: "#fff",
-                  borderRadius: "var(--slacksim-radius-pill)",
+                  padding: '0 5px',
+                  background: 'var(--slacksim-color-sidebar-badge-bg)',
+                  color: '#fff',
+                  borderRadius: 'var(--slacksim-radius-pill)',
                   fontSize: 11,
-                  fontWeight: "var(--slacksim-font-weight-bold)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  fontWeight: 'var(--slacksim-font-weight-bold)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   lineHeight: 1,
                 }}
               >
-                {unread > 99 ? "99+" : unread}
+                {unread > 99 ? '99+' : unread}
               </span>
             )}
           </button>

@@ -1,9 +1,9 @@
-import React from "react";
-import { useStore } from "../../store";
-import MessageList from "./MessageList";
-import Composer from "./Composer";
-import ChannelChip from "./ChannelChip";
-import { controlApi } from "../../lib/api";
+import React from 'react';
+import { useStore } from '../../store';
+import MessageList from './MessageList';
+import Composer from './Composer';
+import ChannelChip from './ChannelChip';
+import { controlApi } from '../../lib/api';
 
 export default function MainPane() {
   const { activeChannelId, channels, apps, users, actingUserId } = useStore();
@@ -15,12 +15,12 @@ export default function MainPane() {
       <div
         style={{
           flex: 1,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "var(--slacksim-color-bg)",
-          color: "var(--slacksim-color-fg-muted)",
-          fontSize: "var(--slacksim-font-size-lg)",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'var(--slacksim-color-bg)',
+          color: 'var(--slacksim-color-fg-muted)',
+          fontSize: 'var(--slacksim-font-size-lg)',
         }}
       >
         Select a channel to start messaging
@@ -28,7 +28,7 @@ export default function MainPane() {
     );
   }
 
-  const isIm = channel.type === "im" || channel.type === "mpim";
+  const isIm = channel.type === 'im' || channel.type === 'mpim';
 
   // Resolve display names for all DM members
   const dmMemberNames = isIm
@@ -44,7 +44,7 @@ export default function MainPane() {
   const headerName = isIm
     ? (() => {
         const others = channel.members.filter((id) => id !== actingUserId);
-        if (others.length === 0) return dmMemberNames.join(", ");
+        if (others.length === 0) return dmMemberNames.join(', ');
         return others
           .map((id) => {
             const u = users.find((u) => u.id === id);
@@ -52,23 +52,23 @@ export default function MainPane() {
             const a = apps.find((a) => a.botUserId === id);
             return a?.name ?? id;
           })
-          .join(", ");
+          .join(', ');
       })()
     : channel.name;
 
   const isMember = channel.members.includes(actingUserId);
 
   const humanCount = channel.members.filter((id) =>
-    users.some((u) => u.id === id),
+    users.some((u) => u.id === id)
   ).length;
   const botCount = apps.length;
   const memberLabel = !isIm
     ? humanCount > 0 && botCount > 0
-      ? `${humanCount} members and ${botCount} ${botCount === 1 ? "app" : "apps"}`
+      ? `${humanCount} members and ${botCount} ${botCount === 1 ? 'app' : 'apps'}`
       : humanCount > 0
-        ? `${humanCount} ${humanCount === 1 ? "member" : "members"}`
-        : `${botCount} ${botCount === 1 ? "app" : "apps"}`
-    : "";
+        ? `${humanCount} ${humanCount === 1 ? 'member' : 'members'}`
+        : `${botCount} ${botCount === 1 ? 'app' : 'apps'}`
+    : '';
 
   async function handleJoinLeave() {
     try {
@@ -78,18 +78,18 @@ export default function MainPane() {
         await controlApi.joinChannel(activeChannelId!);
       }
     } catch (e) {
-      console.error("Failed to join/leave channel", e);
+      console.error('Failed to join/leave channel', e);
     }
   }
 
   async function handleArchive() {
     if (!channel) return;
-    const action = channel.archived ? "Unarchive" : "Archive";
+    const action = channel.archived ? 'Unarchive' : 'Archive';
     if (!confirm(`${action} #${channel.name}?`)) return;
     try {
       await controlApi.archiveChannel(activeChannelId!);
     } catch (e) {
-      console.error("Failed to archive/unarchive channel", e);
+      console.error('Failed to archive/unarchive channel', e);
     }
   }
 
@@ -97,34 +97,34 @@ export default function MainPane() {
     <div
       style={{
         flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        background: "var(--slacksim-color-bg)",
-        overflow: "hidden",
+        display: 'flex',
+        flexDirection: 'column',
+        background: 'var(--slacksim-color-bg)',
+        overflow: 'hidden',
         minWidth: 0,
       }}
     >
       {/* Channel header */}
       <div
         style={{
-          height: "var(--slacksim-channel-header-height)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "var(--slacksim-space-5) var(--slacksim-space-5)",
+          height: 'var(--slacksim-channel-header-height)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: 'var(--slacksim-space-5) var(--slacksim-space-5)',
           flexShrink: 0,
-          background: "var(--slacksim-color-bg)",
+          background: 'var(--slacksim-color-bg)',
         }}
       >
         <div
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "var(--slacksim-space-2)",
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--slacksim-space-2)',
           }}
         >
           {!isIm &&
-            (channel.type === "private" ? (
+            (channel.type === 'private' ? (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -137,7 +137,7 @@ export default function MainPane() {
                 strokeLinejoin="round"
                 style={{
                   flexShrink: 0,
-                  color: "var(--slacksim-color-fg-muted)",
+                  color: 'var(--slacksim-color-fg-muted)',
                   marginRight: -2,
                 }}
               >
@@ -157,7 +157,7 @@ export default function MainPane() {
                 strokeLinejoin="round"
                 style={{
                   flexShrink: 0,
-                  color: "var(--slacksim-color-fg-muted)",
+                  color: 'var(--slacksim-color-fg-muted)',
                   marginRight: -2,
                 }}
               >
@@ -169,9 +169,9 @@ export default function MainPane() {
             ))}
           <span
             style={{
-              fontWeight: "var(--slacksim-font-weight-bold)",
-              fontSize: "var(--slacksim-font-size-md)",
-              color: "var(--slacksim-color-fg)",
+              fontWeight: 'var(--slacksim-font-weight-bold)',
+              fontSize: 'var(--slacksim-font-size-md)',
+              color: 'var(--slacksim-color-fg)',
             }}
           >
             {headerName}
@@ -190,9 +190,9 @@ export default function MainPane() {
         {/* Join / Leave + Archive buttons (non-DM channels only) */}
         <div
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "var(--slacksim-space-2)",
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--slacksim-space-2)',
           }}
         >
           {!isIm && !channel.archived && (
@@ -201,19 +201,19 @@ export default function MainPane() {
               className="ss-header-btn-filled"
               style={{
                 background: isMember
-                  ? "var(--slacksim-color-sidebar-badge-bg)"
-                  : "var(--slacksim-color-primary)",
-                color: "var(--slacksim-color-sidebar-fg-active)",
-                border: "none",
-                borderRadius: "var(--slacksim-radius-sm)",
-                padding: "4px 10px",
-                cursor: "pointer",
-                fontSize: "var(--slacksim-font-size-sm)",
-                fontWeight: "var(--slacksim-font-weight-bold)",
-                fontFamily: "var(--slacksim-font-body)",
+                  ? 'var(--slacksim-color-sidebar-badge-bg)'
+                  : 'var(--slacksim-color-primary)',
+                color: 'var(--slacksim-color-sidebar-fg-active)',
+                border: 'none',
+                borderRadius: 'var(--slacksim-radius-sm)',
+                padding: '4px 10px',
+                cursor: 'pointer',
+                fontSize: 'var(--slacksim-font-size-sm)',
+                fontWeight: 'var(--slacksim-font-weight-bold)',
+                fontFamily: 'var(--slacksim-font-body)',
               }}
             >
-              {isMember ? "Leave Channel" : "Join Channel"}
+              {isMember ? 'Leave Channel' : 'Join Channel'}
             </button>
           )}
           {!isIm && (
@@ -221,26 +221,26 @@ export default function MainPane() {
               onClick={handleArchive}
               className={
                 channel.archived
-                  ? "ss-header-btn-filled"
-                  : "ss-header-btn-outline"
+                  ? 'ss-header-btn-filled'
+                  : 'ss-header-btn-outline'
               }
               style={{
                 background: channel.archived
-                  ? "var(--slacksim-color-primary)"
-                  : "transparent",
+                  ? 'var(--slacksim-color-primary)'
+                  : 'transparent',
                 color: channel.archived
-                  ? "var(--slacksim-color-sidebar-fg-active)"
-                  : "var(--slacksim-color-fg-muted)",
-                border: "1px solid var(--slacksim-color-border)",
-                borderRadius: "var(--slacksim-radius-sm)",
-                padding: "4px 10px",
-                cursor: "pointer",
-                fontSize: "var(--slacksim-font-size-sm)",
-                fontWeight: "var(--slacksim-font-weight-bold)",
-                fontFamily: "var(--slacksim-font-body)",
+                  ? 'var(--slacksim-color-sidebar-fg-active)'
+                  : 'var(--slacksim-color-fg-muted)',
+                border: '1px solid var(--slacksim-color-border)',
+                borderRadius: 'var(--slacksim-radius-sm)',
+                padding: '4px 10px',
+                cursor: 'pointer',
+                fontSize: 'var(--slacksim-font-size-sm)',
+                fontWeight: 'var(--slacksim-font-weight-bold)',
+                fontFamily: 'var(--slacksim-font-body)',
               }}
             >
-              {channel.archived ? "Unarchive" : "Archive"}
+              {channel.archived ? 'Unarchive' : 'Archive'}
             </button>
           )}
         </div>
@@ -249,30 +249,30 @@ export default function MainPane() {
       {/* Tab bar */}
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
-          borderBottom: "1px solid var(--slacksim-color-border)",
-          padding: "0 var(--slacksim-space-5)",
+          display: 'flex',
+          alignItems: 'center',
+          borderBottom: '1px solid var(--slacksim-color-border)',
+          padding: '0 var(--slacksim-space-5)',
           flexShrink: 0,
-          background: "var(--slacksim-color-bg)",
-          gap: "var(--slacksim-space-1)",
+          background: 'var(--slacksim-color-bg)',
+          gap: 'var(--slacksim-space-1)',
         }}
       >
         <button
           className="ss-tab-btn"
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "var(--slacksim-space-2)",
-            padding: "10px 4px 9px",
-            background: "transparent",
-            border: "none",
-            borderBottom: "2px solid var(--slacksim-color-fg)",
-            cursor: "pointer",
-            fontSize: "var(--slacksim-font-size-sm)",
-            fontWeight: "var(--slacksim-font-weight-bold)",
-            color: "var(--slacksim-color-fg)",
-            fontFamily: "var(--slacksim-font-body)",
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--slacksim-space-2)',
+            padding: '10px 4px 9px',
+            background: 'transparent',
+            border: 'none',
+            borderBottom: '2px solid var(--slacksim-color-fg)',
+            cursor: 'pointer',
+            fontSize: 'var(--slacksim-font-size-sm)',
+            fontWeight: 'var(--slacksim-font-weight-bold)',
+            color: 'var(--slacksim-color-fg)',
+            fontFamily: 'var(--slacksim-font-body)',
             marginBottom: -1,
           }}
         >

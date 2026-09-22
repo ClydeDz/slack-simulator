@@ -1,24 +1,24 @@
-import React, { useState, useRef, useEffect } from "react";
-import ReactDOM from "react-dom";
-import type { Message as MessageType, User, App, Channel } from "@shared/types";
-import { useStore } from "../../store";
-import Avatar from "../Avatar";
-import ReactionPicker from "./ReactionPicker";
-import BlockKit from "./BlockKit";
-import MentionChip from "./MentionChip";
-import ChannelChip from "./ChannelChip";
-import { controlApi } from "../../lib/api";
+import React, { useState, useRef, useEffect } from 'react';
+import ReactDOM from 'react-dom';
+import type { Message as MessageType, User, App, Channel } from '@shared/types';
+import { useStore } from '../../store';
+import Avatar from '../Avatar';
+import ReactionPicker from './ReactionPicker';
+import BlockKit from './BlockKit';
+import MentionChip from './MentionChip';
+import ChannelChip from './ChannelChip';
+import { controlApi } from '../../lib/api';
 
 function renderText(
   text: string,
   users: User[],
   apps: App[],
   channels: Channel[],
-  onChannelClick: (id: string) => void,
+  onChannelClick: (id: string) => void
 ) {
   // Split on <#C001>, <@U001>, plain @username, plain #channelname
   const parts = text.split(
-    /(<#\w+(?:\|\S*)?>|<@\w+>|@[\w-]+|#[\w-]+|:[a-z0-9_+\-]+:)/g,
+    /(<#\w+(?:\|\S*)?>|<@\w+>|@[\w-]+|#[\w-]+|:[a-z0-9_+\-]+:)/g
   );
   return parts.map((part, i) => {
     // Channel mention: <#C001> or <#C001|general>
@@ -43,13 +43,13 @@ function renderText(
         );
       }
       return (
-        <span key={i} className="ss-mention" style={{ cursor: "default" }}>
+        <span key={i} className="ss-mention" style={{ cursor: 'default' }}>
           {label}
         </span>
       );
     }
     // Plain #channelname format
-    if (part.startsWith("#")) {
+    if (part.startsWith('#')) {
       const name = part.slice(1);
       const channel = channels.find((c) => c.name === name);
       if (channel) {
@@ -102,7 +102,7 @@ function renderText(
       );
     }
     // Plain @username format
-    if (part.startsWith("@")) {
+    if (part.startsWith('@')) {
       const username = part.slice(1);
       const user = users.find((u) => u.username === username);
       const bot = apps.find((a) => a.botUserName === username);
@@ -146,13 +146,13 @@ function renderText(
         <span
           key={i}
           style={{
-            fontFamily: "var(--slacksim-font-mono)",
-            fontSize: "0.85em",
-            background: "var(--slacksim-color-bg-secondary)",
-            border: "1px solid var(--slacksim-color-border)",
-            borderRadius: "var(--slacksim-radius-sm)",
-            padding: "1px 4px",
-            color: "var(--slacksim-color-fg-muted)",
+            fontFamily: 'var(--slacksim-font-mono)',
+            fontSize: '0.85em',
+            background: 'var(--slacksim-color-bg-secondary)',
+            border: '1px solid var(--slacksim-color-border)',
+            borderRadius: 'var(--slacksim-radius-sm)',
+            padding: '1px 4px',
+            color: 'var(--slacksim-color-fg-muted)',
           }}
         >
           {part}
@@ -170,19 +170,19 @@ interface Props {
 
 function formatTs(ts: string): string {
   const date = new Date(parseFloat(ts) * 1000);
-  return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
 
 function formatReplyTime(ts: string): string {
   const date = new Date(parseFloat(ts) * 1000);
   const diffDays = Math.floor((Date.now() - date.getTime()) / 86400000);
   if (diffDays === 0)
-    return `Today at ${date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
-  if (diffDays === 1) return "Yesterday";
+    return `Today at ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+  if (diffDays === 1) return 'Yesterday';
   if (diffDays < 7) return `${diffDays} days ago`;
   if (diffDays < 365) return `${Math.floor(diffDays / 7)} weeks ago`;
   const years = Math.floor(diffDays / 365);
-  return `${years} ${years === 1 ? "year" : "years"} ago`;
+  return `${years} ${years === 1 ? 'year' : 'years'} ago`;
 }
 
 export default function Message({ message, inThread = false }: Props) {
@@ -226,8 +226,8 @@ export default function Message({ message, inThread = false }: Props) {
         return;
       setShowReactionPicker(false);
     }
-    document.addEventListener("mousedown", handleOutside);
-    return () => document.removeEventListener("mousedown", handleOutside);
+    document.addEventListener('mousedown', handleOutside);
+    return () => document.removeEventListener('mousedown', handleOutside);
   }, [showReactionPicker]);
 
   const author = users.find((u) => u.id === message.user);
@@ -242,7 +242,7 @@ export default function Message({ message, inThread = false }: Props) {
     try {
       await controlApi.toggleReaction(message.id, emoji);
     } catch (e) {
-      console.error("Failed to toggle reaction", e);
+      console.error('Failed to toggle reaction', e);
     }
   }
 
@@ -250,7 +250,7 @@ export default function Message({ message, inThread = false }: Props) {
     try {
       await controlApi.toggleReaction(message.id, reactionName);
     } catch (e) {
-      console.error("Failed to toggle reaction", e);
+      console.error('Failed to toggle reaction', e);
     }
   }
 
@@ -258,53 +258,53 @@ export default function Message({ message, inThread = false }: Props) {
     try {
       await controlApi.pinMessage(message.id, !message.pinned);
     } catch (e) {
-      console.error("Failed to toggle pin", e);
+      console.error('Failed to toggle pin', e);
     }
   }
 
   // Render system join/leave/archive messages like a regular message but faint
   const isSystemMsg =
-    message.subtype === "channel_join" ||
-    message.subtype === "channel_leave" ||
-    message.subtype === "channel_archive" ||
-    message.subtype === "channel_unarchive";
+    message.subtype === 'channel_join' ||
+    message.subtype === 'channel_leave' ||
+    message.subtype === 'channel_archive' ||
+    message.subtype === 'channel_unarchive';
   if (isSystemMsg) {
     return (
       <div
         onMouseEnter={() => setShowActions(true)}
         onMouseLeave={() => setShowActions(false)}
         style={{
-          display: "flex",
-          gap: "var(--slacksim-space-3)",
-          padding: "var(--slacksim-space-1) var(--slacksim-space-5)",
+          display: 'flex',
+          gap: 'var(--slacksim-space-3)',
+          padding: 'var(--slacksim-space-1) var(--slacksim-space-5)',
           background: showActions
-            ? "var(--slacksim-color-bg-hover)"
-            : "transparent",
+            ? 'var(--slacksim-color-bg-hover)'
+            : 'transparent',
         }}
       >
         <Avatar seed={seed} size={36} alt={name} url={avatarUrl} />
         <div style={{ flex: 1, minWidth: 0 }}>
           <div
             style={{
-              display: "flex",
-              alignItems: "baseline",
-              gap: "var(--slacksim-space-2)",
-              marginBottom: "var(--slacksim-space-1)",
+              display: 'flex',
+              alignItems: 'baseline',
+              gap: 'var(--slacksim-space-2)',
+              marginBottom: 'var(--slacksim-space-1)',
             }}
           >
             <span
               style={{
-                fontWeight: "var(--slacksim-font-weight-bold)",
-                fontSize: "var(--slacksim-font-size-md)",
-                color: "var(--slacksim-color-fg)",
+                fontWeight: 'var(--slacksim-font-weight-bold)',
+                fontSize: 'var(--slacksim-font-size-md)',
+                color: 'var(--slacksim-color-fg)',
               }}
             >
               {name}
             </span>
             <span
               style={{
-                fontSize: "var(--slacksim-font-size-sm)",
-                color: "var(--slacksim-color-fg-muted)",
+                fontSize: 'var(--slacksim-font-size-sm)',
+                color: 'var(--slacksim-color-fg-muted)',
               }}
             >
               {formatTs(message.ts)}
@@ -312,8 +312,8 @@ export default function Message({ message, inThread = false }: Props) {
           </div>
           <span
             style={{
-              fontSize: "var(--slacksim-font-size-md)",
-              color: "var(--slacksim-color-fg-muted)",
+              fontSize: 'var(--slacksim-font-size-md)',
+              color: 'var(--slacksim-color-fg-muted)',
               lineHeight: 1.46,
             }}
           >
@@ -332,13 +332,13 @@ export default function Message({ message, inThread = false }: Props) {
         setShowReactionPicker(false);
       }}
       style={{
-        display: "flex",
-        gap: "var(--slacksim-space-3)",
-        padding: "var(--slacksim-space-1) var(--slacksim-space-5)",
-        position: "relative",
+        display: 'flex',
+        gap: 'var(--slacksim-space-3)',
+        padding: 'var(--slacksim-space-1) var(--slacksim-space-5)',
+        position: 'relative',
         background: showActions
-          ? "var(--slacksim-color-bg-hover)"
-          : "transparent",
+          ? 'var(--slacksim-color-bg-hover)'
+          : 'transparent',
       }}
     >
       <Avatar seed={seed} size={36} alt={name} url={avatarUrl} />
@@ -347,17 +347,17 @@ export default function Message({ message, inThread = false }: Props) {
         {/* Author + timestamp */}
         <div
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "var(--slacksim-space-2)",
-            marginBottom: "var(--slacksim-space-1)",
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--slacksim-space-2)',
+            marginBottom: 'var(--slacksim-space-1)',
           }}
         >
           <span
             style={{
-              fontWeight: "var(--slacksim-font-weight-bold)",
-              fontSize: "var(--slacksim-font-size-md)",
-              color: "var(--slacksim-color-fg)",
+              fontWeight: 'var(--slacksim-font-weight-bold)',
+              fontSize: 'var(--slacksim-font-size-md)',
+              color: 'var(--slacksim-color-fg)',
             }}
           >
             {name}
@@ -367,11 +367,11 @@ export default function Message({ message, inThread = false }: Props) {
               style={{
                 fontSize: 10,
                 fontWeight: 500,
-                color: "var(--slacksim-color-fg)",
-                background: "var(--slacksim-color-divider)",
-                borderRadius: "var(--slacksim-radius-sm)",
-                padding: "1px 5px",
-                letterSpacing: "0.04em",
+                color: 'var(--slacksim-color-fg)',
+                background: 'var(--slacksim-color-divider)',
+                borderRadius: 'var(--slacksim-radius-sm)',
+                padding: '1px 5px',
+                letterSpacing: '0.04em',
               }}
             >
               APP
@@ -382,28 +382,28 @@ export default function Message({ message, inThread = false }: Props) {
               style={{
                 fontSize: 10,
                 fontWeight: 500,
-                color: "var(--slacksim-color-primary)",
-                background: "var(--slacksim-color-bg-secondary)",
-                border: "1px solid var(--slacksim-color-border)",
-                borderRadius: "var(--slacksim-radius-sm)",
-                padding: "1px 5px",
-                letterSpacing: "0.04em",
+                color: 'var(--slacksim-color-primary)',
+                background: 'var(--slacksim-color-bg-secondary)',
+                border: '1px solid var(--slacksim-color-border)',
+                borderRadius: 'var(--slacksim-radius-sm)',
+                padding: '1px 5px',
+                letterSpacing: '0.04em',
               }}
             >
               Pinned
             </span>
           )}
-          {message.subtype === "ephemeral" && (
+          {message.subtype === 'ephemeral' && (
             <span
               style={{
                 fontSize: 10,
                 fontWeight: 500,
-                color: "var(--slacksim-color-fg-muted)",
-                background: "var(--slacksim-color-bg-secondary)",
-                border: "1px solid var(--slacksim-color-border)",
-                borderRadius: "var(--slacksim-radius-sm)",
-                padding: "1px 5px",
-                letterSpacing: "0.04em",
+                color: 'var(--slacksim-color-fg-muted)',
+                background: 'var(--slacksim-color-bg-secondary)',
+                border: '1px solid var(--slacksim-color-border)',
+                borderRadius: 'var(--slacksim-radius-sm)',
+                padding: '1px 5px',
+                letterSpacing: '0.04em',
               }}
             >
               Only visible to you
@@ -411,8 +411,8 @@ export default function Message({ message, inThread = false }: Props) {
           )}
           <span
             style={{
-              fontSize: "var(--slacksim-font-size-sm)",
-              color: "var(--slacksim-color-fg-muted)",
+              fontSize: 'var(--slacksim-font-size-sm)',
+              color: 'var(--slacksim-color-fg-muted)',
             }}
           >
             {formatTs(message.ts)}
@@ -421,21 +421,21 @@ export default function Message({ message, inThread = false }: Props) {
 
         {/* Message body — blocks take priority; fall back to plain text */}
         {message.blocks?.length ? (
-          <div style={{ marginTop: "var(--slacksim-space-1)" }}>
+          <div style={{ marginTop: 'var(--slacksim-space-1)' }}>
             <BlockKit
               blocks={message.blocks}
               channelId={message.channel}
               messageTs={message.ts}
-              appId={message.appId ?? botApp?.id ?? ""}
+              appId={message.appId ?? botApp?.id ?? ''}
             />
           </div>
         ) : (
           <div
             style={{
-              fontSize: "var(--slacksim-font-size-md)",
-              color: "var(--slacksim-color-fg)",
+              fontSize: 'var(--slacksim-font-size-md)',
+              color: 'var(--slacksim-color-fg)',
               lineHeight: 1.46,
-              wordBreak: "break-word",
+              wordBreak: 'break-word',
             }}
           >
             {renderText(message.text, users, apps, channels, setActiveChannel)}
@@ -446,20 +446,20 @@ export default function Message({ message, inThread = false }: Props) {
         {message.unfurls && Object.keys(message.unfurls).length > 0 && (
           <div
             style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "var(--slacksim-space-2)",
-              marginTop: "var(--slacksim-space-2)",
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 'var(--slacksim-space-2)',
+              marginTop: 'var(--slacksim-space-2)',
             }}
           >
             {Object.entries(message.unfurls).map(([url, attachment]) => (
               <div
                 key={url}
                 style={{
-                  borderLeft: `4px solid ${(attachment as { color?: string }).color ?? "var(--slacksim-color-border)"}`,
-                  paddingLeft: "var(--slacksim-space-3)",
-                  paddingTop: "var(--slacksim-space-2)",
-                  paddingBottom: "var(--slacksim-space-2)",
+                  borderLeft: `4px solid ${(attachment as { color?: string }).color ?? 'var(--slacksim-color-border)'}`,
+                  paddingLeft: 'var(--slacksim-space-3)',
+                  paddingTop: 'var(--slacksim-space-2)',
+                  paddingBottom: 'var(--slacksim-space-2)',
                   maxWidth: 500,
                 }}
               >
@@ -467,11 +467,11 @@ export default function Message({ message, inThread = false }: Props) {
                   <BlockKit
                     blocks={
                       ((attachment as { blocks: unknown[] })
-                        .blocks as MessageType["blocks"]) || []
+                        .blocks as MessageType['blocks']) || []
                     }
                     channelId={message.channel}
                     messageTs={message.ts}
-                    appId={message.appId ?? botApp?.id ?? ""}
+                    appId={message.appId ?? botApp?.id ?? ''}
                   />
                 ) : (
                   <>
@@ -479,8 +479,8 @@ export default function Message({ message, inThread = false }: Props) {
                       .title && (
                       <div
                         style={{
-                          fontWeight: "var(--slacksim-font-weight-bold)",
-                          fontSize: "var(--slacksim-font-size-md)",
+                          fontWeight: 'var(--slacksim-font-weight-bold)',
+                          fontSize: 'var(--slacksim-font-size-md)',
                           marginBottom: 2,
                         }}
                       >
@@ -492,8 +492,8 @@ export default function Message({ message, inThread = false }: Props) {
                             target="_blank"
                             rel="noopener noreferrer"
                             style={{
-                              color: "var(--slacksim-color-accent)",
-                              textDecoration: "none",
+                              color: 'var(--slacksim-color-accent)',
+                              textDecoration: 'none',
                             }}
                           >
                             {(attachment as { title: string }).title}
@@ -506,8 +506,8 @@ export default function Message({ message, inThread = false }: Props) {
                     {(attachment as { text?: string }).text && (
                       <div
                         style={{
-                          fontSize: "var(--slacksim-font-size-sm)",
-                          color: "var(--slacksim-color-fg-muted)",
+                          fontSize: 'var(--slacksim-font-size-sm)',
+                          color: 'var(--slacksim-color-fg-muted)',
                           lineHeight: 1.46,
                         }}
                       >
@@ -517,13 +517,13 @@ export default function Message({ message, inThread = false }: Props) {
                     {(attachment as { image_url?: string }).image_url && (
                       <img
                         src={(attachment as { image_url: string }).image_url}
-                        alt={(attachment as { title?: string }).title ?? ""}
+                        alt={(attachment as { title?: string }).title ?? ''}
                         style={{
                           maxWidth: 360,
                           maxHeight: 200,
-                          marginTop: "var(--slacksim-space-2)",
-                          borderRadius: "var(--slacksim-radius-sm)",
-                          display: "block",
+                          marginTop: 'var(--slacksim-space-2)',
+                          borderRadius: 'var(--slacksim-radius-sm)',
+                          display: 'block',
                         }}
                       />
                     )}
@@ -538,42 +538,46 @@ export default function Message({ message, inThread = false }: Props) {
         {message.reactions.length > 0 && (
           <div
             style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "var(--slacksim-space-1)",
-              marginTop: "var(--slacksim-space-1)",
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: 'var(--slacksim-space-1)',
+              marginTop: 'var(--slacksim-space-1)',
             }}
           >
             {message.reactions.map((reaction) => {
               const isMine = reaction.users.includes(actingUserId);
               const reactionUserNames = reaction.users
                 .map((userId) => {
-                  const user = users.find((candidate) => candidate.id === userId);
+                  const user = users.find(
+                    (candidate) => candidate.id === userId
+                  );
                   if (user) return user.fullName;
-                  const app = apps.find((candidate) => candidate.botUserId === userId);
+                  const app = apps.find(
+                    (candidate) => candidate.botUserId === userId
+                  );
                   return app?.name ?? userId;
                 })
-                .join(", ");
+                .join(', ');
               return (
                 <button
                   key={reaction.name}
                   onClick={() => handleReactionPillClick(reaction.name)}
                   title={reactionUserNames}
                   style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "var(--slacksim-space-1)",
-                    padding: "4px 6px",
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 'var(--slacksim-space-1)',
+                    padding: '4px 6px',
                     background: isMine
-                      ? "var(--slacksim-color-reaction-bg-mine)"
-                      : "var(--slacksim-color-reaction-bg)",
+                      ? 'var(--slacksim-color-reaction-bg-mine)'
+                      : 'var(--slacksim-color-reaction-bg)',
                     border: isMine
-                      ? "1px solid var(--slacksim-color-reaction-border-mine)"
-                      : "1px solid var(--slacksim-color-reaction-border)",
-                    borderRadius: "var(--slacksim-radius-pill)",
-                    cursor: "pointer",
-                    fontSize: "var(--slacksim-font-size-sm)",
-                    color: "var(--slacksim-color-fg)",
+                      ? '1px solid var(--slacksim-color-reaction-border-mine)'
+                      : '1px solid var(--slacksim-color-reaction-border)',
+                    borderRadius: 'var(--slacksim-radius-pill)',
+                    cursor: 'pointer',
+                    fontSize: 'var(--slacksim-font-size-sm)',
+                    color: 'var(--slacksim-color-fg)',
                     lineHeight: 1,
                   }}
                 >
@@ -583,8 +587,8 @@ export default function Message({ message, inThread = false }: Props) {
                   </span>
                   <span
                     style={{
-                      fontWeight: "var(--slacksim-font-weight-bold)",
-                      color: "var(--slacksim-color-accent)",
+                      fontWeight: 'var(--slacksim-font-weight-bold)',
+                      color: 'var(--slacksim-color-accent)',
                     }}
                   >
                     {reaction.users.length}
@@ -601,20 +605,20 @@ export default function Message({ message, inThread = false }: Props) {
             onClick={() => setActiveThread(message.ts)}
             className="ss-thread-footer"
             style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "var(--slacksim-space-2)",
-              marginTop: "var(--slacksim-space-1)",
-              padding: "3px 6px 3px 2px",
-              background: "transparent",
-              border: "none",
-              borderRadius: "var(--slacksim-radius-sm)",
-              cursor: "pointer",
-              textAlign: "left",
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 'var(--slacksim-space-2)',
+              marginTop: 'var(--slacksim-space-1)',
+              padding: '3px 6px 3px 2px',
+              background: 'transparent',
+              border: 'none',
+              borderRadius: 'var(--slacksim-radius-sm)',
+              cursor: 'pointer',
+              textAlign: 'left',
             }}
           >
             {/* Participant avatars */}
-            <div style={{ display: "flex", alignItems: "center" }}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
               {(message.replyUsers ?? []).map((uid, i) => {
                 const u = users.find((u) => u.id === uid);
                 const bot = !u
@@ -639,20 +643,20 @@ export default function Message({ message, inThread = false }: Props) {
             {/* Reply count */}
             <span
               style={{
-                fontSize: "var(--slacksim-font-size-sm)",
-                fontWeight: "var(--slacksim-font-weight-bold)",
-                color: "var(--slacksim-color-accent)",
+                fontSize: 'var(--slacksim-font-size-sm)',
+                fontWeight: 'var(--slacksim-font-weight-bold)',
+                color: 'var(--slacksim-color-accent)',
               }}
             >
-              {message.replyCount}{" "}
-              {message.replyCount === 1 ? "reply" : "replies"}
+              {message.replyCount}{' '}
+              {message.replyCount === 1 ? 'reply' : 'replies'}
             </span>
             {/* Last reply time */}
             {message.latestReplyTs && (
               <span
                 style={{
-                  fontSize: "var(--slacksim-font-size-sm)",
-                  color: "var(--slacksim-color-fg-muted)",
+                  fontSize: 'var(--slacksim-font-size-sm)',
+                  color: 'var(--slacksim-color-fg-muted)',
                 }}
               >
                 {formatReplyTime(message.latestReplyTs)}
@@ -666,37 +670,37 @@ export default function Message({ message, inThread = false }: Props) {
       {showActions && (
         <div
           style={{
-            position: "absolute",
-            top: "var(--slacksim-space-1)",
-            right: "var(--slacksim-space-4)",
-            display: "flex",
-            gap: "var(--slacksim-space-1)",
-            background: "var(--slacksim-color-modal-bg)",
-            border: "1px solid var(--slacksim-color-border)",
-            borderRadius: "var(--slacksim-radius-md)",
-            boxShadow: "var(--slacksim-shadow-sm)",
-            padding: "2px 4px",
+            position: 'absolute',
+            top: 'var(--slacksim-space-1)',
+            right: 'var(--slacksim-space-4)',
+            display: 'flex',
+            gap: 'var(--slacksim-space-1)',
+            background: 'var(--slacksim-color-modal-bg)',
+            border: '1px solid var(--slacksim-color-border)',
+            borderRadius: 'var(--slacksim-radius-md)',
+            boxShadow: 'var(--slacksim-shadow-sm)',
+            padding: '2px 4px',
             zIndex: 10,
           }}
         >
           {!inThread && (
             <button
               onClick={handlePinToggle}
-              title={message.pinned ? "Unpin message" : "Pin message"}
+              title={message.pinned ? 'Unpin message' : 'Pin message'}
               className="ss-action-btn"
               style={{
-                background: "transparent",
-                border: "none",
-                cursor: "pointer",
-                padding: "4px 6px",
-                borderRadius: "var(--slacksim-radius-sm)",
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '4px 6px',
+                borderRadius: 'var(--slacksim-radius-sm)',
                 color: message.pinned
-                  ? "var(--slacksim-color-primary)"
-                  : "var(--slacksim-color-fg-muted)",
+                  ? 'var(--slacksim-color-primary)'
+                  : 'var(--slacksim-color-fg-muted)',
                 lineHeight: 1,
-                transition: "background 0.1s ease",
-                display: "inline-flex",
-                alignItems: "center",
+                transition: 'background 0.1s ease',
+                display: 'inline-flex',
+                alignItems: 'center',
               }}
             >
               {message.pinned ? (
@@ -736,23 +740,23 @@ export default function Message({ message, inThread = false }: Props) {
               )}
             </button>
           )}
-          <div style={{ position: "relative" }}>
+          <div style={{ position: 'relative' }}>
             <button
               ref={reactionBtnRef}
               onClick={openReactionPicker}
               title="Add reaction"
               className="ss-action-btn"
               style={{
-                background: "transparent",
-                border: "none",
-                cursor: "pointer",
-                padding: "4px 6px",
-                borderRadius: "var(--slacksim-radius-sm)",
-                color: "var(--slacksim-color-fg-muted)",
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '4px 6px',
+                borderRadius: 'var(--slacksim-radius-sm)',
+                color: 'var(--slacksim-color-fg-muted)',
                 lineHeight: 1,
-                transition: "background 0.1s ease",
-                display: "inline-flex",
-                alignItems: "center",
+                transition: 'background 0.1s ease',
+                display: 'inline-flex',
+                alignItems: 'center',
               }}
             >
               <svg
@@ -776,16 +780,16 @@ export default function Message({ message, inThread = false }: Props) {
               title="Reply in thread"
               className="ss-action-btn"
               style={{
-                background: "transparent",
-                border: "none",
-                cursor: "pointer",
-                padding: "4px 6px",
-                borderRadius: "var(--slacksim-radius-sm)",
-                color: "var(--slacksim-color-fg-muted)",
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '4px 6px',
+                borderRadius: 'var(--slacksim-radius-sm)',
+                color: 'var(--slacksim-color-fg-muted)',
                 lineHeight: 1,
-                transition: "background 0.1s ease",
-                display: "inline-flex",
-                alignItems: "center",
+                transition: 'background 0.1s ease',
+                display: 'inline-flex',
+                alignItems: 'center',
               }}
             >
               <svg
@@ -813,10 +817,10 @@ export default function Message({ message, inThread = false }: Props) {
           <div
             ref={pickerRef}
             style={{
-              position: "fixed",
+              position: 'fixed',
               top: pickerPos.top,
               left: pickerPos.left,
-              transform: "translateX(-100%) translateY(-100%)",
+              transform: 'translateX(-100%) translateY(-100%)',
               zIndex: 1000,
             }}
           >
@@ -825,7 +829,7 @@ export default function Message({ message, inThread = false }: Props) {
               onClose={() => setShowReactionPicker(false)}
             />
           </div>,
-          document.body,
+          document.body
         )}
     </div>
   );

@@ -1,12 +1,12 @@
-import { beforeAll, afterAll, afterEach, vi } from "vitest";
-import Database from "better-sqlite3";
-import "@testing-library/jest-dom";
+import { beforeAll, afterAll, afterEach, vi } from 'vitest';
+import Database from 'better-sqlite3';
+import '@testing-library/jest-dom';
 
 // Mock scrollIntoView for jsdom
 Element.prototype.scrollIntoView = vi.fn();
 
 // Global test database path
-const TEST_DB_PATH = ":memory:";
+const TEST_DB_PATH = ':memory:';
 
 let globalDb: Database.Database | null = null;
 

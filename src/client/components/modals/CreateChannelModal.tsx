@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { useStore } from "../../store";
-import { controlApi } from "../../lib/api";
+import React, { useState } from 'react';
+import { useStore } from '../../store';
+import { controlApi } from '../../lib/api';
 
 interface Props {
   onClose: () => void;
@@ -8,9 +8,9 @@ interface Props {
 
 export default function CreateChannelModal({ onClose }: Props) {
   const { users, setActiveChannel } = useStore();
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const [selectedMembers, setSelectedMembers] = useState<string[]>(
-    users.map((u) => u.id),
+    users.map((u) => u.id)
   );
   const [isPrivate, setIsPrivate] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -19,8 +19,8 @@ export default function CreateChannelModal({ onClose }: Props) {
   function handleNameChange(e: React.ChangeEvent<HTMLInputElement>) {
     const raw = e.target.value
       .toLowerCase()
-      .replace(/\s+/g, "-")
-      .replace(/[^a-z0-9-]/g, "");
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-]/g, '');
     setName(raw);
   }
 
@@ -28,14 +28,14 @@ export default function CreateChannelModal({ onClose }: Props) {
     setSelectedMembers((prev) =>
       prev.includes(userId)
         ? prev.filter((id) => id !== userId)
-        : [...prev, userId],
+        : [...prev, userId]
     );
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!name.trim()) {
-      setError("Channel name is required");
+      setError('Channel name is required');
       return;
     }
 
@@ -46,12 +46,12 @@ export default function CreateChannelModal({ onClose }: Props) {
       const channel = await controlApi.createChannel(
         name.trim(),
         selectedMembers,
-        isPrivate,
+        isPrivate
       );
       setActiveChannel(channel.id);
       onClose();
     } catch (err) {
-      setError("Failed to create channel. Please try again.");
+      setError('Failed to create channel. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -60,13 +60,13 @@ export default function CreateChannelModal({ onClose }: Props) {
   return (
     <div
       style={{
-        position: "fixed",
+        position: 'fixed',
         inset: 0,
-        background: "var(--slacksim-color-modal-overlay)",
+        background: 'var(--slacksim-color-modal-overlay)',
         zIndex: 1000,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
@@ -74,32 +74,32 @@ export default function CreateChannelModal({ onClose }: Props) {
     >
       <div
         style={{
-          background: "var(--slacksim-color-modal-bg)",
-          borderRadius: "var(--slacksim-radius-lg)",
-          boxShadow: "var(--slacksim-shadow-lg)",
+          background: 'var(--slacksim-color-modal-bg)',
+          borderRadius: 'var(--slacksim-radius-lg)',
+          boxShadow: 'var(--slacksim-shadow-lg)',
           width: 480,
-          maxWidth: "90vw",
-          maxHeight: "80vh",
-          display: "flex",
-          flexDirection: "column",
-          overflow: "hidden",
+          maxWidth: '90vw',
+          maxHeight: '80vh',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
         }}
       >
         {/* Modal header */}
         <div
           style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "var(--slacksim-space-5)",
-            borderBottom: "1px solid var(--slacksim-color-border)",
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: 'var(--slacksim-space-5)',
+            borderBottom: '1px solid var(--slacksim-color-border)',
           }}
         >
           <h2
             style={{
-              fontSize: "var(--slacksim-font-size-xl)",
-              fontWeight: "var(--slacksim-font-weight-bold)",
-              color: "var(--slacksim-color-fg)",
+              fontSize: 'var(--slacksim-font-size-xl)',
+              fontWeight: 'var(--slacksim-font-weight-bold)',
+              color: 'var(--slacksim-color-fg)',
             }}
           >
             Create a channel
@@ -107,13 +107,13 @@ export default function CreateChannelModal({ onClose }: Props) {
           <button
             onClick={onClose}
             style={{
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "var(--slacksim-font-size-xl)",
-              color: "var(--slacksim-color-fg-muted)",
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: 'var(--slacksim-font-size-xl)',
+              color: 'var(--slacksim-color-fg-muted)',
               lineHeight: 1,
-              padding: "var(--slacksim-space-1)",
+              padding: 'var(--slacksim-space-1)',
             }}
           >
             ✕
@@ -125,44 +125,44 @@ export default function CreateChannelModal({ onClose }: Props) {
           onSubmit={handleSubmit}
           style={{
             flex: 1,
-            overflowY: "auto",
-            padding: "var(--slacksim-space-5)",
+            overflowY: 'auto',
+            padding: 'var(--slacksim-space-5)',
           }}
         >
           {/* Channel name */}
-          <div style={{ marginBottom: "var(--slacksim-space-5)" }}>
+          <div style={{ marginBottom: 'var(--slacksim-space-5)' }}>
             <label
               style={{
-                display: "block",
-                marginBottom: "var(--slacksim-space-2)",
-                fontWeight: "var(--slacksim-font-weight-bold)",
-                fontSize: "var(--slacksim-font-size-md)",
-                color: "var(--slacksim-color-fg)",
+                display: 'block',
+                marginBottom: 'var(--slacksim-space-2)',
+                fontWeight: 'var(--slacksim-font-weight-bold)',
+                fontSize: 'var(--slacksim-font-size-md)',
+                color: 'var(--slacksim-color-fg)',
               }}
             >
               Channel name
             </label>
             <div
               style={{
-                display: "flex",
-                alignItems: "center",
-                border: "1px solid var(--slacksim-color-composer-border)",
-                borderRadius: "var(--slacksim-radius-sm)",
-                overflow: "hidden",
+                display: 'flex',
+                alignItems: 'center',
+                border: '1px solid var(--slacksim-color-composer-border)',
+                borderRadius: 'var(--slacksim-radius-sm)',
+                overflow: 'hidden',
               }}
             >
               <span
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   flexShrink: 0,
                   width: 40,
-                  padding: "8px 0",
-                  color: "var(--slacksim-color-fg-muted)",
-                  fontSize: "var(--slacksim-font-size-md)",
-                  borderRight: "1px solid var(--slacksim-color-border)",
-                  background: "var(--slacksim-color-bg-secondary)",
+                  padding: '8px 0',
+                  color: 'var(--slacksim-color-fg-muted)',
+                  fontSize: 'var(--slacksim-font-size-md)',
+                  borderRight: '1px solid var(--slacksim-color-border)',
+                  background: 'var(--slacksim-color-bg-secondary)',
                 }}
               >
                 {isPrivate ? (
@@ -206,21 +206,21 @@ export default function CreateChannelModal({ onClose }: Props) {
                 placeholder="e.g. announcements"
                 style={{
                   flex: 1,
-                  border: "none",
-                  outline: "none",
-                  padding: "8px 12px",
-                  fontFamily: "var(--slacksim-font-body)",
-                  fontSize: "var(--slacksim-font-size-md)",
-                  color: "var(--slacksim-color-fg)",
-                  background: "transparent",
+                  border: 'none',
+                  outline: 'none',
+                  padding: '8px 12px',
+                  fontFamily: 'var(--slacksim-font-body)',
+                  fontSize: 'var(--slacksim-font-size-md)',
+                  color: 'var(--slacksim-color-fg)',
+                  background: 'transparent',
                 }}
               />
             </div>
             <div
               style={{
-                marginTop: "var(--slacksim-space-1)",
-                fontSize: "var(--slacksim-font-size-sm)",
-                color: "var(--slacksim-color-fg-muted)",
+                marginTop: 'var(--slacksim-space-1)',
+                fontSize: 'var(--slacksim-font-size-sm)',
+                color: 'var(--slacksim-color-fg-muted)',
               }}
             >
               Lowercase letters, numbers, and hyphens only.
@@ -228,59 +228,59 @@ export default function CreateChannelModal({ onClose }: Props) {
           </div>
 
           {/* Members */}
-          <div style={{ marginBottom: "var(--slacksim-space-5)" }}>
+          <div style={{ marginBottom: 'var(--slacksim-space-5)' }}>
             <label
               style={{
-                display: "block",
-                marginBottom: "var(--slacksim-space-2)",
-                fontWeight: "var(--slacksim-font-weight-bold)",
-                fontSize: "var(--slacksim-font-size-md)",
-                color: "var(--slacksim-color-fg)",
+                display: 'block',
+                marginBottom: 'var(--slacksim-space-2)',
+                fontWeight: 'var(--slacksim-font-weight-bold)',
+                fontSize: 'var(--slacksim-font-size-md)',
+                color: 'var(--slacksim-color-fg)',
               }}
             >
               Members
             </label>
             <div
               style={{
-                border: "1px solid var(--slacksim-color-border)",
-                borderRadius: "var(--slacksim-radius-sm)",
-                overflow: "hidden",
+                border: '1px solid var(--slacksim-color-border)',
+                borderRadius: 'var(--slacksim-radius-sm)',
+                overflow: 'hidden',
               }}
             >
               {users.map((user, i) => (
                 <label
                   key={user.id}
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "var(--slacksim-space-3)",
-                    padding: "10px 12px",
-                    cursor: "pointer",
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 'var(--slacksim-space-3)',
+                    padding: '10px 12px',
+                    cursor: 'pointer',
                     borderTop:
-                      i > 0 ? "1px solid var(--slacksim-color-border)" : "none",
+                      i > 0 ? '1px solid var(--slacksim-color-border)' : 'none',
                     background: selectedMembers.includes(user.id)
-                      ? "var(--slacksim-color-bg-secondary)"
-                      : "transparent",
+                      ? 'var(--slacksim-color-bg-secondary)'
+                      : 'transparent',
                   }}
                 >
                   <input
                     type="checkbox"
                     checked={selectedMembers.includes(user.id)}
                     onChange={() => toggleMember(user.id)}
-                    style={{ cursor: "pointer" }}
+                    style={{ cursor: 'pointer' }}
                   />
                   <span
                     style={{
-                      fontSize: "var(--slacksim-font-size-md)",
-                      color: "var(--slacksim-color-fg)",
+                      fontSize: 'var(--slacksim-font-size-md)',
+                      color: 'var(--slacksim-color-fg)',
                     }}
                   >
                     {user.fullName}
                   </span>
                   <span
                     style={{
-                      fontSize: "var(--slacksim-font-size-sm)",
-                      color: "var(--slacksim-color-fg-muted)",
+                      fontSize: 'var(--slacksim-font-size-sm)',
+                      color: 'var(--slacksim-color-fg-muted)',
                     }}
                   >
                     @{user.username}
@@ -291,35 +291,35 @@ export default function CreateChannelModal({ onClose }: Props) {
           </div>
 
           {/* Private toggle */}
-          <div style={{ marginBottom: "var(--slacksim-space-5)" }}>
+          <div style={{ marginBottom: 'var(--slacksim-space-5)' }}>
             <label
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "var(--slacksim-space-3)",
-                cursor: "pointer",
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--slacksim-space-3)',
+                cursor: 'pointer',
               }}
             >
               <input
                 type="checkbox"
                 checked={isPrivate}
                 onChange={(e) => setIsPrivate(e.target.checked)}
-                style={{ cursor: "pointer" }}
+                style={{ cursor: 'pointer' }}
               />
               <div>
                 <div
                   style={{
-                    fontWeight: "var(--slacksim-font-weight-bold)",
-                    fontSize: "var(--slacksim-font-size-md)",
-                    color: "var(--slacksim-color-fg)",
+                    fontWeight: 'var(--slacksim-font-weight-bold)',
+                    fontSize: 'var(--slacksim-font-size-md)',
+                    color: 'var(--slacksim-color-fg)',
                   }}
                 >
                   Make private
                 </div>
                 <div
                   style={{
-                    fontSize: "var(--slacksim-font-size-sm)",
-                    color: "var(--slacksim-color-fg-muted)",
+                    fontSize: 'var(--slacksim-font-size-sm)',
+                    color: 'var(--slacksim-color-fg-muted)',
                   }}
                 >
                   Only invited members can view this channel
@@ -331,13 +331,13 @@ export default function CreateChannelModal({ onClose }: Props) {
           {error && (
             <div
               style={{
-                padding: "var(--slacksim-space-3)",
-                marginBottom: "var(--slacksim-space-4)",
-                background: "var(--slacksim-color-mention-bg)",
-                border: "1px solid var(--slacksim-color-mention-border)",
-                borderRadius: "var(--slacksim-radius-sm)",
-                fontSize: "var(--slacksim-font-size-sm)",
-                color: "var(--slacksim-color-fg)",
+                padding: 'var(--slacksim-space-3)',
+                marginBottom: 'var(--slacksim-space-4)',
+                background: 'var(--slacksim-color-mention-bg)',
+                border: '1px solid var(--slacksim-color-mention-border)',
+                borderRadius: 'var(--slacksim-radius-sm)',
+                fontSize: 'var(--slacksim-font-size-sm)',
+                color: 'var(--slacksim-color-fg)',
               }}
             >
               {error}
@@ -347,22 +347,22 @@ export default function CreateChannelModal({ onClose }: Props) {
           {/* Actions */}
           <div
             style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              gap: "var(--slacksim-space-3)",
+              display: 'flex',
+              justifyContent: 'flex-end',
+              gap: 'var(--slacksim-space-3)',
             }}
           >
             <button
               type="button"
               onClick={onClose}
               style={{
-                background: "transparent",
-                border: "1px solid var(--slacksim-color-border)",
-                borderRadius: "var(--slacksim-radius-sm)",
-                padding: "8px 16px",
-                cursor: "pointer",
-                fontSize: "var(--slacksim-font-size-md)",
-                color: "var(--slacksim-color-fg)",
+                background: 'transparent',
+                border: '1px solid var(--slacksim-color-border)',
+                borderRadius: 'var(--slacksim-radius-sm)',
+                padding: '8px 16px',
+                cursor: 'pointer',
+                fontSize: 'var(--slacksim-font-size-md)',
+                color: 'var(--slacksim-color-fg)',
               }}
             >
               Cancel
@@ -373,20 +373,20 @@ export default function CreateChannelModal({ onClose }: Props) {
               className="ss-btn-primary"
               style={{
                 background: name.trim()
-                  ? "var(--slacksim-color-primary)"
-                  : "var(--slacksim-color-primary-disabled)",
-                color: name.trim() ? "#fff" : "#888",
-                border: "none",
-                borderRadius: "var(--slacksim-radius-sm)",
-                padding: "8px 16px",
-                cursor: name.trim() ? "pointer" : "default",
-                fontSize: "var(--slacksim-font-size-md)",
-                fontWeight: "var(--slacksim-font-weight-bold)",
-                fontFamily: "var(--slacksim-font-body)",
-                transition: "background 0.1s ease",
+                  ? 'var(--slacksim-color-primary)'
+                  : 'var(--slacksim-color-primary-disabled)',
+                color: name.trim() ? '#fff' : '#888',
+                border: 'none',
+                borderRadius: 'var(--slacksim-radius-sm)',
+                padding: '8px 16px',
+                cursor: name.trim() ? 'pointer' : 'default',
+                fontSize: 'var(--slacksim-font-size-md)',
+                fontWeight: 'var(--slacksim-font-weight-bold)',
+                fontFamily: 'var(--slacksim-font-body)',
+                transition: 'background 0.1s ease',
               }}
             >
-              {isSubmitting ? "Creating…" : "Create Channel"}
+              {isSubmitting ? 'Creating…' : 'Create Channel'}
             </button>
           </div>
         </form>

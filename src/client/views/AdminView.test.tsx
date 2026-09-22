@@ -122,7 +122,9 @@ describe('AdminView Component', () => {
 
       renderAdminView();
 
-      expect(screen.queryByText(/App Token.*SLACK_APP_TOKEN/)).not.toBeInTheDocument();
+      expect(
+        screen.queryByText(/App Token.*SLACK_APP_TOKEN/)
+      ).not.toBeInTheDocument();
       expect(
         screen.getByText(/Signing Secret.*SLACK_SIGNING_SECRET/)
       ).toBeInTheDocument();
@@ -133,7 +135,9 @@ describe('AdminView Component', () => {
 
       renderAdminView();
 
-      expect(screen.getByText(/App Token.*SLACK_APP_TOKEN/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/App Token.*SLACK_APP_TOKEN/)
+      ).toBeInTheDocument();
       expect(
         screen.queryByText(/Signing Secret.*SLACK_SIGNING_SECRET/)
       ).not.toBeInTheDocument();

@@ -1,29 +1,29 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import App from "./App";
-import { useStore } from "./store";
-import { useRealtimeWS } from "./hooks/useRealtimeWS";
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { render, screen, waitFor } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import App from './App';
+import { useStore } from './store';
+import { useRealtimeWS } from './hooks/useRealtimeWS';
 
 // Mock dependencies
-vi.mock("./store");
-vi.mock("./hooks/useRealtimeWS");
-vi.mock("./components/ControlBar", () => ({
+vi.mock('./store');
+vi.mock('./hooks/useRealtimeWS');
+vi.mock('./components/ControlBar', () => ({
   default: () => <div data-testid="control-bar">ControlBar</div>,
 }));
-vi.mock("./views/WorkspaceView", () => ({
+vi.mock('./views/WorkspaceView', () => ({
   default: () => <div data-testid="workspace-view">WorkspaceView</div>,
 }));
-vi.mock("./views/AdminView", () => ({
+vi.mock('./views/AdminView', () => ({
   default: () => <div data-testid="admin-view">AdminView</div>,
 }));
-vi.mock("./views/LogsView", () => ({
+vi.mock('./views/LogsView', () => ({
   default: () => <div data-testid="logs-view">LogsView</div>,
 }));
-vi.mock("./views/DatabaseView", () => ({
+vi.mock('./views/DatabaseView', () => ({
   default: () => <div data-testid="database-view">DatabaseView</div>,
 }));
-vi.mock("./components/modals/SlackModal", () => ({
+vi.mock('./components/modals/SlackModal', () => ({
   default: ({
     view,
     appId,
@@ -44,7 +44,7 @@ vi.mock("./components/modals/SlackModal", () => ({
   ),
 }));
 
-describe("App Component", () => {
+describe('App Component', () => {
   let queryClient: QueryClient;
 
   beforeEach(() => {
@@ -60,7 +60,7 @@ describe("App Component", () => {
     // Set up default store mock
     vi.mocked(useStore).mockReturnValue({
       setWorkspaceData: vi.fn(),
-      activeTab: "workspace",
+      activeTab: 'workspace',
       activeModals: [],
     } as any);
   });
@@ -69,25 +69,25 @@ describe("App Component", () => {
     return render(
       <QueryClientProvider client={queryClient}>
         <App />
-      </QueryClientProvider>,
+      </QueryClientProvider>
     );
   };
 
-  describe("Loading State", () => {
-    it("should show loading message when data is loading", async () => {
+  describe('Loading State', () => {
+    it('should show loading message when data is loading', async () => {
       // Skip this test for now - complex mock setup needed
       expect(true).toBe(true);
     });
   });
 
-  describe("Render Structure", () => {
+  describe('Render Structure', () => {
     beforeEach(() => {
       // Mock successful fetch
       global.fetch = vi.fn().mockResolvedValue({
         ok: true,
         json: () =>
           Promise.resolve({
-            workspace: { id: "W001", name: "Test Workspace", domain: "test" },
+            workspace: { id: 'W001', name: 'Test Workspace', domain: 'test' },
             users: [],
             channels: [],
             apps: [],
@@ -97,100 +97,100 @@ describe("App Component", () => {
       // Mock store
       vi.mocked(useStore).mockReturnValue({
         setWorkspaceData: vi.fn(),
-        activeTab: "workspace",
+        activeTab: 'workspace',
         activeModals: [],
       } as any);
     });
 
-    it("should render ControlBar", async () => {
+    it('should render ControlBar', async () => {
       renderApp();
 
       await waitFor(() => {
-        expect(screen.getByTestId("control-bar")).toBeInTheDocument();
+        expect(screen.getByTestId('control-bar')).toBeInTheDocument();
       });
     });
 
-    it("should render WorkspaceView when activeTab is workspace", async () => {
+    it('should render WorkspaceView when activeTab is workspace', async () => {
       vi.mocked(useStore).mockReturnValue({
         setWorkspaceData: vi.fn(),
-        activeTab: "workspace",
-        activeModals: [],
-      } as any);
-
-      renderApp();
-
-      await waitFor(() => {
-        expect(screen.getByTestId("workspace-view")).toBeInTheDocument();
-      });
-    });
-
-    it("should render AdminView when activeTab is admin", async () => {
-      vi.mocked(useStore).mockReturnValue({
-        setWorkspaceData: vi.fn(),
-        activeTab: "admin",
+        activeTab: 'workspace',
         activeModals: [],
       } as any);
 
       renderApp();
 
       await waitFor(() => {
-        expect(screen.getByTestId("admin-view")).toBeInTheDocument();
+        expect(screen.getByTestId('workspace-view')).toBeInTheDocument();
       });
     });
 
-    it("should render LogsView when activeTab is logs", async () => {
+    it('should render AdminView when activeTab is admin', async () => {
       vi.mocked(useStore).mockReturnValue({
         setWorkspaceData: vi.fn(),
-        activeTab: "logs",
+        activeTab: 'admin',
         activeModals: [],
       } as any);
 
       renderApp();
 
       await waitFor(() => {
-        expect(screen.getByTestId("logs-view")).toBeInTheDocument();
+        expect(screen.getByTestId('admin-view')).toBeInTheDocument();
       });
     });
 
-    it("should render DatabaseView when activeTab is database", async () => {
+    it('should render LogsView when activeTab is logs', async () => {
       vi.mocked(useStore).mockReturnValue({
         setWorkspaceData: vi.fn(),
-        activeTab: "database",
+        activeTab: 'logs',
         activeModals: [],
       } as any);
 
       renderApp();
 
       await waitFor(() => {
-        expect(screen.getByTestId("database-view")).toBeInTheDocument();
+        expect(screen.getByTestId('logs-view')).toBeInTheDocument();
       });
     });
 
-    it("should render SlackModal when there are active modals", async () => {
+    it('should render DatabaseView when activeTab is database', async () => {
       vi.mocked(useStore).mockReturnValue({
         setWorkspaceData: vi.fn(),
-        activeTab: "workspace",
-        activeModals: [{ view: { id: "V001", type: "modal" }, appId: "A001" }],
+        activeTab: 'database',
+        activeModals: [],
       } as any);
 
       renderApp();
 
       await waitFor(() => {
-        const modal = screen.getByTestId("slack-modal");
+        expect(screen.getByTestId('database-view')).toBeInTheDocument();
+      });
+    });
+
+    it('should render SlackModal when there are active modals', async () => {
+      vi.mocked(useStore).mockReturnValue({
+        setWorkspaceData: vi.fn(),
+        activeTab: 'workspace',
+        activeModals: [{ view: { id: 'V001', type: 'modal' }, appId: 'A001' }],
+      } as any);
+
+      renderApp();
+
+      await waitFor(() => {
+        const modal = screen.getByTestId('slack-modal');
         expect(modal).toBeInTheDocument();
-        expect(modal).toHaveAttribute("data-app-id", "A001");
-        expect(modal).toHaveAttribute("data-stack-depth", "1");
+        expect(modal).toHaveAttribute('data-app-id', 'A001');
+        expect(modal).toHaveAttribute('data-stack-depth', '1');
       });
     });
   });
 
-  describe("Data Fetching", () => {
-    it("should fetch workspace data on mount", async () => {
+  describe('Data Fetching', () => {
+    it('should fetch workspace data on mount', async () => {
       const mockFetch = vi.fn().mockResolvedValue({
         ok: true,
         json: () =>
           Promise.resolve({
-            workspace: { id: "W001", name: "Test Workspace", domain: "test" },
+            workspace: { id: 'W001', name: 'Test Workspace', domain: 'test' },
             users: [],
             channels: [],
             apps: [],
@@ -200,21 +200,21 @@ describe("App Component", () => {
 
       vi.mocked(useStore).mockReturnValue({
         setWorkspaceData: vi.fn(),
-        activeTab: "workspace",
+        activeTab: 'workspace',
         activeModals: [],
       } as any);
 
       renderApp();
 
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledWith("/_control/workspace");
+        expect(mockFetch).toHaveBeenCalledWith('/_control/workspace');
       });
     });
 
-    it("should call setWorkspaceData with fetched data", async () => {
+    it('should call setWorkspaceData with fetched data', async () => {
       const mockData = {
-        workspace: { id: "W001", name: "Test Workspace", domain: "test" },
-        users: [{ id: "U001", username: "alice" }],
+        workspace: { id: 'W001', name: 'Test Workspace', domain: 'test' },
+        users: [{ id: 'U001', username: 'alice' }],
         channels: [],
         apps: [],
       };
@@ -227,7 +227,7 @@ describe("App Component", () => {
       const mockSetWorkspaceData = vi.fn();
       vi.mocked(useStore).mockReturnValue({
         setWorkspaceData: mockSetWorkspaceData,
-        activeTab: "workspace",
+        activeTab: 'workspace',
         activeModals: [],
       } as any);
 
@@ -239,13 +239,13 @@ describe("App Component", () => {
     });
   });
 
-  describe("WebSocket Hook", () => {
-    it("should call useRealtimeWS hook", async () => {
+  describe('WebSocket Hook', () => {
+    it('should call useRealtimeWS hook', async () => {
       global.fetch = vi.fn().mockResolvedValue({
         ok: true,
         json: () =>
           Promise.resolve({
-            workspace: { id: "W001", name: "Test Workspace", domain: "test" },
+            workspace: { id: 'W001', name: 'Test Workspace', domain: 'test' },
             users: [],
             channels: [],
             apps: [],
@@ -254,7 +254,7 @@ describe("App Component", () => {
 
       vi.mocked(useStore).mockReturnValue({
         setWorkspaceData: vi.fn(),
-        activeTab: "workspace",
+        activeTab: 'workspace',
         activeModals: [],
       } as any);
 

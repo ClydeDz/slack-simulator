@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import type {
   Block,
   TextObject,
@@ -13,11 +13,11 @@ import type {
   User,
   Channel,
   App,
-} from "@shared/types";
-import { useStore } from "../../store";
-import { controlApi } from "../../lib/api";
-import MentionChip from "./MentionChip";
-import ChannelChip from "./ChannelChip";
+} from '@shared/types';
+import { useStore } from '../../store';
+import { controlApi } from '../../lib/api';
+import MentionChip from './MentionChip';
+import ChannelChip from './ChannelChip';
 
 // ── mrkdwn inline renderer ────────────────────────────────────────────────────
 
@@ -26,32 +26,32 @@ function renderMrkdwn(
   users: User[],
   apps: App[],
   channels: Channel[],
-  onChannelClick: (id: string) => void,
+  onChannelClick: (id: string) => void
 ): React.ReactNode[] {
   // Pre-process blockquotes: lines starting with "> " become a quoted block
-  const lines = text.split("\n");
+  const lines = text.split('\n');
   const processedLines: React.ReactNode[] = [];
   let i = 0;
   while (i < lines.length) {
     const line = lines[i];
-    if (line.startsWith("> ") || line === ">") {
+    if (line.startsWith('> ') || line === '>') {
       // Collect consecutive blockquote lines
       const quoteLines: string[] = [];
       while (
         i < lines.length &&
-        (lines[i].startsWith("> ") || lines[i] === ">")
+        (lines[i].startsWith('> ') || lines[i] === '>')
       ) {
-        quoteLines.push(lines[i].startsWith("> ") ? lines[i].slice(2) : "");
+        quoteLines.push(lines[i].startsWith('> ') ? lines[i].slice(2) : '');
         i++;
       }
       processedLines.push(
         <div
           key={`bq-${i}`}
           style={{
-            borderLeft: "3px solid var(--slacksim-color-divider)",
-            paddingLeft: "var(--slacksim-space-3)",
-            color: "var(--slacksim-color-fg-muted)",
-            margin: "2px 0",
+            borderLeft: '3px solid var(--slacksim-color-divider)',
+            paddingLeft: 'var(--slacksim-space-3)',
+            color: 'var(--slacksim-color-fg-muted)',
+            margin: '2px 0',
           }}
         >
           {quoteLines.map((ql, qi) => (
@@ -59,13 +59,13 @@ function renderMrkdwn(
               {renderMrkdwn(ql, users, apps, channels, onChannelClick)}
             </div>
           ))}
-        </div>,
+        </div>
       );
     } else {
       if (processedLines.length > 0)
         processedLines.push(<br key={`nl-${i}`} />);
       processedLines.push(
-        ...renderMrkdwnLine(lines[i], users, apps, channels, onChannelClick, i),
+        ...renderMrkdwnLine(lines[i], users, apps, channels, onChannelClick, i)
       );
       i++;
     }
@@ -79,10 +79,10 @@ function renderMrkdwnLine(
   apps: App[],
   channels: Channel[],
   onChannelClick: (id: string) => void,
-  baseKey: number,
+  baseKey: number
 ): React.ReactNode[] {
   const parts = text.split(
-    /(\*[^*\n]+\*|_[^_\n]+_|~[^~\n]+~|`[^`\n]+`|<[^>]+>|:[a-z0-9_+\-]+:)/g,
+    /(\*[^*\n]+\*|_[^_\n]+_|~[^~\n]+~|`[^`\n]+`|<[^>]+>|:[a-z0-9_+\-]+:)/g
   );
   return parts.map((part, i) => {
     const key = `${baseKey}-${i}`;
@@ -95,7 +95,7 @@ function renderMrkdwnLine(
             apps,
             channels,
             onChannelClick,
-            baseKey * 1000 + i,
+            baseKey * 1000 + i
           )}
         </strong>
       );
@@ -108,7 +108,7 @@ function renderMrkdwnLine(
             apps,
             channels,
             onChannelClick,
-            baseKey * 1000 + i,
+            baseKey * 1000 + i
           )}
         </em>
       );
@@ -121,7 +121,7 @@ function renderMrkdwnLine(
             apps,
             channels,
             onChannelClick,
-            baseKey * 1000 + i,
+            baseKey * 1000 + i
           )}
         </del>
       );
@@ -130,12 +130,12 @@ function renderMrkdwnLine(
         <code
           key={key}
           style={{
-            fontFamily: "var(--slacksim-font-mono)",
-            fontSize: "0.875em",
-            background: "var(--slacksim-color-bg-secondary)",
-            border: "1px solid var(--slacksim-color-border)",
-            borderRadius: "var(--slacksim-radius-sm)",
-            padding: "0 3px",
+            fontFamily: 'var(--slacksim-font-mono)',
+            fontSize: '0.875em',
+            background: 'var(--slacksim-color-bg-secondary)',
+            border: '1px solid var(--slacksim-color-border)',
+            borderRadius: 'var(--slacksim-radius-sm)',
+            padding: '0 3px',
           }}
         >
           {part.slice(1, -1)}
@@ -155,13 +155,13 @@ function renderMrkdwnLine(
         <span
           key={key}
           style={{
-            fontFamily: "var(--slacksim-font-mono)",
-            fontSize: "0.85em",
-            background: "var(--slacksim-color-bg-secondary)",
-            border: "1px solid var(--slacksim-color-border)",
-            borderRadius: "var(--slacksim-radius-sm)",
-            padding: "1px 4px",
-            color: "var(--slacksim-color-fg-muted)",
+            fontFamily: 'var(--slacksim-font-mono)',
+            fontSize: '0.85em',
+            background: 'var(--slacksim-color-bg-secondary)',
+            border: '1px solid var(--slacksim-color-border)',
+            borderRadius: 'var(--slacksim-radius-sm)',
+            padding: '1px 4px',
+            color: 'var(--slacksim-color-fg-muted)',
           }}
         >
           {part}
@@ -172,7 +172,7 @@ function renderMrkdwnLine(
       const inner = part.slice(1, -1);
 
       // Broadcast mentions: <!here>, <!channel>, <!everyone>
-      if (inner === "!here" || inner === "!channel" || inner === "!everyone") {
+      if (inner === '!here' || inner === '!channel' || inner === '!everyone') {
         return (
           <span key={key} className="ss-mention">
             @{inner.slice(1)}
@@ -180,12 +180,12 @@ function renderMrkdwnLine(
         );
       }
 
-      const pipeIdx = inner.indexOf("|");
+      const pipeIdx = inner.indexOf('|');
       const ref = pipeIdx >= 0 ? inner.slice(0, pipeIdx) : inner;
       const explicitLabel = pipeIdx >= 0 ? inner.slice(pipeIdx + 1) : null;
 
       // User mention: <@U001> or <@U001|username>
-      if (ref.startsWith("@")) {
+      if (ref.startsWith('@')) {
         const uid = ref.slice(1);
         const user = users.find((u) => u.id === uid);
         const bot = !user ? apps.find((a) => a.botUserId === uid) : undefined;
@@ -221,7 +221,7 @@ function renderMrkdwnLine(
       }
 
       // Channel mention: <#C001> or <#C001|general>
-      if (ref.startsWith("#")) {
+      if (ref.startsWith('#')) {
         const cid = ref.slice(1);
         const channel = channels.find((c) => c.id === cid);
         const label = channel
@@ -241,14 +241,14 @@ function renderMrkdwnLine(
           );
         }
         return (
-          <span key={key} className="ss-mention" style={{ cursor: "default" }}>
+          <span key={key} className="ss-mention" style={{ cursor: 'default' }}>
             {label}
           </span>
         );
       }
 
       // URL link: <https://...> or <https://...|label>
-      if (ref.startsWith("http") || ref.startsWith("mailto")) {
+      if (ref.startsWith('http') || ref.startsWith('mailto')) {
         return (
           <a
             key={key}
@@ -256,8 +256,8 @@ function renderMrkdwnLine(
             target="_blank"
             rel="noreferrer"
             style={{
-              color: "var(--slacksim-color-accent)",
-              textDecoration: "none",
+              color: 'var(--slacksim-color-accent)',
+              textDecoration: 'none',
             }}
           >
             {explicitLabel ?? ref}
@@ -303,10 +303,10 @@ const Ctx = React.createContext<BKCtx>({
   apps: [],
   channels: [],
   onChannelClick: () => {},
-  channelId: "",
-  messageTs: "",
-  appId: "",
-  viewId: "",
+  channelId: '',
+  messageTs: '',
+  appId: '',
+  viewId: '',
 });
 
 // ── Element renderers ─────────────────────────────────────────────────────────
@@ -319,8 +319,8 @@ function ImageEl({ el, size = 20 }: { el: ImageElement; size?: number }) {
       style={{
         width: size,
         height: size,
-        objectFit: "cover",
-        borderRadius: "var(--slacksim-radius-sm)",
+        objectFit: 'cover',
+        borderRadius: 'var(--slacksim-radius-sm)',
         flexShrink: 0,
       }}
     />
@@ -338,8 +338,8 @@ function Button({ el, blockId }: { el: ButtonElement; blockId?: string }) {
     appId,
     viewId,
   } = React.useContext(Ctx);
-  const isPrimary = el.style === "primary";
-  const isDanger = el.style === "danger";
+  const isPrimary = el.style === 'primary';
+  const isDanger = el.style === 'danger';
   const isInteractive = !!appId && !!el.action_id;
 
   function handleClick() {
@@ -350,10 +350,10 @@ function Button({ el, blockId }: { el: ButtonElement; blockId?: string }) {
       controlApi
         .postModalBlockAction(
           viewId,
-          resolvedBlockId ?? "",
+          resolvedBlockId ?? '',
           el.action_id!,
           el.value,
-          appId,
+          appId
         )
         .catch(() => {
           /* silent */
@@ -363,10 +363,10 @@ function Button({ el, blockId }: { el: ButtonElement; blockId?: string }) {
         .postBlockAction(
           channelId,
           messageTs,
-          resolvedBlockId ?? "",
+          resolvedBlockId ?? '',
           el.action_id!,
           el.value,
-          appId,
+          appId
         )
         .catch(() => {
           /* silent */
@@ -378,25 +378,25 @@ function Button({ el, blockId }: { el: ButtonElement; blockId?: string }) {
     <button
       onClick={isInteractive ? handleClick : undefined}
       style={{
-        display: "inline-flex",
-        alignItems: "center",
-        padding: "5px 12px",
-        border: `1px solid ${isPrimary ? "var(--slacksim-color-primary)" : isDanger ? "var(--slacksim-color-sidebar-badge-bg)" : "var(--slacksim-color-border)"}`,
-        borderRadius: "var(--slacksim-radius-sm)",
+        display: 'inline-flex',
+        alignItems: 'center',
+        padding: '5px 12px',
+        border: `1px solid ${isPrimary ? 'var(--slacksim-color-primary)' : isDanger ? 'var(--slacksim-color-sidebar-badge-bg)' : 'var(--slacksim-color-border)'}`,
+        borderRadius: 'var(--slacksim-radius-sm)',
         background: isPrimary
-          ? "var(--slacksim-color-primary)"
+          ? 'var(--slacksim-color-primary)'
           : isDanger
-            ? "var(--slacksim-color-sidebar-badge-bg)"
-            : "transparent",
+            ? 'var(--slacksim-color-sidebar-badge-bg)'
+            : 'transparent',
         color:
           isPrimary || isDanger
-            ? "var(--slacksim-color-sidebar-fg-active)"
-            : "var(--slacksim-color-fg)",
-        fontSize: "var(--slacksim-font-size-sm)",
-        fontFamily: "var(--slacksim-font-body)",
-        fontWeight: "var(--slacksim-font-weight-bold)",
-        cursor: isInteractive ? "pointer" : "default",
-        whiteSpace: "nowrap",
+            ? 'var(--slacksim-color-sidebar-fg-active)'
+            : 'var(--slacksim-color-fg)',
+        fontSize: 'var(--slacksim-font-size-sm)',
+        fontFamily: 'var(--slacksim-font-body)',
+        fontWeight: 'var(--slacksim-font-weight-bold)',
+        cursor: isInteractive ? 'pointer' : 'default',
+        whiteSpace: 'nowrap',
       }}
     >
       <TextEl
@@ -418,19 +418,19 @@ function Section({ block }: { block: SectionBlock }) {
   return (
     <div
       style={{
-        display: "flex",
-        gap: "var(--slacksim-space-4)",
-        alignItems: "flex-start",
+        display: 'flex',
+        gap: 'var(--slacksim-space-4)',
+        alignItems: 'flex-start',
       }}
     >
       <div style={{ flex: 1, minWidth: 0 }}>
         {block.text && (
           <div
             style={{
-              fontSize: "var(--slacksim-font-size-md)",
-              color: "var(--slacksim-color-fg)",
+              fontSize: 'var(--slacksim-font-size-md)',
+              color: 'var(--slacksim-color-fg)',
               lineHeight: 1.5,
-              marginBottom: block.fields ? "var(--slacksim-space-2)" : 0,
+              marginBottom: block.fields ? 'var(--slacksim-space-2)' : 0,
             }}
           >
             <TextEl
@@ -445,18 +445,18 @@ function Section({ block }: { block: SectionBlock }) {
         {block.fields && (
           <div
             style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "var(--slacksim-space-2)",
-              marginTop: block.text ? "var(--slacksim-space-2)" : 0,
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: 'var(--slacksim-space-2)',
+              marginTop: block.text ? 'var(--slacksim-space-2)' : 0,
             }}
           >
             {block.fields.map((field, i) => (
               <div
                 key={i}
                 style={{
-                  fontSize: "var(--slacksim-font-size-sm)",
-                  color: "var(--slacksim-color-fg)",
+                  fontSize: 'var(--slacksim-font-size-sm)',
+                  color: 'var(--slacksim-color-fg)',
                   lineHeight: 1.4,
                 }}
               >
@@ -474,9 +474,9 @@ function Section({ block }: { block: SectionBlock }) {
       </div>
       {hasAccessory && block.accessory && (
         <div style={{ flexShrink: 0 }}>
-          {block.accessory.type === "image" ? (
+          {block.accessory.type === 'image' ? (
             <ImageEl el={block.accessory as ImageElement} size={72} />
-          ) : block.accessory.type === "button" ? (
+          ) : block.accessory.type === 'button' ? (
             <Button el={block.accessory as ButtonElement} />
           ) : null}
         </div>
@@ -491,8 +491,8 @@ function Header({ block }: { block: HeaderBlock }) {
     <div
       style={{
         fontSize: 18,
-        fontWeight: "var(--slacksim-font-weight-bold)",
-        color: "var(--slacksim-color-fg)",
+        fontWeight: 'var(--slacksim-font-weight-bold)',
+        color: 'var(--slacksim-color-fg)',
         lineHeight: 1.3,
       }}
     >
@@ -511,8 +511,8 @@ function Divider() {
   return (
     <hr
       style={{
-        border: "none",
-        borderTop: "1px solid var(--slacksim-color-border)",
+        border: 'none',
+        borderTop: '1px solid var(--slacksim-color-border)',
         margin: 0,
       }}
     />
@@ -524,22 +524,22 @@ function Context({ block }: { block: ContextBlock }) {
   return (
     <div
       style={{
-        display: "flex",
-        flexWrap: "wrap",
-        alignItems: "center",
-        gap: "var(--slacksim-space-2)",
+        display: 'flex',
+        flexWrap: 'wrap',
+        alignItems: 'center',
+        gap: 'var(--slacksim-space-2)',
       }}
     >
       {block.elements.map((el, i) => {
-        if (el.type === "image") {
+        if (el.type === 'image') {
           return <ImageEl key={i} el={el as ImageElement} size={18} />;
         }
         return (
           <span
             key={i}
             style={{
-              fontSize: "var(--slacksim-font-size-sm)",
-              color: "var(--slacksim-color-fg-muted)",
+              fontSize: 'var(--slacksim-font-size-sm)',
+              color: 'var(--slacksim-color-fg-muted)',
               lineHeight: 1.4,
             }}
           >
@@ -564,10 +564,10 @@ function ImageBlockEl({ block }: { block: ImageBlock }) {
       {block.title && (
         <div
           style={{
-            fontSize: "var(--slacksim-font-size-sm)",
-            fontWeight: "var(--slacksim-font-weight-bold)",
-            color: "var(--slacksim-color-fg)",
-            marginBottom: "var(--slacksim-space-1)",
+            fontSize: 'var(--slacksim-font-size-sm)',
+            fontWeight: 'var(--slacksim-font-weight-bold)',
+            color: 'var(--slacksim-color-fg)',
+            marginBottom: 'var(--slacksim-space-1)',
           }}
         >
           <TextEl
@@ -583,18 +583,18 @@ function ImageBlockEl({ block }: { block: ImageBlock }) {
         src={block.image_url}
         alt={block.alt_text}
         style={{
-          maxWidth: "100%",
+          maxWidth: '100%',
           maxHeight: 360,
-          objectFit: "contain",
-          borderRadius: "var(--slacksim-radius-md)",
-          display: "block",
+          objectFit: 'contain',
+          borderRadius: 'var(--slacksim-radius-md)',
+          display: 'block',
         }}
       />
       <div
         style={{
-          fontSize: "var(--slacksim-font-size-sm)",
-          color: "var(--slacksim-color-fg-muted)",
-          marginTop: "var(--slacksim-space-1)",
+          fontSize: 'var(--slacksim-font-size-sm)',
+          color: 'var(--slacksim-color-fg-muted)',
+          marginTop: 'var(--slacksim-space-1)',
         }}
       >
         {block.alt_text}
@@ -613,7 +613,7 @@ function StaticSelect({
   const { channelId, messageTs, appId, viewId } = React.useContext(Ctx);
   const isInteractive = !!appId && !!el.action_id;
 
-  const initialValue = el.initial_option?.value ?? "";
+  const initialValue = el.initial_option?.value ?? '';
   const [selected, setSelected] = React.useState(initialValue);
 
   function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
@@ -622,7 +622,7 @@ function StaticSelect({
     if (!isInteractive) return;
     const opt = el.options.find((o) => o.value === val);
     if (!opt) return;
-    const resolvedBlockId = blockId ?? "";
+    const resolvedBlockId = blockId ?? '';
     const selectedOption = {
       text: { type: opt.text.type, text: opt.text.text },
       value: opt.value,
@@ -635,7 +635,7 @@ function StaticSelect({
           el.action_id!,
           val,
           appId,
-          selectedOption,
+          selectedOption
         )
         .catch(() => {
           /* silent */
@@ -649,7 +649,7 @@ function StaticSelect({
           el.action_id!,
           val,
           appId,
-          selectedOption,
+          selectedOption
         )
         .catch(() => {
           /* silent */
@@ -662,17 +662,17 @@ function StaticSelect({
       value={selected}
       onChange={handleChange}
       style={{
-        padding: "5px 10px",
-        border: "1px solid var(--slacksim-color-border)",
-        borderRadius: "var(--slacksim-radius-sm)",
-        background: "var(--slacksim-color-bg)",
+        padding: '5px 10px',
+        border: '1px solid var(--slacksim-color-border)',
+        borderRadius: 'var(--slacksim-radius-sm)',
+        background: 'var(--slacksim-color-bg)',
         color: selected
-          ? "var(--slacksim-color-fg)"
-          : "var(--slacksim-color-fg-placeholder)",
-        fontSize: "var(--slacksim-font-size-sm)",
-        fontFamily: "var(--slacksim-font-body)",
-        cursor: isInteractive ? "pointer" : "default",
-        outline: "none",
+          ? 'var(--slacksim-color-fg)'
+          : 'var(--slacksim-color-fg-placeholder)',
+        fontSize: 'var(--slacksim-font-size-sm)',
+        fontFamily: 'var(--slacksim-font-body)',
+        cursor: isInteractive ? 'pointer' : 'default',
+        outline: 'none',
         minWidth: 120,
       }}
     >
@@ -694,13 +694,13 @@ function Actions({ block }: { block: ActionsBlock }) {
   return (
     <div
       style={{
-        display: "flex",
-        flexWrap: "wrap",
-        gap: "var(--slacksim-space-2)",
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: 'var(--slacksim-space-2)',
       }}
     >
       {block.elements.map((el, i) => {
-        if (el.type === "static_select") {
+        if (el.type === 'static_select') {
           return (
             <StaticSelect
               key={i}
@@ -729,10 +729,10 @@ interface BlockKitProps {
 
 export default function BlockKit({
   blocks,
-  channelId = "",
-  messageTs = "",
-  appId = "",
-  viewId = "",
+  channelId = '',
+  messageTs = '',
+  appId = '',
+  viewId = '',
 }: BlockKitProps) {
   const { users, apps, channels, setActiveChannel } = useStore((s) => ({
     users: s.users,
@@ -755,24 +755,24 @@ export default function BlockKit({
     >
       <div
         style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "var(--slacksim-space-2)",
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 'var(--slacksim-space-2)',
         }}
       >
         {blocks.map((block, i) => {
           switch (block.type) {
-            case "section":
+            case 'section':
               return <Section key={i} block={block} />;
-            case "header":
+            case 'header':
               return <Header key={i} block={block} />;
-            case "divider":
+            case 'divider':
               return <Divider key={i} />;
-            case "context":
+            case 'context':
               return <Context key={i} block={block} />;
-            case "image":
+            case 'image':
               return <ImageBlockEl key={i} block={block} />;
-            case "actions":
+            case 'actions':
               return <Actions key={i} block={block} />;
             default:
               return null;

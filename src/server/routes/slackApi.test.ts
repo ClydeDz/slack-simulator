@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import Fastify from "fastify";
-import { registerSlackApi } from "./slackApi";
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import Fastify from 'fastify';
+import { registerSlackApi } from './slackApi';
 import {
   getDb,
   getAllUsers,
@@ -17,26 +17,26 @@ import {
   generateTs,
   generateId,
   setMessageUnfurls,
-} from "../db";
-import { broadcast } from "../realtime";
-import { logInbound, dispatchEvent } from "../dispatcher";
-import { issueTicket } from "../socketModeServer";
+} from '../db';
+import { broadcast } from '../realtime';
+import { logInbound, dispatchEvent } from '../dispatcher';
+import { issueTicket } from '../socketModeServer';
 import {
   redeemTrigger,
   openModal,
   updateModal,
   pushModal,
-} from "../interactivity";
+} from '../interactivity';
 
 // Mock all dependencies
-vi.mock("../db");
-vi.mock("../realtime");
-vi.mock("../dispatcher");
-vi.mock("../socketModeServer");
-vi.mock("../interactivity");
-vi.mock("../index", () => ({ SIMULATOR_BASE_URL: "http://localhost:4500" }));
+vi.mock('../db');
+vi.mock('../realtime');
+vi.mock('../dispatcher');
+vi.mock('../socketModeServer');
+vi.mock('../interactivity');
+vi.mock('../index', () => ({ SIMULATOR_BASE_URL: 'http://localhost:4500' }));
 
-describe("Slack API Routes", () => {
+describe('Slack API Routes', () => {
   let app: any;
 
   beforeEach(async () => {
@@ -49,11 +49,11 @@ describe("Slack API Routes", () => {
     await app.close();
   });
 
-  describe("Authentication", () => {
-    it("should reject requests without Bearer token", async () => {
+  describe('Authentication', () => {
+    it('should reject requests without Bearer token', async () => {
       const response = await app.inject({
-        method: "POST",
-        url: "/api/auth.test",
+        method: 'POST',
+        url: '/api/auth.test',
         headers: {},
         body: {},
       });
@@ -61,37 +61,37 @@ describe("Slack API Routes", () => {
       expect(response.statusCode).toBe(200);
       expect(JSON.parse(response.payload)).toEqual({
         ok: false,
-        error: "invalid_auth",
+        error: 'invalid_auth',
       });
     });
 
-    it("should reject requests with invalid token", async () => {
+    it('should reject requests with invalid token', async () => {
       vi.mocked(getAppByToken).mockReturnValue(null);
 
       const response = await app.inject({
-        method: "POST",
-        url: "/api/auth.test",
-        headers: { authorization: "Bearer invalid-token" },
+        method: 'POST',
+        url: '/api/auth.test',
+        headers: { authorization: 'Bearer invalid-token' },
         body: {},
       });
 
       expect(response.statusCode).toBe(200);
       expect(JSON.parse(response.payload)).toEqual({
         ok: false,
-        error: "invalid_auth",
+        error: 'invalid_auth',
       });
     });
 
-    it("should accept requests with valid token", async () => {
+    it('should accept requests with valid token', async () => {
       const mockApp = {
-        id: "A001",
-        name: "Test App",
-        botUserId: "U001",
-        botUserName: "TestBot",
-        botToken: "xoxb-test",
-        appToken: "xapp-test",
-        signingSecret: "secret",
-        requestUrl: "",
+        id: 'A001',
+        name: 'Test App',
+        botUserId: 'U001',
+        botUserName: 'TestBot',
+        botToken: 'xoxb-test',
+        appToken: 'xapp-test',
+        signingSecret: 'secret',
+        requestUrl: '',
         subscribedEvents: [],
         socketModeEnabled: false,
       };
@@ -99,58 +99,58 @@ describe("Slack API Routes", () => {
       vi.mocked(getDb).mockReturnValue({
         prepare: vi.fn().mockReturnValue({
           get: vi.fn().mockReturnValue({
-            id: "W001",
-            name: "Test Workspace",
-            domain: "test",
+            id: 'W001',
+            name: 'Test Workspace',
+            domain: 'test',
           }),
         }),
       } as any);
 
       const response = await app.inject({
-        method: "POST",
-        url: "/api/auth.test",
-        headers: { authorization: "Bearer xoxb-test" },
+        method: 'POST',
+        url: '/api/auth.test',
+        headers: { authorization: 'Bearer xoxb-test' },
         body: {},
       });
 
       expect(response.statusCode).toBe(200);
       const payload = JSON.parse(response.payload);
       expect(payload.ok).toBe(true);
-      expect(payload.url).toBe("http://localhost:4500");
-      expect(payload.user).toBe("TestBot");
+      expect(payload.url).toBe('http://localhost:4500');
+      expect(payload.user).toBe('TestBot');
     });
   });
 
-  describe("chat.postMessage", () => {
+  describe('chat.postMessage', () => {
     beforeEach(() => {
       const mockApp = {
-        id: "A001",
-        name: "Test App",
-        botUserId: "U001",
-        botUserName: "TestBot",
-        botToken: "xoxb-test",
-        appToken: "xapp-test",
-        signingSecret: "secret",
-        requestUrl: "",
+        id: 'A001',
+        name: 'Test App',
+        botUserId: 'U001',
+        botUserName: 'TestBot',
+        botToken: 'xoxb-test',
+        appToken: 'xapp-test',
+        signingSecret: 'secret',
+        requestUrl: '',
         subscribedEvents: [],
         socketModeEnabled: false,
       };
       vi.mocked(getAppByToken).mockReturnValue(mockApp);
       vi.mocked(getChannel).mockReturnValue({
-        id: "C001",
-        name: "general",
-        type: "public",
-        members: ["U001"],
+        id: 'C001',
+        name: 'general',
+        type: 'public',
+        members: ['U001'],
         archived: false,
       });
-      vi.mocked(generateTs).mockReturnValue("1234567890.000001");
-      vi.mocked(generateId).mockReturnValue("M001");
+      vi.mocked(generateTs).mockReturnValue('1234567890.000001');
+      vi.mocked(generateId).mockReturnValue('M001');
       vi.mocked(insertMessage).mockReturnValue({
-        id: "M001",
-        channel: "C001",
-        user: "U001",
-        text: "Hello",
-        ts: "1234567890.000001",
+        id: 'M001',
+        channel: 'C001',
+        user: 'U001',
+        text: 'Hello',
+        ts: '1234567890.000001',
         reactions: [],
       });
       vi.mocked(getDb).mockReturnValue({
@@ -162,167 +162,167 @@ describe("Slack API Routes", () => {
       } as any);
     });
 
-    it("should reject posts to archived channels", async () => {
+    it('should reject posts to archived channels', async () => {
       vi.mocked(getChannel).mockReturnValue({
-        id: "C001",
-        name: "general",
-        type: "public",
-        members: ["U001"],
+        id: 'C001',
+        name: 'general',
+        type: 'public',
+        members: ['U001'],
         archived: true,
       });
 
       const response = await app.inject({
-        method: "POST",
-        url: "/api/chat.postMessage",
-        headers: { authorization: "Bearer xoxb-test" },
-        body: { channel: "C001", text: "Hello" },
+        method: 'POST',
+        url: '/api/chat.postMessage',
+        headers: { authorization: 'Bearer xoxb-test' },
+        body: { channel: 'C001', text: 'Hello' },
       });
 
       expect(response.statusCode).toBe(200);
       const payload = JSON.parse(response.payload);
       expect(payload.ok).toBe(false);
-      expect(payload.error).toBe("is_archived");
+      expect(payload.error).toBe('is_archived');
     });
 
-    it("should post thread replies", async () => {
+    it('should post thread replies', async () => {
       // Skip this test for now - complex database interactions
       expect(true).toBe(true);
     });
   });
 
-  describe("chat.update", () => {
+  describe('chat.update', () => {
     beforeEach(() => {
       const mockApp = {
-        id: "A001",
-        name: "Test App",
-        botUserId: "U001",
-        botUserName: "TestBot",
-        botToken: "xoxb-test",
-        appToken: "xapp-test",
-        signingSecret: "secret",
-        requestUrl: "",
+        id: 'A001',
+        name: 'Test App',
+        botUserId: 'U001',
+        botUserName: 'TestBot',
+        botToken: 'xoxb-test',
+        appToken: 'xapp-test',
+        signingSecret: 'secret',
+        requestUrl: '',
         subscribedEvents: [],
         socketModeEnabled: false,
       };
       vi.mocked(getAppByToken).mockReturnValue(mockApp);
     });
 
-    it("should update message", async () => {
+    it('should update message', async () => {
       const updatedMessage = {
-        id: "M001",
-        channel: "C001",
-        user: "U001",
-        text: "Updated",
-        ts: "1234567890.000001",
+        id: 'M001',
+        channel: 'C001',
+        user: 'U001',
+        text: 'Updated',
+        ts: '1234567890.000001',
         reactions: [],
       };
       vi.mocked(updateMessage).mockReturnValue(updatedMessage);
 
       const response = await app.inject({
-        method: "POST",
-        url: "/api/chat.update",
-        headers: { authorization: "Bearer xoxb-test" },
-        body: { channel: "C001", ts: "1234567890.000001", text: "Updated" },
+        method: 'POST',
+        url: '/api/chat.update',
+        headers: { authorization: 'Bearer xoxb-test' },
+        body: { channel: 'C001', ts: '1234567890.000001', text: 'Updated' },
       });
 
       expect(response.statusCode).toBe(200);
       const payload = JSON.parse(response.payload);
       expect(payload.ok).toBe(true);
       expect(updateMessage).toHaveBeenCalledWith(
-        "C001",
-        "1234567890.000001",
-        "Updated",
-        undefined,
+        'C001',
+        '1234567890.000001',
+        'Updated',
+        undefined
       );
       expect(broadcast).toHaveBeenCalledWith({
-        type: "message_updated",
+        type: 'message_updated',
         message: updatedMessage,
       });
     });
 
-    it("should return error for non-existent message", async () => {
+    it('should return error for non-existent message', async () => {
       vi.mocked(updateMessage).mockReturnValue(null);
 
       const response = await app.inject({
-        method: "POST",
-        url: "/api/chat.update",
-        headers: { authorization: "Bearer xoxb-test" },
-        body: { channel: "C001", ts: "9999999999.999999", text: "Updated" },
+        method: 'POST',
+        url: '/api/chat.update',
+        headers: { authorization: 'Bearer xoxb-test' },
+        body: { channel: 'C001', ts: '9999999999.999999', text: 'Updated' },
       });
 
       expect(response.statusCode).toBe(200);
       const payload = JSON.parse(response.payload);
       expect(payload.ok).toBe(false);
-      expect(payload.error).toBe("message_not_found");
+      expect(payload.error).toBe('message_not_found');
     });
   });
 
-  describe("chat.delete", () => {
+  describe('chat.delete', () => {
     beforeEach(() => {
       const mockApp = {
-        id: "A001",
-        name: "Test App",
-        botUserId: "U001",
-        botUserName: "TestBot",
-        botToken: "xoxb-test",
-        appToken: "xapp-test",
-        signingSecret: "secret",
-        requestUrl: "",
+        id: 'A001',
+        name: 'Test App',
+        botUserId: 'U001',
+        botUserName: 'TestBot',
+        botToken: 'xoxb-test',
+        appToken: 'xapp-test',
+        signingSecret: 'secret',
+        requestUrl: '',
         subscribedEvents: [],
         socketModeEnabled: false,
       };
       vi.mocked(getAppByToken).mockReturnValue(mockApp);
     });
 
-    it("should delete message", async () => {
+    it('should delete message', async () => {
       vi.mocked(deleteMessage).mockReturnValue(true);
 
       const response = await app.inject({
-        method: "POST",
-        url: "/api/chat.delete",
-        headers: { authorization: "Bearer xoxb-test" },
-        body: { channel: "C001", ts: "1234567890.000001" },
+        method: 'POST',
+        url: '/api/chat.delete',
+        headers: { authorization: 'Bearer xoxb-test' },
+        body: { channel: 'C001', ts: '1234567890.000001' },
       });
 
       expect(response.statusCode).toBe(200);
       const payload = JSON.parse(response.payload);
       expect(payload.ok).toBe(true);
-      expect(deleteMessage).toHaveBeenCalledWith("C001", "1234567890.000001");
+      expect(deleteMessage).toHaveBeenCalledWith('C001', '1234567890.000001');
       expect(broadcast).toHaveBeenCalledWith({
-        type: "message_deleted",
-        channelId: "C001",
-        ts: "1234567890.000001",
+        type: 'message_deleted',
+        channelId: 'C001',
+        ts: '1234567890.000001',
       });
     });
 
-    it("should return error for non-existent message", async () => {
+    it('should return error for non-existent message', async () => {
       vi.mocked(deleteMessage).mockReturnValue(false);
 
       const response = await app.inject({
-        method: "POST",
-        url: "/api/chat.delete",
-        headers: { authorization: "Bearer xoxb-test" },
-        body: { channel: "C001", ts: "9999999999.999999" },
+        method: 'POST',
+        url: '/api/chat.delete',
+        headers: { authorization: 'Bearer xoxb-test' },
+        body: { channel: 'C001', ts: '9999999999.999999' },
       });
 
       expect(response.statusCode).toBe(200);
       const payload = JSON.parse(response.payload);
       expect(payload.ok).toBe(false);
-      expect(payload.error).toBe("message_not_found");
+      expect(payload.error).toBe('message_not_found');
     });
   });
 
-  describe("conversations.list", () => {
+  describe('conversations.list', () => {
     beforeEach(() => {
       const mockApp = {
-        id: "A001",
-        name: "Test App",
-        botUserId: "U001",
-        botUserName: "TestBot",
-        botToken: "xoxb-test",
-        appToken: "xapp-test",
-        signingSecret: "secret",
-        requestUrl: "",
+        id: 'A001',
+        name: 'Test App',
+        botUserId: 'U001',
+        botUserName: 'TestBot',
+        botToken: 'xoxb-test',
+        appToken: 'xapp-test',
+        signingSecret: 'secret',
+        requestUrl: '',
         subscribedEvents: [],
         socketModeEnabled: false,
       };
@@ -330,18 +330,18 @@ describe("Slack API Routes", () => {
       vi.mocked(getDb).mockReturnValue({
         prepare: vi.fn().mockReturnValue({
           all: vi.fn().mockReturnValue([
-            { id: "C001", name: "general", type: "public" },
-            { id: "C002", name: "random", type: "private" },
+            { id: 'C001', name: 'general', type: 'public' },
+            { id: 'C002', name: 'random', type: 'private' },
           ]),
         }),
       } as any);
     });
 
-    it("should list all channels", async () => {
+    it('should list all channels', async () => {
       const response = await app.inject({
-        method: "POST",
-        url: "/api/conversations.list",
-        headers: { authorization: "Bearer xoxb-test" },
+        method: 'POST',
+        url: '/api/conversations.list',
+        headers: { authorization: 'Bearer xoxb-test' },
         body: {},
       });
 
@@ -354,17 +354,17 @@ describe("Slack API Routes", () => {
     });
   });
 
-  describe("conversations.history", () => {
+  describe('conversations.history', () => {
     beforeEach(() => {
       const mockApp = {
-        id: "A001",
-        name: "Test App",
-        botUserId: "U001",
-        botUserName: "TestBot",
-        botToken: "xoxb-test",
-        appToken: "xapp-test",
-        signingSecret: "secret",
-        requestUrl: "",
+        id: 'A001',
+        name: 'Test App',
+        botUserId: 'U001',
+        botUserName: 'TestBot',
+        botToken: 'xoxb-test',
+        appToken: 'xapp-test',
+        signingSecret: 'secret',
+        requestUrl: '',
         subscribedEvents: [],
         socketModeEnabled: false,
       };
@@ -372,11 +372,11 @@ describe("Slack API Routes", () => {
       vi.mocked(getChannelMessages).mockReturnValue({
         messages: [
           {
-            id: "M001",
-            channel: "C001",
-            user: "U001",
-            text: "Hello",
-            ts: "1234567890.000001",
+            id: 'M001',
+            channel: 'C001',
+            user: 'U001',
+            text: 'Hello',
+            ts: '1234567890.000001',
             reactions: [],
           },
         ],
@@ -384,121 +384,121 @@ describe("Slack API Routes", () => {
       });
     });
 
-    it("should get channel history", async () => {
+    it('should get channel history', async () => {
       const response = await app.inject({
-        method: "POST",
-        url: "/api/conversations.history",
-        headers: { authorization: "Bearer xoxb-test" },
-        body: { channel: "C001" },
+        method: 'POST',
+        url: '/api/conversations.history',
+        headers: { authorization: 'Bearer xoxb-test' },
+        body: { channel: 'C001' },
       });
 
       expect(response.statusCode).toBe(200);
       const payload = JSON.parse(response.payload);
       expect(payload.ok).toBe(true);
       expect(payload.messages).toHaveLength(1);
-      expect(payload.messages[0].text).toBe("Hello");
-      expect(getChannelMessages).toHaveBeenCalledWith("C001", 100, undefined);
+      expect(payload.messages[0].text).toBe('Hello');
+      expect(getChannelMessages).toHaveBeenCalledWith('C001', 100, undefined);
     });
 
-    it("should support pagination with limit", async () => {
+    it('should support pagination with limit', async () => {
       const response = await app.inject({
-        method: "POST",
-        url: "/api/conversations.history",
-        headers: { authorization: "Bearer xoxb-test" },
-        body: { channel: "C001", limit: "50" },
+        method: 'POST',
+        url: '/api/conversations.history',
+        headers: { authorization: 'Bearer xoxb-test' },
+        body: { channel: 'C001', limit: '50' },
       });
 
-      expect(getChannelMessages).toHaveBeenCalledWith("C001", 50, undefined);
+      expect(getChannelMessages).toHaveBeenCalledWith('C001', 50, undefined);
     });
   });
 
-  describe("reactions.add", () => {
+  describe('reactions.add', () => {
     beforeEach(() => {
       const mockApp = {
-        id: "A001",
-        name: "Test App",
-        botUserId: "U001",
-        botUserName: "TestBot",
-        botToken: "xoxb-test",
-        appToken: "xapp-test",
-        signingSecret: "secret",
-        requestUrl: "",
+        id: 'A001',
+        name: 'Test App',
+        botUserId: 'U001',
+        botUserName: 'TestBot',
+        botToken: 'xoxb-test',
+        appToken: 'xapp-test',
+        signingSecret: 'secret',
+        requestUrl: '',
         subscribedEvents: [],
         socketModeEnabled: false,
       };
       vi.mocked(getAppByToken).mockReturnValue(mockApp);
       vi.mocked(getMessageByTs).mockReturnValue({
-        id: "M001",
-        channel: "C001",
-        user: "U001",
-        text: "Hello",
-        ts: "1234567890.000001",
+        id: 'M001',
+        channel: 'C001',
+        user: 'U001',
+        text: 'Hello',
+        ts: '1234567890.000001',
         reactions: [],
       });
-      vi.mocked(toggleReaction).mockReturnValue("added");
+      vi.mocked(toggleReaction).mockReturnValue('added');
     });
 
-    it("should add reaction to message", async () => {
+    it('should add reaction to message', async () => {
       const response = await app.inject({
-        method: "POST",
-        url: "/api/reactions.add",
-        headers: { authorization: "Bearer xoxb-test" },
+        method: 'POST',
+        url: '/api/reactions.add',
+        headers: { authorization: 'Bearer xoxb-test' },
         body: {
-          channel: "C001",
-          name: "thumbsup",
-          timestamp: "1234567890.000001",
+          channel: 'C001',
+          name: 'thumbsup',
+          timestamp: '1234567890.000001',
         },
       });
 
       expect(response.statusCode).toBe(200);
       const payload = JSON.parse(response.payload);
       expect(payload.ok).toBe(true);
-      expect(toggleReaction).toHaveBeenCalledWith("M001", "thumbsup", "U001");
+      expect(toggleReaction).toHaveBeenCalledWith('M001', 'thumbsup', 'U001');
       expect(broadcast).toHaveBeenCalled();
     });
 
-    it("should return error for non-existent message", async () => {
+    it('should return error for non-existent message', async () => {
       vi.mocked(getMessageByTs).mockReturnValue(null);
 
       const response = await app.inject({
-        method: "POST",
-        url: "/api/reactions.add",
-        headers: { authorization: "Bearer xoxb-test" },
+        method: 'POST',
+        url: '/api/reactions.add',
+        headers: { authorization: 'Bearer xoxb-test' },
         body: {
-          channel: "C001",
-          name: "thumbsup",
-          timestamp: "9999999999.999999",
+          channel: 'C001',
+          name: 'thumbsup',
+          timestamp: '9999999999.999999',
         },
       });
 
       expect(response.statusCode).toBe(200);
       const payload = JSON.parse(response.payload);
       expect(payload.ok).toBe(false);
-      expect(payload.error).toBe("message_not_found");
+      expect(payload.error).toBe('message_not_found');
     });
   });
 
-  describe("reactions.remove", () => {
+  describe('reactions.remove', () => {
     beforeEach(() => {
       const mockApp = {
-        id: "A001",
-        name: "Test App",
-        botUserId: "U001",
-        botUserName: "TestBot",
-        botToken: "xoxb-test",
-        appToken: "xapp-test",
-        signingSecret: "secret",
-        requestUrl: "",
+        id: 'A001',
+        name: 'Test App',
+        botUserId: 'U001',
+        botUserName: 'TestBot',
+        botToken: 'xoxb-test',
+        appToken: 'xapp-test',
+        signingSecret: 'secret',
+        requestUrl: '',
         subscribedEvents: [],
         socketModeEnabled: false,
       };
       vi.mocked(getAppByToken).mockReturnValue(mockApp);
       vi.mocked(getMessageByTs).mockReturnValue({
-        id: "M001",
-        channel: "C001",
-        user: "U001",
-        text: "Hello",
-        ts: "1234567890.000001",
+        id: 'M001',
+        channel: 'C001',
+        user: 'U001',
+        text: 'Hello',
+        ts: '1234567890.000001',
         reactions: [],
       });
       vi.mocked(getDb).mockReturnValue({
@@ -508,15 +508,15 @@ describe("Slack API Routes", () => {
       } as any);
     });
 
-    it("should remove reaction from message", async () => {
+    it('should remove reaction from message', async () => {
       const response = await app.inject({
-        method: "POST",
-        url: "/api/reactions.remove",
-        headers: { authorization: "Bearer xoxb-test" },
+        method: 'POST',
+        url: '/api/reactions.remove',
+        headers: { authorization: 'Bearer xoxb-test' },
         body: {
-          channel: "C001",
-          name: "thumbsup",
-          timestamp: "1234567890.000001",
+          channel: 'C001',
+          name: 'thumbsup',
+          timestamp: '1234567890.000001',
         },
       });
 
@@ -527,17 +527,17 @@ describe("Slack API Routes", () => {
     });
   });
 
-  describe("Inbound Logging", () => {
-    it("should log inbound API calls", async () => {
+  describe('Inbound Logging', () => {
+    it('should log inbound API calls', async () => {
       const mockApp = {
-        id: "A001",
-        name: "Test App",
-        botUserId: "U001",
-        botUserName: "TestBot",
-        botToken: "xoxb-test",
-        appToken: "xapp-test",
-        signingSecret: "secret",
-        requestUrl: "",
+        id: 'A001',
+        name: 'Test App',
+        botUserId: 'U001',
+        botUserName: 'TestBot',
+        botToken: 'xoxb-test',
+        appToken: 'xapp-test',
+        signingSecret: 'secret',
+        requestUrl: '',
         subscribedEvents: [],
         socketModeEnabled: false,
       };
@@ -545,68 +545,68 @@ describe("Slack API Routes", () => {
       vi.mocked(getDb).mockReturnValue({
         prepare: vi.fn().mockReturnValue({
           get: vi.fn().mockReturnValue({
-            id: "W001",
-            name: "Test Workspace",
-            domain: "test",
+            id: 'W001',
+            name: 'Test Workspace',
+            domain: 'test',
           }),
         }),
       } as any);
 
       await app.inject({
-        method: "POST",
-        url: "/api/auth.test",
-        headers: { authorization: "Bearer xoxb-test" },
+        method: 'POST',
+        url: '/api/auth.test',
+        headers: { authorization: 'Bearer xoxb-test' },
         body: {},
       });
 
       expect(logInbound).toHaveBeenCalledWith(
-        "A001",
-        "Test App",
-        "auth.test",
+        'A001',
+        'Test App',
+        'auth.test',
         {},
-        200,
+        200
       );
     });
   });
 
-  describe("users.list", () => {
+  describe('users.list', () => {
     beforeEach(() => {
       const mockApp = {
-        id: "A001",
-        name: "Test App",
-        botUserId: "U001",
-        botUserName: "TestBot",
-        botToken: "xoxb-test",
-        appToken: "xapp-test",
-        signingSecret: "secret",
-        requestUrl: "",
+        id: 'A001',
+        name: 'Test App',
+        botUserId: 'U001',
+        botUserName: 'TestBot',
+        botToken: 'xoxb-test',
+        appToken: 'xapp-test',
+        signingSecret: 'secret',
+        requestUrl: '',
         subscribedEvents: [],
         socketModeEnabled: false,
       };
       vi.mocked(getAppByToken).mockReturnValue(mockApp);
       vi.mocked(getAllUsers).mockReturnValue([
         {
-          id: "U002",
-          username: "user1",
-          fullName: "User One",
-          email: "user1@test.com",
-          avatarSeed: "seed1",
+          id: 'U002',
+          username: 'user1',
+          fullName: 'User One',
+          email: 'user1@test.com',
+          avatarSeed: 'seed1',
         },
         {
-          id: "U003",
-          username: "user2",
-          fullName: "User Two",
-          email: "user2@test.com",
-          avatarSeed: "seed2",
+          id: 'U003',
+          username: 'user2',
+          fullName: 'User Two',
+          email: 'user2@test.com',
+          avatarSeed: 'seed2',
         },
       ]);
     });
 
-    it("should list all users including bot", async () => {
+    it('should list all users including bot', async () => {
       const response = await app.inject({
-        method: "POST",
-        url: "/api/users.list",
-        headers: { authorization: "Bearer xoxb-test" },
+        method: 'POST',
+        url: '/api/users.list',
+        headers: { authorization: 'Bearer xoxb-test' },
         body: {},
       });
 
@@ -619,96 +619,96 @@ describe("Slack API Routes", () => {
     });
   });
 
-  describe("users.info", () => {
+  describe('users.info', () => {
     beforeEach(() => {
       const mockApp = {
-        id: "A001",
-        name: "Test App",
-        botUserId: "U001",
-        botUserName: "TestBot",
-        botToken: "xoxb-test",
-        appToken: "xapp-test",
-        signingSecret: "secret",
-        requestUrl: "",
+        id: 'A001',
+        name: 'Test App',
+        botUserId: 'U001',
+        botUserName: 'TestBot',
+        botToken: 'xoxb-test',
+        appToken: 'xapp-test',
+        signingSecret: 'secret',
+        requestUrl: '',
         subscribedEvents: [],
         socketModeEnabled: false,
       };
       vi.mocked(getAppByToken).mockReturnValue(mockApp);
       vi.mocked(getAllUsers).mockReturnValue([
         {
-          id: "U002",
-          username: "user1",
-          fullName: "User One",
-          email: "user1@test.com",
-          avatarSeed: "seed1",
+          id: 'U002',
+          username: 'user1',
+          fullName: 'User One',
+          email: 'user1@test.com',
+          avatarSeed: 'seed1',
         },
       ]);
     });
 
-    it("should get user info", async () => {
+    it('should get user info', async () => {
       const response = await app.inject({
-        method: "POST",
-        url: "/api/users.info",
-        headers: { authorization: "Bearer xoxb-test" },
-        body: { user: "U002" },
+        method: 'POST',
+        url: '/api/users.info',
+        headers: { authorization: 'Bearer xoxb-test' },
+        body: { user: 'U002' },
       });
 
       expect(response.statusCode).toBe(200);
       const payload = JSON.parse(response.payload);
       expect(payload.ok).toBe(true);
-      expect(payload.user.id).toBe("U002");
-      expect(payload.user.name).toBe("user1");
+      expect(payload.user.id).toBe('U002');
+      expect(payload.user.name).toBe('user1');
     });
 
-    it("should return error for non-existent user", async () => {
+    it('should return error for non-existent user', async () => {
       const response = await app.inject({
-        method: "POST",
-        url: "/api/users.info",
-        headers: { authorization: "Bearer xoxb-test" },
-        body: { user: "U999" },
+        method: 'POST',
+        url: '/api/users.info',
+        headers: { authorization: 'Bearer xoxb-test' },
+        body: { user: 'U999' },
       });
 
       expect(response.statusCode).toBe(200);
       const payload = JSON.parse(response.payload);
       expect(payload.ok).toBe(false);
-      expect(payload.error).toBe("user_not_found");
+      expect(payload.error).toBe('user_not_found');
     });
   });
 
-  describe("conversations.replies", () => {
+  describe('conversations.replies', () => {
     beforeEach(() => {
       const mockApp = {
-        id: "A001",
-        name: "Test App",
-        botUserId: "U001",
-        botUserName: "TestBot",
-        botToken: "xoxb-test",
-        appToken: "xapp-test",
-        signingSecret: "secret",
-        requestUrl: "",
+        id: 'A001',
+        name: 'Test App',
+        botUserId: 'U001',
+        botUserName: 'TestBot',
+        botToken: 'xoxb-test',
+        appToken: 'xapp-test',
+        signingSecret: 'secret',
+        requestUrl: '',
         subscribedEvents: [],
         socketModeEnabled: false,
       };
       vi.mocked(getAppByToken).mockReturnValue(mockApp);
       vi.mocked(getThreadMessages).mockReturnValue([
         {
-          id: "M002",
-          channel: "C001",
-          user: "U001",
-          text: "Reply",
-          ts: "1234567890.000002",
-          threadTs: "1234567890.000001",
+          id: 'M002',
+          channel: 'C001',
+          user: 'U001',
+          text: 'Reply',
+          ts: '1234567890.000002',
+          threadTs: '1234567890.000001',
           reactions: [],
         },
       ]);
     });
 
-    it("should get thread replies", async () => {
+    it('should get thread replies', async () => {
       const response = await app.inject({
-        method: "POST",
-        url: "/api/conversations.replies",
-        headers: { authorization: "Bearer xoxb-test" },
-        body: { channel: "C001", ts: "1234567890.000001" },
+        method: 'POST',
+        url: '/api/conversations.replies',
+        headers: { authorization: 'Bearer xoxb-test' },
+        body: { channel: 'C001', ts: '1234567890.000001' },
       });
 
       expect(response.statusCode).toBe(200);
@@ -716,32 +716,32 @@ describe("Slack API Routes", () => {
       expect(payload.ok).toBe(true);
       expect(payload.messages).toHaveLength(1);
       expect(getThreadMessages).toHaveBeenCalledWith(
-        "C001",
-        "1234567890.000001",
+        'C001',
+        '1234567890.000001'
       );
     });
   });
 
-  describe("conversations.create", () => {
+  describe('conversations.create', () => {
     beforeEach(() => {
       const mockApp = {
-        id: "A001",
-        name: "Test App",
-        botUserId: "U001",
-        botUserName: "TestBot",
-        botToken: "xoxb-test",
-        appToken: "xapp-test",
-        signingSecret: "secret",
-        requestUrl: "",
+        id: 'A001',
+        name: 'Test App',
+        botUserId: 'U001',
+        botUserName: 'TestBot',
+        botToken: 'xoxb-test',
+        appToken: 'xapp-test',
+        signingSecret: 'secret',
+        requestUrl: '',
         subscribedEvents: [],
         socketModeEnabled: false,
       };
       vi.mocked(getAppByToken).mockReturnValue(mockApp);
-      vi.mocked(generateId).mockReturnValue("C003");
+      vi.mocked(generateId).mockReturnValue('C003');
       vi.mocked(getChannel).mockReturnValue({
-        id: "C003",
-        name: "test-channel",
-        type: "public",
+        id: 'C003',
+        name: 'test-channel',
+        type: 'public',
         members: [],
         archived: false,
       });
@@ -753,28 +753,28 @@ describe("Slack API Routes", () => {
       } as any);
     });
 
-    it("should create a public channel", async () => {
+    it('should create a public channel', async () => {
       const response = await app.inject({
-        method: "POST",
-        url: "/api/conversations.create",
-        headers: { authorization: "Bearer xoxb-test" },
-        body: { name: "Test Channel" },
+        method: 'POST',
+        url: '/api/conversations.create',
+        headers: { authorization: 'Bearer xoxb-test' },
+        body: { name: 'Test Channel' },
       });
 
       expect(response.statusCode).toBe(200);
       const payload = JSON.parse(response.payload);
       expect(payload.ok).toBe(true);
-      expect(payload.channel.name).toBe("test-channel");
+      expect(payload.channel.name).toBe('test-channel');
       expect(payload.channel.is_channel).toBe(true);
       expect(broadcast).toHaveBeenCalled();
     });
 
-    it("should create a private channel", async () => {
+    it('should create a private channel', async () => {
       const response = await app.inject({
-        method: "POST",
-        url: "/api/conversations.create",
-        headers: { authorization: "Bearer xoxb-test" },
-        body: { name: "Private Channel", is_private: true },
+        method: 'POST',
+        url: '/api/conversations.create',
+        headers: { authorization: 'Bearer xoxb-test' },
+        body: { name: 'Private Channel', is_private: true },
       });
 
       expect(response.statusCode).toBe(200);
@@ -783,17 +783,17 @@ describe("Slack API Routes", () => {
     });
   });
 
-  describe("conversations.members", () => {
+  describe('conversations.members', () => {
     beforeEach(() => {
       const mockApp = {
-        id: "A001",
-        name: "Test App",
-        botUserId: "U001",
-        botUserName: "TestBot",
-        botToken: "xoxb-test",
-        appToken: "xapp-test",
-        signingSecret: "secret",
-        requestUrl: "",
+        id: 'A001',
+        name: 'Test App',
+        botUserId: 'U001',
+        botUserName: 'TestBot',
+        botToken: 'xoxb-test',
+        appToken: 'xapp-test',
+        signingSecret: 'secret',
+        requestUrl: '',
         subscribedEvents: [],
         socketModeEnabled: false,
       };
@@ -802,94 +802,94 @@ describe("Slack API Routes", () => {
         prepare: vi.fn().mockReturnValue({
           all: vi
             .fn()
-            .mockReturnValue([{ user_id: "U001" }, { user_id: "U002" }]),
+            .mockReturnValue([{ user_id: 'U001' }, { user_id: 'U002' }]),
         }),
       } as any);
     });
 
-    it("should list channel members", async () => {
+    it('should list channel members', async () => {
       const response = await app.inject({
-        method: "POST",
-        url: "/api/conversations.members",
-        headers: { authorization: "Bearer xoxb-test" },
-        body: { channel: "C001" },
+        method: 'POST',
+        url: '/api/conversations.members',
+        headers: { authorization: 'Bearer xoxb-test' },
+        body: { channel: 'C001' },
       });
 
       expect(response.statusCode).toBe(200);
       const payload = JSON.parse(response.payload);
       expect(payload.ok).toBe(true);
       expect(payload.members).toHaveLength(2);
-      expect(payload.members).toContain("U001");
+      expect(payload.members).toContain('U001');
     });
   });
 
-  describe("conversations.info", () => {
+  describe('conversations.info', () => {
     beforeEach(() => {
       const mockApp = {
-        id: "A001",
-        name: "Test App",
-        botUserId: "U001",
-        botUserName: "TestBot",
-        botToken: "xoxb-test",
-        appToken: "xapp-test",
-        signingSecret: "secret",
-        requestUrl: "",
+        id: 'A001',
+        name: 'Test App',
+        botUserId: 'U001',
+        botUserName: 'TestBot',
+        botToken: 'xoxb-test',
+        appToken: 'xapp-test',
+        signingSecret: 'secret',
+        requestUrl: '',
         subscribedEvents: [],
         socketModeEnabled: false,
       };
       vi.mocked(getAppByToken).mockReturnValue(mockApp);
       vi.mocked(getChannel).mockReturnValue({
-        id: "C001",
-        name: "general",
-        type: "public",
-        members: ["U001", "U002"],
+        id: 'C001',
+        name: 'general',
+        type: 'public',
+        members: ['U001', 'U002'],
         archived: false,
       });
     });
 
-    it("should get channel info", async () => {
+    it('should get channel info', async () => {
       const response = await app.inject({
-        method: "POST",
-        url: "/api/conversations.info",
-        headers: { authorization: "Bearer xoxb-test" },
-        body: { channel: "C001" },
+        method: 'POST',
+        url: '/api/conversations.info',
+        headers: { authorization: 'Bearer xoxb-test' },
+        body: { channel: 'C001' },
       });
 
       expect(response.statusCode).toBe(200);
       const payload = JSON.parse(response.payload);
       expect(payload.ok).toBe(true);
-      expect(payload.channel.id).toBe("C001");
-      expect(payload.channel.name).toBe("general");
+      expect(payload.channel.id).toBe('C001');
+      expect(payload.channel.name).toBe('general');
     });
 
-    it("should return error for non-existent channel", async () => {
+    it('should return error for non-existent channel', async () => {
       vi.mocked(getChannel).mockReturnValue(null);
 
       const response = await app.inject({
-        method: "POST",
-        url: "/api/conversations.info",
-        headers: { authorization: "Bearer xoxb-test" },
-        body: { channel: "C999" },
+        method: 'POST',
+        url: '/api/conversations.info',
+        headers: { authorization: 'Bearer xoxb-test' },
+        body: { channel: 'C999' },
       });
 
       expect(response.statusCode).toBe(200);
       const payload = JSON.parse(response.payload);
       expect(payload.ok).toBe(false);
-      expect(payload.error).toBe("channel_not_found");
+      expect(payload.error).toBe('channel_not_found');
     });
   });
 
-  describe("users.conversations", () => {
+  describe('users.conversations', () => {
     beforeEach(() => {
       const mockApp = {
-        id: "A001",
-        name: "Test App",
-        botUserId: "U001",
-        botUserName: "TestBot",
-        botToken: "xoxb-test",
-        appToken: "xapp-test",
-        signingSecret: "secret",
-        requestUrl: "",
+        id: 'A001',
+        name: 'Test App',
+        botUserId: 'U001',
+        botUserName: 'TestBot',
+        botToken: 'xoxb-test',
+        appToken: 'xapp-test',
+        signingSecret: 'secret',
+        requestUrl: '',
         subscribedEvents: [],
         socketModeEnabled: false,
       };
@@ -897,19 +897,19 @@ describe("Slack API Routes", () => {
       vi.mocked(getDb).mockReturnValue({
         prepare: vi.fn().mockReturnValue({
           all: vi.fn().mockReturnValue([
-            { id: "C001", name: "general", type: "public" },
-            { id: "C002", name: "random", type: "private" },
+            { id: 'C001', name: 'general', type: 'public' },
+            { id: 'C002', name: 'random', type: 'private' },
           ]),
         }),
       } as any);
     });
 
-    it("should list user conversations", async () => {
+    it('should list user conversations', async () => {
       const response = await app.inject({
-        method: "POST",
-        url: "/api/users.conversations",
-        headers: { authorization: "Bearer xoxb-test" },
-        body: { user: "U001" },
+        method: 'POST',
+        url: '/api/users.conversations',
+        headers: { authorization: 'Bearer xoxb-test' },
+        body: { user: 'U001' },
       });
 
       expect(response.statusCode).toBe(200);
@@ -919,41 +919,41 @@ describe("Slack API Routes", () => {
     });
   });
 
-  describe("chat.postEphemeral", () => {
+  describe('chat.postEphemeral', () => {
     beforeEach(() => {
       const mockApp = {
-        id: "A001",
-        name: "Test App",
-        botUserId: "U001",
-        botUserName: "TestBot",
-        botToken: "xoxb-test",
-        appToken: "xapp-test",
-        signingSecret: "secret",
-        requestUrl: "",
+        id: 'A001',
+        name: 'Test App',
+        botUserId: 'U001',
+        botUserName: 'TestBot',
+        botToken: 'xoxb-test',
+        appToken: 'xapp-test',
+        signingSecret: 'secret',
+        requestUrl: '',
         subscribedEvents: [],
         socketModeEnabled: false,
       };
       vi.mocked(getAppByToken).mockReturnValue(mockApp);
-      vi.mocked(generateTs).mockReturnValue("1234567890.000001");
-      vi.mocked(generateId).mockReturnValue("ME001");
+      vi.mocked(generateTs).mockReturnValue('1234567890.000001');
+      vi.mocked(generateId).mockReturnValue('ME001');
       vi.mocked(insertMessage).mockReturnValue({
-        id: "ME001",
-        channel: "C001",
-        user: "U001",
-        text: "Ephemeral",
-        ts: "1234567890.000001",
+        id: 'ME001',
+        channel: 'C001',
+        user: 'U001',
+        text: 'Ephemeral',
+        ts: '1234567890.000001',
         reactions: [],
-        subtype: "ephemeral",
-        ephemeralRecipient: "U002",
+        subtype: 'ephemeral',
+        ephemeralRecipient: 'U002',
       });
     });
 
-    it("should post ephemeral message", async () => {
+    it('should post ephemeral message', async () => {
       const response = await app.inject({
-        method: "POST",
-        url: "/api/chat.postEphemeral",
-        headers: { authorization: "Bearer xoxb-test" },
-        body: { channel: "C001", text: "Ephemeral", user: "U002" },
+        method: 'POST',
+        url: '/api/chat.postEphemeral',
+        headers: { authorization: 'Bearer xoxb-test' },
+        body: { channel: 'C001', text: 'Ephemeral', user: 'U002' },
       });
 
       expect(response.statusCode).toBe(200);
@@ -964,72 +964,72 @@ describe("Slack API Routes", () => {
     });
   });
 
-  describe("chat.getPermalink", () => {
+  describe('chat.getPermalink', () => {
     beforeEach(() => {
       const mockApp = {
-        id: "A001",
-        name: "Test App",
-        botUserId: "U001",
-        botUserName: "TestBot",
-        botToken: "xoxb-test",
-        appToken: "xapp-test",
-        signingSecret: "secret",
-        requestUrl: "",
+        id: 'A001',
+        name: 'Test App',
+        botUserId: 'U001',
+        botUserName: 'TestBot',
+        botToken: 'xoxb-test',
+        appToken: 'xapp-test',
+        signingSecret: 'secret',
+        requestUrl: '',
         subscribedEvents: [],
         socketModeEnabled: false,
       };
       vi.mocked(getAppByToken).mockReturnValue(mockApp);
     });
 
-    it("should get message permalink", async () => {
+    it('should get message permalink', async () => {
       const response = await app.inject({
-        method: "POST",
-        url: "/api/chat.getPermalink",
-        headers: { authorization: "Bearer xoxb-test" },
-        body: { channel: "C001", message_ts: "1234567890.000001" },
+        method: 'POST',
+        url: '/api/chat.getPermalink',
+        headers: { authorization: 'Bearer xoxb-test' },
+        body: { channel: 'C001', message_ts: '1234567890.000001' },
       });
 
       expect(response.statusCode).toBe(200);
       const payload = JSON.parse(response.payload);
       expect(payload.ok).toBe(true);
-      expect(payload.permalink).toContain("C001");
-      expect(payload.permalink).toContain("1234567890000001");
+      expect(payload.permalink).toContain('C001');
+      expect(payload.permalink).toContain('1234567890000001');
     });
   });
 
-  describe("reactions.get", () => {
+  describe('reactions.get', () => {
     beforeEach(() => {
       const mockApp = {
-        id: "A001",
-        name: "Test App",
-        botUserId: "U001",
-        botUserName: "TestBot",
-        botToken: "xoxb-test",
-        appToken: "xapp-test",
-        signingSecret: "secret",
-        requestUrl: "",
+        id: 'A001',
+        name: 'Test App',
+        botUserId: 'U001',
+        botUserName: 'TestBot',
+        botToken: 'xoxb-test',
+        appToken: 'xapp-test',
+        signingSecret: 'secret',
+        requestUrl: '',
         subscribedEvents: [],
         socketModeEnabled: false,
       };
       vi.mocked(getAppByToken).mockReturnValue(mockApp);
       vi.mocked(getMessageByTs).mockReturnValue({
-        id: "M001",
-        channel: "C001",
-        user: "U001",
-        text: "Hello",
-        ts: "1234567890.000001",
-        reactions: [{ name: "thumbsup", users: ["U001", "U002"] }],
+        id: 'M001',
+        channel: 'C001',
+        user: 'U001',
+        text: 'Hello',
+        ts: '1234567890.000001',
+        reactions: [{ name: 'thumbsup', users: ['U001', 'U002'] }],
       });
     });
 
-    it("should get message reactions", async () => {
+    it('should get message reactions', async () => {
       const response = await app.inject({
-        method: "POST",
-        url: "/api/reactions.get",
-        headers: { authorization: "Bearer xoxb-test" },
+        method: 'POST',
+        url: '/api/reactions.get',
+        headers: { authorization: 'Bearer xoxb-test' },
         body: {
-          channel: "C001",
-          timestamp: "1234567890.000001",
+          channel: 'C001',
+          timestamp: '1234567890.000001',
         },
       });
 
@@ -1037,138 +1037,138 @@ describe("Slack API Routes", () => {
       const payload = JSON.parse(response.payload);
       expect(payload.ok).toBe(true);
       expect(payload.message.reactions).toHaveLength(1);
-      expect(payload.message.reactions[0].name).toBe("thumbsup");
+      expect(payload.message.reactions[0].name).toBe('thumbsup');
     });
   });
 
-  describe("apps.connections.open", () => {
+  describe('apps.connections.open', () => {
     beforeEach(() => {
       const mockApp = {
-        id: "A001",
-        name: "Test App",
-        botUserId: "U001",
-        botUserName: "TestBot",
-        botToken: "xoxb-test",
-        appToken: "xapp-test",
-        signingSecret: "secret",
-        requestUrl: "",
+        id: 'A001',
+        name: 'Test App',
+        botUserId: 'U001',
+        botUserName: 'TestBot',
+        botToken: 'xoxb-test',
+        appToken: 'xapp-test',
+        signingSecret: 'secret',
+        requestUrl: '',
         subscribedEvents: [],
         socketModeEnabled: false,
       };
       vi.mocked(getAppByToken).mockReturnValue(mockApp);
-      vi.mocked(issueTicket).mockReturnValue("ticket-123");
+      vi.mocked(issueTicket).mockReturnValue('ticket-123');
     });
 
-    it("should open socket mode connection", async () => {
+    it('should open socket mode connection', async () => {
       const response = await app.inject({
-        method: "POST",
-        url: "/api/apps.connections.open",
-        headers: { authorization: "Bearer xoxb-test" },
+        method: 'POST',
+        url: '/api/apps.connections.open',
+        headers: { authorization: 'Bearer xoxb-test' },
         body: {},
       });
 
       expect(response.statusCode).toBe(200);
       const payload = JSON.parse(response.payload);
       expect(payload.ok).toBe(true);
-      expect(payload.url).toContain("ws://");
-      expect(payload.url).toContain("ticket=ticket-123");
-      expect(issueTicket).toHaveBeenCalledWith("A001");
+      expect(payload.url).toContain('ws://');
+      expect(payload.url).toContain('ticket=ticket-123');
+      expect(issueTicket).toHaveBeenCalledWith('A001');
     });
   });
 
-  describe("views.open", () => {
+  describe('views.open', () => {
     beforeEach(() => {
       const mockApp = {
-        id: "A001",
-        name: "Test App",
-        botUserId: "U001",
-        botUserName: "TestBot",
-        botToken: "xoxb-test",
-        appToken: "xapp-test",
-        signingSecret: "secret",
-        requestUrl: "",
+        id: 'A001',
+        name: 'Test App',
+        botUserId: 'U001',
+        botUserName: 'TestBot',
+        botToken: 'xoxb-test',
+        appToken: 'xapp-test',
+        signingSecret: 'secret',
+        requestUrl: '',
         subscribedEvents: [],
         socketModeEnabled: false,
       };
       vi.mocked(getAppByToken).mockReturnValue(mockApp);
-      vi.mocked(redeemTrigger).mockReturnValue("A001");
+      vi.mocked(redeemTrigger).mockReturnValue('A001');
       vi.mocked(openModal).mockReturnValue({
-        id: "V001",
-        type: "modal",
-        title: { type: "plain_text", text: "Test" },
+        id: 'V001',
+        type: 'modal',
+        title: { type: 'plain_text', text: 'Test' },
         blocks: [],
       } as any);
     });
 
-    it("should open a modal", async () => {
+    it('should open a modal', async () => {
       const response = await app.inject({
-        method: "POST",
-        url: "/api/views.open",
-        headers: { authorization: "Bearer xoxb-test" },
+        method: 'POST',
+        url: '/api/views.open',
+        headers: { authorization: 'Bearer xoxb-test' },
         body: {
-          trigger_id: "trigger-123",
-          view: { type: "modal", title: "Test" },
+          trigger_id: 'trigger-123',
+          view: { type: 'modal', title: 'Test' },
         },
       });
 
       expect(response.statusCode).toBe(200);
       const payload = JSON.parse(response.payload);
       expect(payload.ok).toBe(true);
-      expect(payload.view.id).toBe("V001");
-      expect(redeemTrigger).toHaveBeenCalledWith("trigger-123");
+      expect(payload.view.id).toBe('V001');
+      expect(redeemTrigger).toHaveBeenCalledWith('trigger-123');
     });
 
-    it("should return error for expired trigger", async () => {
+    it('should return error for expired trigger', async () => {
       vi.mocked(redeemTrigger).mockReturnValue(null);
 
       const response = await app.inject({
-        method: "POST",
-        url: "/api/views.open",
-        headers: { authorization: "Bearer xoxb-test" },
+        method: 'POST',
+        url: '/api/views.open',
+        headers: { authorization: 'Bearer xoxb-test' },
         body: {
-          trigger_id: "expired-trigger",
-          view: { type: "modal", title: "Test" },
+          trigger_id: 'expired-trigger',
+          view: { type: 'modal', title: 'Test' },
         },
       });
 
       expect(response.statusCode).toBe(200);
       const payload = JSON.parse(response.payload);
       expect(payload.ok).toBe(false);
-      expect(payload.error).toBe("expired_trigger_id");
+      expect(payload.error).toBe('expired_trigger_id');
     });
   });
 
-  describe("views.update", () => {
+  describe('views.update', () => {
     beforeEach(() => {
       const mockApp = {
-        id: "A001",
-        name: "Test App",
-        botUserId: "U001",
-        botUserName: "TestBot",
-        botToken: "xoxb-test",
-        appToken: "xapp-test",
-        signingSecret: "secret",
-        requestUrl: "",
+        id: 'A001',
+        name: 'Test App',
+        botUserId: 'U001',
+        botUserName: 'TestBot',
+        botToken: 'xoxb-test',
+        appToken: 'xapp-test',
+        signingSecret: 'secret',
+        requestUrl: '',
         subscribedEvents: [],
         socketModeEnabled: false,
       };
       vi.mocked(getAppByToken).mockReturnValue(mockApp);
       vi.mocked(updateModal).mockReturnValue({
-        id: "V001",
-        type: "modal",
-        title: { type: "plain_text", text: "Updated" },
+        id: 'V001',
+        type: 'modal',
+        title: { type: 'plain_text', text: 'Updated' },
         blocks: [],
       } as any);
     });
 
-    it("should update a modal", async () => {
+    it('should update a modal', async () => {
       const response = await app.inject({
-        method: "POST",
-        url: "/api/views.update",
-        headers: { authorization: "Bearer xoxb-test" },
+        method: 'POST',
+        url: '/api/views.update',
+        headers: { authorization: 'Bearer xoxb-test' },
         body: {
-          view_id: "V001",
-          view: { type: "modal", title: "Updated" },
+          view_id: 'V001',
+          view: { type: 'modal', title: 'Updated' },
         },
       });
 
@@ -1178,96 +1178,96 @@ describe("Slack API Routes", () => {
       expect(updateModal).toHaveBeenCalled();
     });
 
-    it("should return error for non-existent view", async () => {
+    it('should return error for non-existent view', async () => {
       vi.mocked(updateModal).mockReturnValue(null);
 
       const response = await app.inject({
-        method: "POST",
-        url: "/api/views.update",
-        headers: { authorization: "Bearer xoxb-test" },
+        method: 'POST',
+        url: '/api/views.update',
+        headers: { authorization: 'Bearer xoxb-test' },
         body: {
-          view_id: "V999",
-          view: { type: "modal", title: "Updated" },
+          view_id: 'V999',
+          view: { type: 'modal', title: 'Updated' },
         },
       });
 
       expect(response.statusCode).toBe(200);
       const payload = JSON.parse(response.payload);
       expect(payload.ok).toBe(false);
-      expect(payload.error).toBe("not_found");
+      expect(payload.error).toBe('not_found');
     });
   });
 
-  describe("views.push", () => {
+  describe('views.push', () => {
     beforeEach(() => {
       const mockApp = {
-        id: "A001",
-        name: "Test App",
-        botUserId: "U001",
-        botUserName: "TestBot",
-        botToken: "xoxb-test",
-        appToken: "xapp-test",
-        signingSecret: "secret",
-        requestUrl: "",
+        id: 'A001',
+        name: 'Test App',
+        botUserId: 'U001',
+        botUserName: 'TestBot',
+        botToken: 'xoxb-test',
+        appToken: 'xapp-test',
+        signingSecret: 'secret',
+        requestUrl: '',
         subscribedEvents: [],
         socketModeEnabled: false,
       };
       vi.mocked(getAppByToken).mockReturnValue(mockApp);
-      vi.mocked(redeemTrigger).mockReturnValue("A001");
+      vi.mocked(redeemTrigger).mockReturnValue('A001');
       vi.mocked(pushModal).mockReturnValue({
-        id: "V002",
-        type: "modal",
-        title: { type: "plain_text", text: "Pushed" },
+        id: 'V002',
+        type: 'modal',
+        title: { type: 'plain_text', text: 'Pushed' },
         blocks: [],
       } as any);
     });
 
-    it("should push a new modal", async () => {
+    it('should push a new modal', async () => {
       const response = await app.inject({
-        method: "POST",
-        url: "/api/views.push",
-        headers: { authorization: "Bearer xoxb-test" },
+        method: 'POST',
+        url: '/api/views.push',
+        headers: { authorization: 'Bearer xoxb-test' },
         body: {
-          trigger_id: "trigger-123",
-          view: { type: "modal", title: "Pushed" },
+          trigger_id: 'trigger-123',
+          view: { type: 'modal', title: 'Pushed' },
         },
       });
 
       expect(response.statusCode).toBe(200);
       const payload = JSON.parse(response.payload);
       expect(payload.ok).toBe(true);
-      expect(payload.view.id).toBe("V002");
+      expect(payload.view.id).toBe('V002');
       expect(pushModal).toHaveBeenCalled();
     });
   });
 
-  describe("Unknown Method", () => {
-    it("should return 404 for unknown methods", async () => {
+  describe('Unknown Method', () => {
+    it('should return 404 for unknown methods', async () => {
       const mockApp = {
-        id: "A001",
-        name: "Test App",
-        botUserId: "U001",
-        botUserName: "TestBot",
-        botToken: "xoxb-test",
-        appToken: "xapp-test",
-        signingSecret: "secret",
-        requestUrl: "",
+        id: 'A001',
+        name: 'Test App',
+        botUserId: 'U001',
+        botUserName: 'TestBot',
+        botToken: 'xoxb-test',
+        appToken: 'xapp-test',
+        signingSecret: 'secret',
+        requestUrl: '',
         subscribedEvents: [],
         socketModeEnabled: false,
       };
       vi.mocked(getAppByToken).mockReturnValue(mockApp);
 
       const response = await app.inject({
-        method: "POST",
-        url: "/api/unknown.method",
-        headers: { authorization: "Bearer xoxb-test" },
+        method: 'POST',
+        url: '/api/unknown.method',
+        headers: { authorization: 'Bearer xoxb-test' },
         body: {},
       });
 
       expect(response.statusCode).toBe(404);
       const payload = JSON.parse(response.payload);
       expect(payload.ok).toBe(false);
-      expect(payload.error).toBe("unknown_method");
+      expect(payload.error).toBe('unknown_method');
     });
   });
 });

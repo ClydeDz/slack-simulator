@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import type {
   ModalView,
   InputBlock,
   PlainTextInputElement,
   StaticSelectElement,
   Block,
-} from "@shared/types";
-import { useStore } from "../../store";
-import { controlApi } from "../../lib/api";
-import BlockKit from "../MainPane/BlockKit";
+} from '@shared/types';
+import { useStore } from '../../store';
+import { controlApi } from '../../lib/api';
+import BlockKit from '../MainPane/BlockKit';
 
 // ── Input block renderer ──────────────────────────────────────────────────────
 
@@ -31,20 +31,20 @@ function PlainTextInput({
     <textarea
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      placeholder={el.placeholder?.text ?? ""}
+      placeholder={el.placeholder?.text ?? ''}
       rows={4}
       style={{
-        width: "100%",
-        padding: "8px 10px",
-        border: "1px solid var(--slacksim-color-composer-border)",
-        borderRadius: "var(--slacksim-radius-sm)",
-        fontFamily: "var(--slacksim-font-body)",
-        fontSize: "var(--slacksim-font-size-md)",
-        color: "var(--slacksim-color-fg)",
-        background: "var(--slacksim-color-bg)",
-        resize: "vertical",
-        outline: "none",
-        boxSizing: "border-box",
+        width: '100%',
+        padding: '8px 10px',
+        border: '1px solid var(--slacksim-color-composer-border)',
+        borderRadius: 'var(--slacksim-radius-sm)',
+        fontFamily: 'var(--slacksim-font-body)',
+        fontSize: 'var(--slacksim-font-size-md)',
+        color: 'var(--slacksim-color-fg)',
+        background: 'var(--slacksim-color-bg)',
+        resize: 'vertical',
+        outline: 'none',
+        boxSizing: 'border-box',
       }}
     />
   ) : (
@@ -52,18 +52,18 @@ function PlainTextInput({
       type="text"
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      placeholder={el.placeholder?.text ?? ""}
+      placeholder={el.placeholder?.text ?? ''}
       style={{
-        width: "100%",
-        padding: "8px 10px",
-        border: "1px solid var(--slacksim-color-composer-border)",
-        borderRadius: "var(--slacksim-radius-sm)",
-        fontFamily: "var(--slacksim-font-body)",
-        fontSize: "var(--slacksim-font-size-md)",
-        color: "var(--slacksim-color-fg)",
-        background: "var(--slacksim-color-bg)",
-        outline: "none",
-        boxSizing: "border-box",
+        width: '100%',
+        padding: '8px 10px',
+        border: '1px solid var(--slacksim-color-composer-border)',
+        borderRadius: 'var(--slacksim-radius-sm)',
+        fontFamily: 'var(--slacksim-font-body)',
+        fontSize: 'var(--slacksim-font-size-md)',
+        color: 'var(--slacksim-color-fg)',
+        background: 'var(--slacksim-color-bg)',
+        outline: 'none',
+        boxSizing: 'border-box',
       }}
     />
   );
@@ -83,19 +83,19 @@ function StaticSelectInput({
       value={value}
       onChange={(e) => onChange(e.target.value)}
       style={{
-        width: "100%",
-        padding: "8px 10px",
-        border: "1px solid var(--slacksim-color-composer-border)",
-        borderRadius: "var(--slacksim-radius-sm)",
-        fontFamily: "var(--slacksim-font-body)",
-        fontSize: "var(--slacksim-font-size-md)",
+        width: '100%',
+        padding: '8px 10px',
+        border: '1px solid var(--slacksim-color-composer-border)',
+        borderRadius: 'var(--slacksim-radius-sm)',
+        fontFamily: 'var(--slacksim-font-body)',
+        fontSize: 'var(--slacksim-font-size-md)',
         color: value
-          ? "var(--slacksim-color-fg)"
-          : "var(--slacksim-color-fg-placeholder)",
-        background: "var(--slacksim-color-bg)",
-        outline: "none",
-        boxSizing: "border-box",
-        cursor: "pointer",
+          ? 'var(--slacksim-color-fg)'
+          : 'var(--slacksim-color-fg-placeholder)',
+        background: 'var(--slacksim-color-bg)',
+        outline: 'none',
+        boxSizing: 'border-box',
+        cursor: 'pointer',
       }}
     >
       {!value && el.placeholder && (
@@ -121,31 +121,31 @@ function InputBlockEl({
   inputState: InputState;
   setInputState: React.Dispatch<React.SetStateAction<InputState>>;
 }) {
-  const blockId = block.block_id ?? block.element.action_id ?? "block";
-  const actionId = block.element.action_id ?? "value";
+  const blockId = block.block_id ?? block.element.action_id ?? 'block';
+  const actionId = block.element.action_id ?? 'value';
   const el = block.element;
   const initialValue =
-    el.type === "plain_text_input"
-      ? (el.initial_value ?? "")
-      : (el.initial_option?.value ?? "");
+    el.type === 'plain_text_input'
+      ? (el.initial_value ?? '')
+      : (el.initial_option?.value ?? '');
   const currentValue = inputState[blockId]?.[actionId] ?? initialValue;
 
   return (
-    <div style={{ marginBottom: "var(--slacksim-space-4)" }}>
+    <div style={{ marginBottom: 'var(--slacksim-space-4)' }}>
       <label
         style={{
-          display: "block",
-          marginBottom: "var(--slacksim-space-2)",
-          fontWeight: "var(--slacksim-font-weight-bold)",
-          fontSize: "var(--slacksim-font-size-md)",
-          color: "var(--slacksim-color-fg)",
+          display: 'block',
+          marginBottom: 'var(--slacksim-space-2)',
+          fontWeight: 'var(--slacksim-font-weight-bold)',
+          fontSize: 'var(--slacksim-font-size-md)',
+          color: 'var(--slacksim-color-fg)',
         }}
       >
         {block.label.text}
         {!block.optional && (
           <span
             style={{
-              color: "var(--slacksim-color-sidebar-badge-bg)",
+              color: 'var(--slacksim-color-sidebar-badge-bg)',
               marginLeft: 4,
             }}
           >
@@ -153,7 +153,7 @@ function InputBlockEl({
           </span>
         )}
       </label>
-      {el.type === "plain_text_input" && (
+      {el.type === 'plain_text_input' && (
         <PlainTextInput
           el={el}
           value={currentValue}
@@ -165,7 +165,7 @@ function InputBlockEl({
           }
         />
       )}
-      {el.type === "static_select" && (
+      {el.type === 'static_select' && (
         <StaticSelectInput
           el={el}
           value={currentValue}
@@ -180,9 +180,9 @@ function InputBlockEl({
       {block.hint && (
         <div
           style={{
-            marginTop: "var(--slacksim-space-1)",
-            fontSize: "var(--slacksim-font-size-sm)",
-            color: "var(--slacksim-color-fg-muted)",
+            marginTop: 'var(--slacksim-space-1)',
+            fontSize: 'var(--slacksim-font-size-sm)',
+            color: 'var(--slacksim-color-fg-muted)',
           }}
         >
           {block.hint.text}
@@ -214,8 +214,8 @@ export default function SlackModal({ view, appId, stackDepth = 1 }: Props) {
     setIsSubmitting(false);
   }, [view.id]);
 
-  const submitLabel = view.submit?.text ?? "Submit";
-  const closeLabel = view.close?.text ?? "Cancel";
+  const submitLabel = view.submit?.text ?? 'Submit';
+  const closeLabel = view.close?.text ?? 'Cancel';
   const hasSubmit = !!view.submit;
 
   // Separate display blocks (non-input) from input blocks
@@ -223,7 +223,7 @@ export default function SlackModal({ view, appId, stackDepth = 1 }: Props) {
   const inputBlocks: InputBlock[] = [];
 
   for (const block of view.blocks) {
-    if ((block as InputBlock).type === "input") {
+    if ((block as InputBlock).type === 'input') {
       inputBlocks.push(block as InputBlock);
     } else {
       displayBlocks.push(block as Block);
@@ -237,13 +237,13 @@ export default function SlackModal({ view, appId, stackDepth = 1 }: Props) {
       Record<string, { type: string; value: string }>
     > = {};
     for (const block of inputBlocks) {
-      const blockId = block.block_id ?? block.element.action_id ?? "block";
-      const actionId = block.element.action_id ?? "value";
+      const blockId = block.block_id ?? block.element.action_id ?? 'block';
+      const actionId = block.element.action_id ?? 'value';
       const el = block.element;
       const initialValue =
-        el.type === "plain_text_input"
-          ? (el.initial_value ?? "")
-          : (el.initial_option?.value ?? "");
+        el.type === 'plain_text_input'
+          ? (el.initial_value ?? '')
+          : (el.initial_option?.value ?? '');
       const rawValue = inputState[blockId]?.[actionId] ?? initialValue;
       values[blockId] = {
         [actionId]: { type: el.type, value: rawValue },
@@ -289,13 +289,13 @@ export default function SlackModal({ view, appId, stackDepth = 1 }: Props) {
   return (
     <div
       style={{
-        position: "fixed",
+        position: 'fixed',
         inset: 0,
-        background: "var(--slacksim-color-modal-overlay)",
+        background: 'var(--slacksim-color-modal-overlay)',
         zIndex: 1000,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
       onClick={(e) => {
         if (e.target === e.currentTarget) handleDismiss();
@@ -303,33 +303,33 @@ export default function SlackModal({ view, appId, stackDepth = 1 }: Props) {
     >
       <div
         style={{
-          background: "var(--slacksim-color-modal-bg)",
-          borderRadius: "var(--slacksim-radius-lg)",
-          boxShadow: "var(--slacksim-shadow-lg)",
+          background: 'var(--slacksim-color-modal-bg)',
+          borderRadius: 'var(--slacksim-radius-lg)',
+          boxShadow: 'var(--slacksim-shadow-lg)',
           width: 520,
-          maxWidth: "90vw",
-          maxHeight: "85vh",
-          display: "flex",
-          flexDirection: "column",
-          overflow: "hidden",
+          maxWidth: '90vw',
+          maxHeight: '85vh',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
         }}
       >
         {/* Header */}
         <div
           style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "var(--slacksim-space-5)",
-            borderBottom: "1px solid var(--slacksim-color-border)",
-            gap: "var(--slacksim-space-3)",
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: 'var(--slacksim-space-5)',
+            borderBottom: '1px solid var(--slacksim-color-border)',
+            gap: 'var(--slacksim-space-3)',
           }}
         >
           <div
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "var(--slacksim-space-2)",
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--slacksim-space-2)',
               minWidth: 0,
             }}
           >
@@ -338,13 +338,13 @@ export default function SlackModal({ view, appId, stackDepth = 1 }: Props) {
                 onClick={handleBack}
                 title="Back"
                 style={{
-                  background: "transparent",
-                  border: "none",
-                  cursor: "pointer",
-                  color: "var(--slacksim-color-fg-muted)",
-                  padding: "var(--slacksim-space-1)",
-                  display: "flex",
-                  alignItems: "center",
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  color: 'var(--slacksim-color-fg-muted)',
+                  padding: 'var(--slacksim-space-1)',
+                  display: 'flex',
+                  alignItems: 'center',
                   flexShrink: 0,
                 }}
               >
@@ -366,9 +366,9 @@ export default function SlackModal({ view, appId, stackDepth = 1 }: Props) {
             )}
             <h2
               style={{
-                fontSize: "var(--slacksim-font-size-xl)",
-                fontWeight: "var(--slacksim-font-weight-bold)",
-                color: "var(--slacksim-color-fg)",
+                fontSize: 'var(--slacksim-font-size-xl)',
+                fontWeight: 'var(--slacksim-font-weight-bold)',
+                color: 'var(--slacksim-color-fg)',
                 margin: 0,
               }}
             >
@@ -378,13 +378,13 @@ export default function SlackModal({ view, appId, stackDepth = 1 }: Props) {
           <button
             onClick={handleDismiss}
             style={{
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "var(--slacksim-font-size-xl)",
-              color: "var(--slacksim-color-fg-muted)",
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: 'var(--slacksim-font-size-xl)',
+              color: 'var(--slacksim-color-fg-muted)',
               lineHeight: 1,
-              padding: "var(--slacksim-space-1)",
+              padding: 'var(--slacksim-space-1)',
               flexShrink: 0,
             }}
           >
@@ -396,8 +396,8 @@ export default function SlackModal({ view, appId, stackDepth = 1 }: Props) {
         <div
           style={{
             flex: 1,
-            overflowY: "auto",
-            padding: "var(--slacksim-space-5)",
+            overflowY: 'auto',
+            padding: 'var(--slacksim-space-5)',
           }}
         >
           {/* Non-input blocks */}
@@ -405,7 +405,7 @@ export default function SlackModal({ view, appId, stackDepth = 1 }: Props) {
             <div
               style={{
                 marginBottom:
-                  inputBlocks.length > 0 ? "var(--slacksim-space-4)" : 0,
+                  inputBlocks.length > 0 ? 'var(--slacksim-space-4)' : 0,
               }}
             >
               <BlockKit blocks={displayBlocks} viewId={view.id} appId={appId} />
@@ -415,7 +415,7 @@ export default function SlackModal({ view, appId, stackDepth = 1 }: Props) {
           {/* Input blocks */}
           {inputBlocks.map((block, i) => {
             const blockId =
-              block.block_id ?? block.element.action_id ?? "block";
+              block.block_id ?? block.element.action_id ?? 'block';
             return (
               <div key={i}>
                 <InputBlockEl
@@ -426,10 +426,10 @@ export default function SlackModal({ view, appId, stackDepth = 1 }: Props) {
                 {errors[blockId] && (
                   <div
                     style={{
-                      marginTop: "calc(-1 * var(--slacksim-space-3))",
-                      marginBottom: "var(--slacksim-space-3)",
-                      fontSize: "var(--slacksim-font-size-sm)",
-                      color: "var(--slacksim-color-sidebar-badge-bg)",
+                      marginTop: 'calc(-1 * var(--slacksim-space-3))',
+                      marginBottom: 'var(--slacksim-space-3)',
+                      fontSize: 'var(--slacksim-font-size-sm)',
+                      color: 'var(--slacksim-color-sidebar-badge-bg)',
                     }}
                   >
                     {errors[blockId]}
@@ -444,11 +444,11 @@ export default function SlackModal({ view, appId, stackDepth = 1 }: Props) {
         {(hasSubmit || view.close) && (
           <div
             style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              gap: "var(--slacksim-space-3)",
-              padding: "var(--slacksim-space-4) var(--slacksim-space-5)",
-              borderTop: "1px solid var(--slacksim-color-border)",
+              display: 'flex',
+              justifyContent: 'flex-end',
+              gap: 'var(--slacksim-space-3)',
+              padding: 'var(--slacksim-space-4) var(--slacksim-space-5)',
+              borderTop: '1px solid var(--slacksim-color-border)',
             }}
           >
             {view.close && (
@@ -456,14 +456,14 @@ export default function SlackModal({ view, appId, stackDepth = 1 }: Props) {
                 type="button"
                 onClick={handleDismiss}
                 style={{
-                  background: "transparent",
-                  border: "1px solid var(--slacksim-color-border)",
-                  borderRadius: "var(--slacksim-radius-sm)",
-                  padding: "8px 16px",
-                  cursor: "pointer",
-                  fontSize: "var(--slacksim-font-size-md)",
-                  color: "var(--slacksim-color-fg)",
-                  fontFamily: "var(--slacksim-font-body)",
+                  background: 'transparent',
+                  border: '1px solid var(--slacksim-color-border)',
+                  borderRadius: 'var(--slacksim-radius-sm)',
+                  padding: '8px 16px',
+                  cursor: 'pointer',
+                  fontSize: 'var(--slacksim-font-size-md)',
+                  color: 'var(--slacksim-color-fg)',
+                  fontFamily: 'var(--slacksim-font-body)',
                 }}
               >
                 {closeLabel}
@@ -476,19 +476,19 @@ export default function SlackModal({ view, appId, stackDepth = 1 }: Props) {
                 disabled={isSubmitting}
                 className="ss-btn-primary"
                 style={{
-                  background: "var(--slacksim-color-primary)",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: "var(--slacksim-radius-sm)",
-                  padding: "8px 16px",
-                  cursor: isSubmitting ? "default" : "pointer",
-                  fontSize: "var(--slacksim-font-size-md)",
-                  fontWeight: "var(--slacksim-font-weight-bold)",
-                  fontFamily: "var(--slacksim-font-body)",
-                  transition: "background 0.1s ease",
+                  background: 'var(--slacksim-color-primary)',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: 'var(--slacksim-radius-sm)',
+                  padding: '8px 16px',
+                  cursor: isSubmitting ? 'default' : 'pointer',
+                  fontSize: 'var(--slacksim-font-size-md)',
+                  fontWeight: 'var(--slacksim-font-weight-bold)',
+                  fontFamily: 'var(--slacksim-font-body)',
+                  transition: 'background 0.1s ease',
                 }}
               >
-                {isSubmitting ? "Submitting…" : submitLabel}
+                {isSubmitting ? 'Submitting…' : submitLabel}
               </button>
             )}
           </div>

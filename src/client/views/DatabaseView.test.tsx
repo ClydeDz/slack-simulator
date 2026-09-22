@@ -1,21 +1,21 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
-import DatabaseView from "./DatabaseView";
-import { useStore } from "../store";
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import DatabaseView from './DatabaseView';
+import { useStore } from '../store';
 
 // Mock dependencies
-vi.mock("../store", () => ({
+vi.mock('../store', () => ({
   useStore: vi.fn(),
 }));
 
-vi.mock("../lib/api", () => ({
+vi.mock('../lib/api', () => ({
   controlApi: {
     getDbTables: vi.fn(),
     getDbTableRows: vi.fn(),
   },
 }));
 
-describe("DatabaseView Component", () => {
+describe('DatabaseView Component', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -30,36 +30,36 @@ describe("DatabaseView Component", () => {
     return render(<DatabaseView />);
   };
 
-  describe("Rendering", () => {
-    it("should render database view", () => {
+  describe('Rendering', () => {
+    it('should render database view', () => {
       renderDatabaseView();
 
-      expect(screen.getByText("Tables")).toBeInTheDocument();
+      expect(screen.getByText('Tables')).toBeInTheDocument();
     });
 
-    it("should render loading state", () => {
+    it('should render loading state', () => {
       renderDatabaseView();
 
-      expect(screen.getByText("Loading…")).toBeInTheDocument();
+      expect(screen.getByText('Loading…')).toBeInTheDocument();
     });
 
-    it("should render select table message", () => {
+    it('should render select table message', () => {
       renderDatabaseView();
 
-      expect(screen.getByText("Select a table")).toBeInTheDocument();
+      expect(screen.getByText('Select a table')).toBeInTheDocument();
     });
 
-    it("should render SidebarAd in the database sidebar", () => {
+    it('should render SidebarAd in the database sidebar', () => {
       renderDatabaseView();
-      expect(screen.getByLabelText("Advertisement")).toBeInTheDocument();
+      expect(screen.getByLabelText('Advertisement')).toBeInTheDocument();
     });
   });
 
-  describe("Header", () => {
-    it("should render refresh button", () => {
+  describe('Header', () => {
+    it('should render refresh button', () => {
       renderDatabaseView();
 
-      expect(screen.getByTitle("Refresh table list")).toBeInTheDocument();
+      expect(screen.getByTitle('Refresh table list')).toBeInTheDocument();
     });
   });
 });

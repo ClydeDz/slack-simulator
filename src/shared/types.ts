@@ -16,7 +16,7 @@ export interface User {
 export interface Channel {
   id: string;
   name: string;
-  type: "public" | "private" | "im" | "mpim";
+  type: 'public' | 'private' | 'im' | 'mpim';
   members: string[];
   archived?: boolean;
 }
@@ -58,24 +58,24 @@ export interface Message {
 // ── Block Kit types ───────────────────────────────────────────────────────────
 
 export interface TextObject {
-  type: "plain_text" | "mrkdwn";
+  type: 'plain_text' | 'mrkdwn';
   text: string;
   emoji?: boolean;
 }
 
 export interface ImageElement {
-  type: "image";
+  type: 'image';
   image_url: string;
   alt_text: string;
 }
 
 export interface ButtonElement {
-  type: "button";
+  type: 'button';
   text: TextObject;
   action_id?: string;
   block_id?: string;
   value?: string;
-  style?: "primary" | "danger";
+  style?: 'primary' | 'danger';
   url?: string;
 }
 
@@ -85,7 +85,7 @@ export interface StaticSelectOption {
 }
 
 export interface StaticSelectElement {
-  type: "static_select";
+  type: 'static_select';
   action_id?: string;
   placeholder?: TextObject;
   options: StaticSelectOption[];
@@ -95,35 +95,35 @@ export interface StaticSelectElement {
 export type BlockElement = ImageElement | ButtonElement | StaticSelectElement;
 
 export interface SectionBlock {
-  type: "section";
+  type: 'section';
   text?: TextObject;
   fields?: TextObject[];
   accessory?: BlockElement;
 }
 
 export interface HeaderBlock {
-  type: "header";
+  type: 'header';
   text: TextObject;
 }
 
 export interface DividerBlock {
-  type: "divider";
+  type: 'divider';
 }
 
 export interface ContextBlock {
-  type: "context";
+  type: 'context';
   elements: Array<TextObject | ImageElement>;
 }
 
 export interface ImageBlock {
-  type: "image";
+  type: 'image';
   image_url: string;
   alt_text: string;
   title?: TextObject;
 }
 
 export interface ActionsBlock {
-  type: "actions";
+  type: 'actions';
   block_id?: string;
   elements: Array<ButtonElement | StaticSelectElement>;
 }
@@ -169,9 +169,9 @@ export interface LogEntry {
   ts: number; // unix ms
   appId: string;
   appName: string;
-  direction: "outbound" | "inbound";
+  direction: 'outbound' | 'inbound';
   eventType: string; // e.g. 'message', 'reaction_added', 'chat.postMessage'
-  transport: "http" | "socket_mode" | "api";
+  transport: 'http' | 'socket_mode' | 'api';
   status?: number; // HTTP status for outbound, or 'ack' for socket mode
   durationMs?: number;
   payload: unknown;
@@ -181,7 +181,7 @@ export interface LogEntry {
 // ── Modal / Block Kit interactivity ──────────────────────────────────────────
 
 export interface InputBlock {
-  type: "input";
+  type: 'input';
   block_id?: string;
   label: TextObject;
   element: InputElement;
@@ -190,7 +190,7 @@ export interface InputBlock {
 }
 
 export interface PlainTextInputElement {
-  type: "plain_text_input";
+  type: 'plain_text_input';
   action_id?: string;
   placeholder?: TextObject;
   initial_value?: string;
@@ -201,7 +201,7 @@ export type InputElement = PlainTextInputElement | StaticSelectElement;
 
 export interface ModalView {
   id: string;
-  type: "modal";
+  type: 'modal';
   title: TextObject;
   submit?: TextObject;
   close?: TextObject;
@@ -213,20 +213,20 @@ export interface ModalView {
 
 // WebSocket push events (server → SPA)
 export type WsEvent =
-  | { type: "message_new"; message: Message }
-  | { type: "message_updated"; message: Message }
-  | { type: "message_deleted"; channelId: string; ts: string }
+  | { type: 'message_new'; message: Message }
+  | { type: 'message_updated'; message: Message }
+  | { type: 'message_deleted'; channelId: string; ts: string }
   | {
-      type: "reaction_updated";
+      type: 'reaction_updated';
       ts: string;
       channelId: string;
       reactions: Reaction[];
     }
-  | { type: "channel_created"; channel: Channel }
-  | { type: "channel_updated"; channel: Channel }
-  | { type: "workspace_reset" }
-  | { type: "log_entry"; entry: LogEntry }
-  | { type: "modal_open"; view: ModalView; appId: string }
-  | { type: "modal_close"; viewId: string }
-  | { type: "modal_update"; view: ModalView }
-  | { type: "modal_push"; view: ModalView; appId: string };
+  | { type: 'channel_created'; channel: Channel }
+  | { type: 'channel_updated'; channel: Channel }
+  | { type: 'workspace_reset' }
+  | { type: 'log_entry'; entry: LogEntry }
+  | { type: 'modal_open'; view: ModalView; appId: string }
+  | { type: 'modal_close'; viewId: string }
+  | { type: 'modal_update'; view: ModalView }
+  | { type: 'modal_push'; view: ModalView; appId: string };

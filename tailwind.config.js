@@ -4,11 +4,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        'sidebar-bg':   'var(--slacksim-color-sidebar-bg)',
-        'sidebar-fg':   'var(--slacksim-color-sidebar-fg)',
-        'accent':       'var(--slacksim-color-accent)',
+        'sidebar-bg': 'var(--slacksim-color-sidebar-bg)',
+        'sidebar-fg': 'var(--slacksim-color-sidebar-fg)',
+        accent: 'var(--slacksim-color-accent)',
       },
     },
   },
   plugins: [],
-}
+};

@@ -1,127 +1,127 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { controlFetch, controlApi } from "./api";
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { controlFetch, controlApi } from './api';
 
 // Mock the store at module level to avoid clearing issues
-vi.mock("../store", () => ({
+vi.mock('../store', () => ({
   useStore: {
     getState: vi.fn(() => ({
-      actingUserId: "U001",
+      actingUserId: 'U001',
     })),
   },
 }));
 
-describe("API Client Tests", () => {
+describe('API Client Tests', () => {
   beforeEach(() => {
     // Don't clear mocks to preserve the store mock
   });
 
-  describe("controlFetch", () => {
-    it("should include acting user header", async () => {
+  describe('controlFetch', () => {
+    it('should include acting user header', async () => {
       global.fetch = vi.fn().mockResolvedValue({
         ok: true,
         json: () => Promise.resolve({ success: true }),
       });
 
-      await controlFetch("/test");
+      await controlFetch('/test');
 
       expect(fetch).toHaveBeenCalledWith(
-        "/test",
+        '/test',
         expect.objectContaining({
           headers: expect.objectContaining({
-            "X-Slacksim-Acting-User": "U001",
+            'X-Slacksim-Acting-User': 'U001',
           }),
-        }),
+        })
       );
     });
 
-    it("should set content-type to JSON", async () => {
+    it('should set content-type to JSON', async () => {
       global.fetch = vi.fn().mockResolvedValue({
         ok: true,
         json: () => Promise.resolve({ success: true }),
       });
 
-      await controlFetch("/test");
+      await controlFetch('/test');
 
       expect(fetch).toHaveBeenCalledWith(
-        "/test",
+        '/test',
         expect.objectContaining({
           headers: expect.objectContaining({
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           }),
-        }),
+        })
       );
     });
 
-    it("should return JSON on successful response", async () => {
-      const mockData = { success: true, data: "test" };
+    it('should return JSON on successful response', async () => {
+      const mockData = { success: true, data: 'test' };
       global.fetch = vi.fn().mockResolvedValue({
         ok: true,
         json: () => Promise.resolve(mockData),
       });
 
-      const result = await controlFetch("/test");
+      const result = await controlFetch('/test');
 
       expect(result).toEqual(mockData);
     });
 
-    it("should parse error from response body on failure", async () => {
+    it('should parse error from response body on failure', async () => {
       global.fetch = vi.fn().mockResolvedValue({
         ok: false,
         status: 400,
-        json: () => Promise.resolve({ error: "Invalid request" }),
+        json: () => Promise.resolve({ error: 'Invalid request' }),
       });
 
-      await expect(controlFetch("/test")).rejects.toThrow("Invalid request");
+      await expect(controlFetch('/test')).rejects.toThrow('Invalid request');
     });
 
-    it("should use generic error message if response body has no error", async () => {
+    it('should use generic error message if response body has no error', async () => {
       global.fetch = vi.fn().mockResolvedValue({
         ok: false,
         status: 500,
-        json: () => Promise.resolve({ message: "Server error" }),
+        json: () => Promise.resolve({ message: 'Server error' }),
       });
 
-      await expect(controlFetch("/test")).rejects.toThrow(
-        "Request failed (500)",
+      await expect(controlFetch('/test')).rejects.toThrow(
+        'Request failed (500)'
       );
     });
 
-    it("should use generic error message if JSON parsing fails", async () => {
+    it('should use generic error message if JSON parsing fails', async () => {
       global.fetch = vi.fn().mockResolvedValue({
         ok: false,
         status: 500,
-        json: () => Promise.reject(new Error("Invalid JSON")),
+        json: () => Promise.reject(new Error('Invalid JSON')),
       });
 
-      await expect(controlFetch("/test")).rejects.toThrow(
-        "Request failed (500)",
+      await expect(controlFetch('/test')).rejects.toThrow(
+        'Request failed (500)'
       );
     });
 
-    it("should merge custom headers with default headers", async () => {
+    it('should merge custom headers with default headers', async () => {
       global.fetch = vi.fn().mockResolvedValue({
         ok: true,
         json: () => Promise.resolve({ success: true }),
       });
 
-      await controlFetch("/test", {
-        headers: { "X-Custom-Header": "custom-value" },
+      await controlFetch('/test', {
+        headers: { 'X-Custom-Header': 'custom-value' },
       });
 
       expect(fetch).toHaveBeenCalledWith(
-        "/test",
+        '/test',
         expect.objectContaining({
           headers: expect.objectContaining({
-            "Content-Type": "application/json",
-            "X-Slacksim-Acting-User": "U001",
-            "X-Custom-Header": "custom-value",
+            'Content-Type': 'application/json',
+            'X-Slacksim-Acting-User': 'U001',
+            'X-Custom-Header': 'custom-value',
           }),
-        }),
+        })
       );
     });
   });
 
-  describe("controlApi methods", () => {
+  describe('controlApi methods', () => {
     beforeEach(() => {
       global.fetch = vi.fn().mockResolvedValue({
         ok: true,
@@ -129,323 +129,323 @@ describe("API Client Tests", () => {
       });
     });
 
-    it("getChannelMessages should call correct endpoint", async () => {
-      await controlApi.getChannelMessages("C001");
+    it('getChannelMessages should call correct endpoint', async () => {
+      await controlApi.getChannelMessages('C001');
 
       expect(fetch).toHaveBeenCalledWith(
-        "/_control/channels/C001/messages",
-        expect.any(Object),
+        '/_control/channels/C001/messages',
+        expect.any(Object)
       );
     });
 
-    it("postMessage should send correct payload", async () => {
-      await controlApi.postMessage("C001", "Hello", "1234567890.000001");
+    it('postMessage should send correct payload', async () => {
+      await controlApi.postMessage('C001', 'Hello', '1234567890.000001');
 
       expect(fetch).toHaveBeenCalledWith(
-        "/_control/messages",
+        '/_control/messages',
         expect.objectContaining({
-          method: "POST",
+          method: 'POST',
           body: JSON.stringify({
-            channelId: "C001",
-            text: "Hello",
-            threadTs: "1234567890.000001",
+            channelId: 'C001',
+            text: 'Hello',
+            threadTs: '1234567890.000001',
           }),
-        }),
+        })
       );
     });
 
-    it("postMessage should work without threadTs", async () => {
-      await controlApi.postMessage("C001", "Hello");
+    it('postMessage should work without threadTs', async () => {
+      await controlApi.postMessage('C001', 'Hello');
 
       expect(fetch).toHaveBeenCalledWith(
-        "/_control/messages",
+        '/_control/messages',
         expect.objectContaining({
-          method: "POST",
+          method: 'POST',
           body: JSON.stringify({
-            channelId: "C001",
-            text: "Hello",
+            channelId: 'C001',
+            text: 'Hello',
             threadTs: undefined,
           }),
-        }),
+        })
       );
     });
 
-    it("toggleReaction should send correct endpoint and payload", async () => {
-      await controlApi.toggleReaction("M001", "thumbsup");
+    it('toggleReaction should send correct endpoint and payload', async () => {
+      await controlApi.toggleReaction('M001', 'thumbsup');
 
       expect(fetch).toHaveBeenCalledWith(
-        "/_control/messages/M001/reactions",
+        '/_control/messages/M001/reactions',
         expect.objectContaining({
-          method: "POST",
-          body: JSON.stringify({ name: "thumbsup" }),
-        }),
+          method: 'POST',
+          body: JSON.stringify({ name: 'thumbsup' }),
+        })
       );
     });
 
-    it("pinMessage should send correct endpoint and payload", async () => {
-      await controlApi.pinMessage("M001", true);
+    it('pinMessage should send correct endpoint and payload', async () => {
+      await controlApi.pinMessage('M001', true);
 
       expect(fetch).toHaveBeenCalledWith(
-        "/_control/messages/M001/pin",
+        '/_control/messages/M001/pin',
         expect.objectContaining({
-          method: "POST",
+          method: 'POST',
           body: JSON.stringify({ pinned: true }),
-        }),
+        })
       );
     });
 
-    it("createChannel should convert isPrivate to type", async () => {
-      await controlApi.createChannel("general", ["U001", "U002"], true);
+    it('createChannel should convert isPrivate to type', async () => {
+      await controlApi.createChannel('general', ['U001', 'U002'], true);
 
       expect(fetch).toHaveBeenCalledWith(
-        "/_control/channels",
+        '/_control/channels',
         expect.objectContaining({
-          method: "POST",
+          method: 'POST',
           body: JSON.stringify({
-            name: "general",
-            type: "private",
-            memberIds: ["U001", "U002"],
+            name: 'general',
+            type: 'private',
+            memberIds: ['U001', 'U002'],
           }),
-        }),
+        })
       );
     });
 
-    it("createChannel should convert isPrivate=false to public", async () => {
-      await controlApi.createChannel("general", ["U001", "U002"], false);
+    it('createChannel should convert isPrivate=false to public', async () => {
+      await controlApi.createChannel('general', ['U001', 'U002'], false);
 
       expect(fetch).toHaveBeenCalledWith(
-        "/_control/channels",
+        '/_control/channels',
         expect.objectContaining({
-          method: "POST",
+          method: 'POST',
           body: JSON.stringify({
-            name: "general",
-            type: "public",
-            memberIds: ["U001", "U002"],
+            name: 'general',
+            type: 'public',
+            memberIds: ['U001', 'U002'],
           }),
-        }),
+        })
       );
     });
 
-    it("addAppToChannel should send correct payload", async () => {
-      await controlApi.addAppToChannel("C001", "A001");
+    it('addAppToChannel should send correct payload', async () => {
+      await controlApi.addAppToChannel('C001', 'A001');
 
       expect(fetch).toHaveBeenCalledWith(
-        "/_control/channels/C001/apps",
+        '/_control/channels/C001/apps',
         expect.objectContaining({
-          method: "POST",
-          body: JSON.stringify({ appId: "A001" }),
-        }),
+          method: 'POST',
+          body: JSON.stringify({ appId: 'A001' }),
+        })
       );
     });
 
-    it("joinChannel should send POST with empty body", async () => {
-      await controlApi.joinChannel("C001");
+    it('joinChannel should send POST with empty body', async () => {
+      await controlApi.joinChannel('C001');
 
       expect(fetch).toHaveBeenCalledWith(
-        "/_control/channels/C001/join",
+        '/_control/channels/C001/join',
         expect.objectContaining({
-          method: "POST",
-          body: "{}",
-        }),
+          method: 'POST',
+          body: '{}',
+        })
       );
     });
 
-    it("leaveChannel should send POST with empty body", async () => {
-      await controlApi.leaveChannel("C001");
+    it('leaveChannel should send POST with empty body', async () => {
+      await controlApi.leaveChannel('C001');
 
       expect(fetch).toHaveBeenCalledWith(
-        "/_control/channels/C001/leave",
+        '/_control/channels/C001/leave',
         expect.objectContaining({
-          method: "POST",
-          body: "{}",
-        }),
+          method: 'POST',
+          body: '{}',
+        })
       );
     });
 
-    it("archiveChannel should send POST with empty body", async () => {
-      await controlApi.archiveChannel("C001");
+    it('archiveChannel should send POST with empty body', async () => {
+      await controlApi.archiveChannel('C001');
 
       expect(fetch).toHaveBeenCalledWith(
-        "/_control/channels/C001/archive",
+        '/_control/channels/C001/archive',
         expect.objectContaining({
-          method: "POST",
-          body: "{}",
-        }),
+          method: 'POST',
+          body: '{}',
+        })
       );
     });
 
-    it("resetWorkspace should call correct endpoint", async () => {
+    it('resetWorkspace should call correct endpoint', async () => {
       await controlApi.resetWorkspace();
 
       expect(fetch).toHaveBeenCalledWith(
-        "/_control/workspace/reset",
+        '/_control/workspace/reset',
         expect.objectContaining({
-          method: "POST",
+          method: 'POST',
           body: JSON.stringify({}),
-        }),
+        })
       );
     });
 
-    it("getLogs should call correct endpoint", async () => {
+    it('getLogs should call correct endpoint', async () => {
       await controlApi.getLogs();
 
-      expect(fetch).toHaveBeenCalledWith("/_control/logs", expect.any(Object));
+      expect(fetch).toHaveBeenCalledWith('/_control/logs', expect.any(Object));
     });
 
-    it("postSlashCommand should send correct payload", async () => {
-      await controlApi.postSlashCommand("C001", "/test", "arg1");
+    it('postSlashCommand should send correct payload', async () => {
+      await controlApi.postSlashCommand('C001', '/test', 'arg1');
 
       expect(fetch).toHaveBeenCalledWith(
-        "/_control/slash_command",
+        '/_control/slash_command',
         expect.objectContaining({
-          method: "POST",
+          method: 'POST',
           body: JSON.stringify({
-            channelId: "C001",
-            command: "/test",
-            text: "arg1",
+            channelId: 'C001',
+            command: '/test',
+            text: 'arg1',
           }),
-        }),
+        })
       );
     });
 
-    it("postModalBlockAction should send correct payload", async () => {
+    it('postModalBlockAction should send correct payload', async () => {
       await controlApi.postModalBlockAction(
-        "V001",
-        "B001",
-        "A001",
-        "value",
-        "A001",
+        'V001',
+        'B001',
+        'A001',
+        'value',
+        'A001'
       );
 
       expect(fetch).toHaveBeenCalledWith(
-        "/_control/modal_block_action",
+        '/_control/modal_block_action',
         expect.objectContaining({
-          method: "POST",
+          method: 'POST',
           body: JSON.stringify({
-            viewId: "V001",
-            blockId: "B001",
-            actionId: "A001",
-            value: "value",
-            appId: "A001",
+            viewId: 'V001',
+            blockId: 'B001',
+            actionId: 'A001',
+            value: 'value',
+            appId: 'A001',
             selectedOption: undefined,
           }),
-        }),
+        })
       );
     });
 
-    it("postBlockAction should send correct payload", async () => {
+    it('postBlockAction should send correct payload', async () => {
       await controlApi.postBlockAction(
-        "C001",
-        "1234567890.000001",
-        "B001",
-        "A001",
-        "value",
-        "A001",
+        'C001',
+        '1234567890.000001',
+        'B001',
+        'A001',
+        'value',
+        'A001'
       );
 
       expect(fetch).toHaveBeenCalledWith(
-        "/_control/block_action",
+        '/_control/block_action',
         expect.objectContaining({
-          method: "POST",
+          method: 'POST',
           body: JSON.stringify({
-            channelId: "C001",
-            messageTs: "1234567890.000001",
-            blockId: "B001",
-            actionId: "A001",
-            value: "value",
-            appId: "A001",
+            channelId: 'C001',
+            messageTs: '1234567890.000001',
+            blockId: 'B001',
+            actionId: 'A001',
+            value: 'value',
+            appId: 'A001',
             selectedOption: undefined,
           }),
-        }),
+        })
       );
     });
 
-    it("submitView should send correct payload", async () => {
+    it('submitView should send correct payload', async () => {
       const values = {
-        block1: { action1: { type: "plain_text", value: "test" } },
+        block1: { action1: { type: 'plain_text', value: 'test' } },
       };
-      await controlApi.submitView("V001", values);
+      await controlApi.submitView('V001', values);
 
       expect(fetch).toHaveBeenCalledWith(
-        "/_control/view_submit",
+        '/_control/view_submit',
         expect.objectContaining({
-          method: "POST",
-          body: JSON.stringify({ viewId: "V001", values }),
-        }),
+          method: 'POST',
+          body: JSON.stringify({ viewId: 'V001', values }),
+        })
       );
     });
 
-    it("closeView should send correct payload", async () => {
-      await controlApi.closeView("V001");
+    it('closeView should send correct payload', async () => {
+      await controlApi.closeView('V001');
 
       expect(fetch).toHaveBeenCalledWith(
-        "/_control/view_close",
+        '/_control/view_close',
         expect.objectContaining({
-          method: "POST",
-          body: JSON.stringify({ viewId: "V001" }),
-        }),
+          method: 'POST',
+          body: JSON.stringify({ viewId: 'V001' }),
+        })
       );
     });
 
-    it("openDm should send correct payload", async () => {
-      await controlApi.openDm("U001");
+    it('openDm should send correct payload', async () => {
+      await controlApi.openDm('U001');
 
       expect(fetch).toHaveBeenCalledWith(
-        "/_control/dm",
+        '/_control/dm',
         expect.objectContaining({
-          method: "POST",
-          body: JSON.stringify({ botUserId: "U001" }),
-        }),
+          method: 'POST',
+          body: JSON.stringify({ botUserId: 'U001' }),
+        })
       );
     });
 
-    it("updateApp should send correct payload", async () => {
-      await controlApi.updateApp("A001", {
-        requestUrl: "http://example.com",
+    it('updateApp should send correct payload', async () => {
+      await controlApi.updateApp('A001', {
+        requestUrl: 'http://example.com',
         socketModeEnabled: true,
       });
 
       expect(fetch).toHaveBeenCalledWith(
-        "/_control/apps/A001",
+        '/_control/apps/A001',
         expect.objectContaining({
-          method: "PATCH",
+          method: 'PATCH',
           body: JSON.stringify({
-            requestUrl: "http://example.com",
+            requestUrl: 'http://example.com',
             socketModeEnabled: true,
           }),
-        }),
+        })
       );
     });
 
-    it("getDbTables should call correct endpoint", async () => {
+    it('getDbTables should call correct endpoint', async () => {
       await controlApi.getDbTables();
 
       expect(fetch).toHaveBeenCalledWith(
-        "/_control/db/tables",
-        expect.any(Object),
+        '/_control/db/tables',
+        expect.any(Object)
       );
     });
 
-    it("getDbTableRows should build query string correctly", async () => {
-      await controlApi.getDbTableRows("users", {
+    it('getDbTableRows should build query string correctly', async () => {
+      await controlApi.getDbTableRows('users', {
         limit: 10,
         offset: 5,
-        orderBy: "username",
-        order: "asc",
+        orderBy: 'username',
+        order: 'asc',
       });
 
       expect(fetch).toHaveBeenCalledWith(
-        "/_control/db/tables/users?limit=10&offset=5&orderBy=username&order=asc",
-        expect.any(Object),
+        '/_control/db/tables/users?limit=10&offset=5&orderBy=username&order=asc',
+        expect.any(Object)
       );
     });
 
-    it("getDbTableRows should handle partial params", async () => {
-      await controlApi.getDbTableRows("users", { limit: 10 });
+    it('getDbTableRows should handle partial params', async () => {
+      await controlApi.getDbTableRows('users', { limit: 10 });
 
       expect(fetch).toHaveBeenCalledWith(
-        "/_control/db/tables/users?limit=10",
-        expect.any(Object),
+        '/_control/db/tables/users?limit=10',
+        expect.any(Object)
       );
     });
   });

@@ -9,6 +9,8 @@
     "build": "yarn build:client && yarn build:server",
     "build:client": "vite build",
     "build:server": "tsc -p tsconfig.server.json",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
     "docs:dev": "cd docs && eleventy --serve",
     "docs:build": "cd docs && eleventy",

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import {
   issueTicket,
   initSocketModeServer,
@@ -6,11 +6,11 @@ import {
   enqueueSocketModeEvent,
   enqueueSocketModeInteractive,
   enqueueSocketModeSlashCommand,
-} from "./socketModeServer";
-import { WebSocket, WebSocketServer } from "ws";
+} from './socketModeServer';
+import { WebSocket, WebSocketServer } from 'ws';
 
 // Mock ws module
-vi.mock("ws", () => ({
+vi.mock('ws', () => ({
   WebSocket: vi.fn(),
   WebSocketServer: class {
     on = vi.fn();
@@ -20,7 +20,7 @@ vi.mock("ws", () => ({
   },
 }));
 
-describe("Socket Mode Server Tests", () => {
+describe('Socket Mode Server Tests', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.useFakeTimers();
@@ -30,32 +30,32 @@ describe("Socket Mode Server Tests", () => {
     vi.useRealTimers();
   });
 
-  describe("Ticket Management", () => {
-    it("should issue a ticket", () => {
-      const ticket = issueTicket("A001");
+  describe('Ticket Management', () => {
+    it('should issue a ticket', () => {
+      const ticket = issueTicket('A001');
 
       expect(ticket).toBeDefined();
-      expect(ticket).toContain("ticket_");
-      expect(typeof ticket).toBe("string");
+      expect(ticket).toContain('ticket_');
+      expect(typeof ticket).toBe('string');
     });
 
-    it("should issue unique tickets", () => {
-      const ticket1 = issueTicket("A001");
-      const ticket2 = issueTicket("A001");
+    it('should issue unique tickets', () => {
+      const ticket1 = issueTicket('A001');
+      const ticket2 = issueTicket('A001');
 
       expect(ticket1).not.toBe(ticket2);
     });
 
-    it("should include appId in ticket metadata", () => {
+    it('should include appId in ticket metadata', () => {
       // This is tested indirectly through connection acceptance
-      const ticket = issueTicket("A001");
+      const ticket = issueTicket('A001');
 
       expect(ticket).toBeDefined();
     });
 
-    it("should expire tickets after 60 seconds", () => {
+    it('should expire tickets after 60 seconds', () => {
       vi.useFakeTimers();
-      const ticket = issueTicket("A001");
+      const ticket = issueTicket('A001');
 
       // Advance time past TTL (60 seconds)
       vi.advanceTimersByTime(60_000 + 1000);
@@ -66,8 +66,8 @@ describe("Socket Mode Server Tests", () => {
     });
   });
 
-  describe("initSocketModeServer", () => {
-    it("should initialize WebSocket server", () => {
+  describe('initSocketModeServer', () => {
+    it('should initialize WebSocket server', () => {
       const mockHttpServer = {};
       initSocketModeServer(mockHttpServer);
 
@@ -76,14 +76,14 @@ describe("Socket Mode Server Tests", () => {
     });
   });
 
-  describe("handleUpgrade", () => {
-    it("should handle upgrade request when server initialized", () => {
+  describe('handleUpgrade', () => {
+    it('should handle upgrade request when server initialized', () => {
       const mockHttpServer = {};
       initSocketModeServer(mockHttpServer);
 
       const mockReq = {};
       const mockSocket = { destroy: vi.fn() };
-      const mockHead = Buffer.from("");
+      const mockHead = Buffer.from('');
 
       handleUpgrade(mockReq as any, mockSocket as any, mockHead);
 
@@ -92,16 +92,16 @@ describe("Socket Mode Server Tests", () => {
     });
   });
 
-  describe("enqueueSocketModeEvent", () => {
-    it("should return false when no connection exists", async () => {
-      const result = await enqueueSocketModeEvent("A001", "env1", {
-        type: "message",
+  describe('enqueueSocketModeEvent', () => {
+    it('should return false when no connection exists', async () => {
+      const result = await enqueueSocketModeEvent('A001', 'env1', {
+        type: 'message',
       });
 
       expect(result).toBe(false);
     });
 
-    it("should return false when connection not open", async () => {
+    it('should return false when connection not open', async () => {
       const mockWs = {
         readyState: WebSocket.CLOSED,
       };
@@ -109,17 +109,17 @@ describe("Socket Mode Server Tests", () => {
       // Manually set connection (bypassing normal connection flow)
       const connections = (global as any)._connections;
       if (connections) {
-        connections.set("A001", mockWs);
+        connections.set('A001', mockWs);
       }
 
-      const result = await enqueueSocketModeEvent("A001", "env1", {
-        type: "message",
+      const result = await enqueueSocketModeEvent('A001', 'env1', {
+        type: 'message',
       });
 
       expect(result).toBe(false);
     });
 
-    it("should timeout if no ack received", async () => {
+    it('should timeout if no ack received', async () => {
       vi.useFakeTimers();
       const mockWs = {
         readyState: WebSocket.OPEN,
@@ -129,11 +129,11 @@ describe("Socket Mode Server Tests", () => {
       // Manually set connection
       const connections = (global as any)._connections;
       if (connections) {
-        connections.set("A001", mockWs);
+        connections.set('A001', mockWs);
       }
 
-      const promise = enqueueSocketModeEvent("A001", "env1", {
-        type: "message",
+      const promise = enqueueSocketModeEvent('A001', 'env1', {
+        type: 'message',
       });
 
       // Advance time past ACK_TIMEOUT_MS (30 seconds)
@@ -146,33 +146,33 @@ describe("Socket Mode Server Tests", () => {
     });
   });
 
-  describe("enqueueSocketModeInteractive", () => {
-    it("should return acked false when no connection exists", async () => {
-      const result = await enqueueSocketModeInteractive("A001", "env1", {
-        type: "block_actions",
+  describe('enqueueSocketModeInteractive', () => {
+    it('should return acked false when no connection exists', async () => {
+      const result = await enqueueSocketModeInteractive('A001', 'env1', {
+        type: 'block_actions',
       });
 
       expect(result).toEqual({ acked: false });
     });
 
-    it("should return acked false when connection not open", async () => {
+    it('should return acked false when connection not open', async () => {
       const mockWs = {
         readyState: WebSocket.CLOSED,
       };
 
       const connections = (global as any)._connections;
       if (connections) {
-        connections.set("A001", mockWs);
+        connections.set('A001', mockWs);
       }
 
-      const result = await enqueueSocketModeInteractive("A001", "env1", {
-        type: "block_actions",
+      const result = await enqueueSocketModeInteractive('A001', 'env1', {
+        type: 'block_actions',
       });
 
       expect(result).toEqual({ acked: false });
     });
 
-    it("should timeout if no ack received", async () => {
+    it('should timeout if no ack received', async () => {
       vi.useFakeTimers();
       const mockWs = {
         readyState: WebSocket.OPEN,
@@ -181,11 +181,11 @@ describe("Socket Mode Server Tests", () => {
 
       const connections = (global as any)._connections;
       if (connections) {
-        connections.set("A001", mockWs);
+        connections.set('A001', mockWs);
       }
 
-      const promise = enqueueSocketModeInteractive("A001", "env1", {
-        type: "view_submission",
+      const promise = enqueueSocketModeInteractive('A001', 'env1', {
+        type: 'view_submission',
       });
 
       vi.advanceTimersByTime(30_000 + 1000);
@@ -197,33 +197,33 @@ describe("Socket Mode Server Tests", () => {
     });
   });
 
-  describe("enqueueSocketModeSlashCommand", () => {
-    it("should return acked false when no connection exists", async () => {
-      const result = await enqueueSocketModeSlashCommand("A001", "env1", {
-        type: "slash_command",
+  describe('enqueueSocketModeSlashCommand', () => {
+    it('should return acked false when no connection exists', async () => {
+      const result = await enqueueSocketModeSlashCommand('A001', 'env1', {
+        type: 'slash_command',
       });
 
       expect(result).toEqual({ acked: false });
     });
 
-    it("should return acked false when connection not open", async () => {
+    it('should return acked false when connection not open', async () => {
       const mockWs = {
         readyState: WebSocket.CLOSED,
       };
 
       const connections = (global as any)._connections;
       if (connections) {
-        connections.set("A001", mockWs);
+        connections.set('A001', mockWs);
       }
 
-      const result = await enqueueSocketModeSlashCommand("A001", "env1", {
-        type: "slash_command",
+      const result = await enqueueSocketModeSlashCommand('A001', 'env1', {
+        type: 'slash_command',
       });
 
       expect(result).toEqual({ acked: false });
     });
 
-    it("should timeout if no ack received", async () => {
+    it('should timeout if no ack received', async () => {
       vi.useFakeTimers();
       const mockWs = {
         readyState: WebSocket.OPEN,
@@ -232,11 +232,11 @@ describe("Socket Mode Server Tests", () => {
 
       const connections = (global as any)._connections;
       if (connections) {
-        connections.set("A001", mockWs);
+        connections.set('A001', mockWs);
       }
 
-      const promise = enqueueSocketModeSlashCommand("A001", "env1", {
-        type: "slash_command",
+      const promise = enqueueSocketModeSlashCommand('A001', 'env1', {
+        type: 'slash_command',
       });
 
       vi.advanceTimersByTime(30_000 + 1000);

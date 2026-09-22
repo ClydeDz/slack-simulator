@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 import type {
   User,
   Channel,
@@ -8,7 +8,7 @@ import type {
   WsEvent,
   LogEntry,
   ModalView,
-} from "@shared/types";
+} from '@shared/types';
 
 interface WorkspaceState {
   workspace: Workspace | null;
@@ -20,8 +20,8 @@ interface WorkspaceState {
   actingUserId: string;
   activeChannelId: string | null;
   activeThreadTs: string | null;
-  activeTab: "workspace" | "admin" | "logs" | "database";
-  theme: "Slack Light" | "Slack Dark";
+  activeTab: 'workspace' | 'admin' | 'logs' | 'database';
+  theme: 'Slack Light' | 'Slack Dark';
 
   // Messages (keyed by channelId)
   messages: Record<string, Message[]>;
@@ -57,8 +57,8 @@ interface WorkspaceState {
   setActingUser: (userId: string) => void;
   setActiveChannel: (channelId: string) => void;
   setActiveThread: (ts: string | null) => void;
-  setActiveTab: (tab: "workspace" | "admin" | "logs" | "database") => void;
-  setTheme: (theme: "Slack Light" | "Slack Dark") => void;
+  setActiveTab: (tab: 'workspace' | 'admin' | 'logs' | 'database') => void;
+  setTheme: (theme: 'Slack Light' | 'Slack Dark') => void;
   setChannelMessages: (channelId: string, messages: Message[]) => void;
   applyWsEvent: (event: WsEvent) => void;
   addChannel: (channel: Channel) => void;
@@ -69,11 +69,11 @@ export const useStore = create<WorkspaceState>((set, get) => ({
   users: [],
   channels: [],
   apps: [],
-  actingUserId: "U001",
+  actingUserId: 'U001',
   activeChannelId: null,
   activeThreadTs: null,
-  activeTab: "workspace",
-  theme: "Slack Light",
+  activeTab: 'workspace',
+  theme: 'Slack Light',
   messages: {},
   unreadCounts: {},
   resetAt: 0,
@@ -86,7 +86,7 @@ export const useStore = create<WorkspaceState>((set, get) => ({
       users,
       channels,
       apps,
-      actingUserId: users[0]?.id ?? "U001",
+      actingUserId: users[0]?.id ?? 'U001',
       activeChannelId: channels[0]?.id ?? null,
     });
   },
@@ -126,12 +126,12 @@ export const useStore = create<WorkspaceState>((set, get) => ({
   applyWsEvent: (event) => {
     const s = get();
     switch (event.type) {
-      case "message_new": {
+      case 'message_new': {
         const { message } = event;
         if (!message.threadTs) {
           set((st) => {
             const channel = st.channels.find((c) => c.id === message.channel);
-            const isDm = channel?.type === "im" || channel?.type === "mpim";
+            const isDm = channel?.type === 'im' || channel?.type === 'mpim';
             const isActive = st.activeChannelId === message.channel;
             const isFromActingUser = message.user === st.actingUserId;
             const unreadCounts =
@@ -184,12 +184,12 @@ export const useStore = create<WorkspaceState>((set, get) => ({
         }
         break;
       }
-      case "reaction_updated": {
+      case 'reaction_updated': {
         const { ts, channelId, reactions } = event;
         set((st) => {
           // Update main channel messages
           const updatedChannelMessages = (st.messages[channelId] ?? []).map(
-            (m) => (m.ts === ts ? { ...m, reactions } : m),
+            (m) => (m.ts === ts ? { ...m, reactions } : m)
           );
 
           // Also update thread messages if they exist
@@ -198,9 +198,9 @@ export const useStore = create<WorkspaceState>((set, get) => ({
 
           // Check all thread keys and update if the message is there
           Object.keys(updatedMessages).forEach((key) => {
-            if (key.startsWith("thread:")) {
+            if (key.startsWith('thread:')) {
               updatedMessages[key] = (updatedMessages[key] ?? []).map((m) =>
-                m.ts === ts ? { ...m, reactions } : m,
+                m.ts === ts ? { ...m, reactions } : m
               );
             }
           });
@@ -209,20 +209,20 @@ export const useStore = create<WorkspaceState>((set, get) => ({
         });
         break;
       }
-      case "channel_created":
+      case 'channel_created':
         set((st) => ({ channels: [...st.channels, event.channel] }));
         break;
-      case "channel_updated":
+      case 'channel_updated':
         set((st) => ({
           channels: st.channels.map((c) =>
-            c.id === event.channel.id ? event.channel : c,
+            c.id === event.channel.id ? event.channel : c
           ),
         }));
         break;
-      case "log_entry":
+      case 'log_entry':
         get().addLog(event.entry);
         break;
-      case "workspace_reset":
+      case 'workspace_reset':
         set({
           messages: {},
           unreadCounts: {},
@@ -231,37 +231,37 @@ export const useStore = create<WorkspaceState>((set, get) => ({
           resetAt: Date.now(),
         });
         // Refetch workspace data
-        fetch("/_control/workspace")
+        fetch('/_control/workspace')
           .then((r) => r.json())
           .then((data) => {
             get().setWorkspaceData(data);
           });
         break;
-      case "message_updated": {
+      case 'message_updated': {
         const { message } = event;
         set((st) => ({
           messages: {
             ...st.messages,
             [message.channel]: (st.messages[message.channel] ?? []).map((m) =>
-              m.ts === message.ts ? message : m,
+              m.ts === message.ts ? message : m
             ),
           },
         }));
         break;
       }
-      case "message_deleted": {
+      case 'message_deleted': {
         const { channelId, ts } = event;
         set((st) => ({
           messages: {
             ...st.messages,
             [channelId]: (st.messages[channelId] ?? []).filter(
-              (m) => m.ts !== ts,
+              (m) => m.ts !== ts
             ),
           },
         }));
         break;
       }
-      case "modal_open":
+      case 'modal_open':
         set((st) => ({
           activeModals: [
             ...st.activeModals,
@@ -269,7 +269,7 @@ export const useStore = create<WorkspaceState>((set, get) => ({
           ],
         }));
         break;
-      case "modal_push":
+      case 'modal_push':
         set((st) => ({
           activeModals: [
             ...st.activeModals,
@@ -277,10 +277,10 @@ export const useStore = create<WorkspaceState>((set, get) => ({
           ],
         }));
         break;
-      case "modal_update":
+      case 'modal_update':
         set((st) => {
           const idx = st.activeModals.findIndex(
-            (m) => m.view.id === event.view.id,
+            (m) => m.view.id === event.view.id
           );
           if (idx < 0) return {};
           const updated = [...st.activeModals];
@@ -288,10 +288,10 @@ export const useStore = create<WorkspaceState>((set, get) => ({
           return { activeModals: updated };
         });
         break;
-      case "modal_close":
+      case 'modal_close':
         set((st) => ({
           activeModals: st.activeModals.filter(
-            (m) => m.view.id !== event.viewId,
+            (m) => m.view.id !== event.viewId
           ),
         }));
         break;

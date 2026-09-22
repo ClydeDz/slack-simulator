@@ -1,6 +1,6 @@
-import crypto from "crypto";
-import { getApps, getDb } from "./db";
-import type { App, LogEntry } from "../shared/types";
+import crypto from 'crypto';
+import { getApps, getDb } from './db';
+import type { App, LogEntry } from '../shared/types';
 
 // ── In-memory log store ───────────────────────────────────────────────────────
 const MAX_LOGS = 300;
@@ -14,9 +14,9 @@ function addLog(entry: LogEntry) {
   _logs.push(entry);
   if (_logs.length > MAX_LOGS) _logs.shift();
   // Lazy import to avoid circular dep with realtime.ts
-  import("./realtime")
+  import('./realtime')
     .then(({ broadcast }) => {
-      broadcast({ type: "log_entry", entry });
+      broadcast({ type: 'log_entry', entry });
     })
     .catch(() => {});
 }
@@ -25,8 +25,8 @@ function addLog(entry: LogEntry) {
 function sign(signingSecret: string, timestamp: number, body: string): string {
   const base = `v0:${timestamp}:${body}`;
   return (
-    "v0=" +
-    crypto.createHmac("sha256", signingSecret).update(base).digest("hex")
+    'v0=' +
+    crypto.createHmac('sha256', signingSecret).update(base).digest('hex')
   );
 }
 
@@ -35,11 +35,11 @@ async function postWithRetry(
   url: string,
   body: string,
   headers: Record<string, string>,
-  maxRetries = 3,
+  maxRetries = 3
 ): Promise<{ status: number; ok: boolean }> {
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
-      const res = await fetch(url, { method: "POST", headers, body });
+      const res = await fetch(url, { method: 'POST', headers, body });
       if (res.ok || res.status < 500) return { status: res.status, ok: res.ok };
     } catch (_) {
       /* network error — will retry */
@@ -55,7 +55,7 @@ async function postWithRetry(
 let _evCounter = 0;
 function makeEventId() {
   _evCounter = (_evCounter + 1) % 1000000;
-  return `Ev${Date.now()}${String(_evCounter).padStart(6, "0")}`;
+  return `Ev${Date.now()}${String(_evCounter).padStart(6, '0')}`;
 }
 
 // ── Main dispatch entry point ─────────────────────────────────────────────────
@@ -65,20 +65,20 @@ function makeEventId() {
  */
 export async function dispatchEvent(
   eventType: string,
-  eventBody: Record<string, unknown>,
+  eventBody: Record<string, unknown>
 ): Promise<void> {
   const db = getDb();
-  const ws = db.prepare("SELECT * FROM workspace LIMIT 1").get() as
+  const ws = db.prepare('SELECT * FROM workspace LIMIT 1').get() as
     | { id: string; name: string }
     | undefined;
-  const teamId = ws?.id ?? "W001";
+  const teamId = ws?.id ?? 'W001';
 
   const apps = getApps();
 
   const subscribedApps = apps.filter(
     (app) =>
       app.subscribedEvents?.includes(eventType) ||
-      app.subscribedEvents?.includes("*"),
+      app.subscribedEvents?.includes('*')
   );
 
   await Promise.all(
@@ -96,7 +96,7 @@ export async function dispatchEvent(
           team: teamId,
           event_ts: String(eventBody.event_ts ?? eventBody.ts ?? eventTime),
         },
-        type: "event_callback",
+        type: 'event_callback',
         event_id: eventId,
         event_time: eventTime,
         authorizations: [
@@ -112,51 +112,51 @@ export async function dispatchEvent(
 
       const logBase: Omit<
         LogEntry,
-        "transport" | "status" | "durationMs" | "error"
+        'transport' | 'status' | 'durationMs' | 'error'
       > = {
         id: eventId,
         ts: Date.now(),
         appId: app.id,
         appName: app.name,
-        direction: "outbound",
+        direction: 'outbound',
         eventType,
         payload: envelope,
       };
 
       if (app.socketModeEnabled) {
-        const { enqueueSocketModeEvent } = await import("./socketModeServer");
+        const { enqueueSocketModeEvent } = await import('./socketModeServer');
         const acked = await enqueueSocketModeEvent(app.id, eventId, envelope);
         addLog({
           ...logBase,
-          transport: "socket_mode",
+          transport: 'socket_mode',
           status: acked ? 200 : 0,
-          error: acked ? undefined : "no_ack",
+          error: acked ? undefined : 'no_ack',
         });
       } else if (app.requestUrl) {
         const timestamp = Math.floor(Date.now() / 1000);
         const body = JSON.stringify(envelope);
         const headers: Record<string, string> = {
-          "Content-Type": "application/json",
-          "X-Slack-Signature": sign(app.signingSecret, timestamp, body),
-          "X-Slack-Request-Timestamp": String(timestamp),
-          "X-Slack-Retry-Num": "0",
-          "X-Slack-Retry-Reason": "none",
+          'Content-Type': 'application/json',
+          'X-Slack-Signature': sign(app.signingSecret, timestamp, body),
+          'X-Slack-Request-Timestamp': String(timestamp),
+          'X-Slack-Retry-Num': '0',
+          'X-Slack-Retry-Reason': 'none',
         };
         const start = Date.now();
         const { status, ok } = await postWithRetry(
           app.requestUrl,
           body,
-          headers,
+          headers
         );
         addLog({
           ...logBase,
-          transport: "http",
+          transport: 'http',
           status,
           durationMs: Date.now() - start,
-          error: ok ? undefined : `HTTP ${status || "network_error"}`,
+          error: ok ? undefined : `HTTP ${status || 'network_error'}`,
         });
       }
-    }),
+    })
   );
 }
 
@@ -167,13 +167,13 @@ export async function dispatchEvent(
 export async function dispatchEventToApp(
   app: App,
   eventType: string,
-  eventBody: Record<string, unknown>,
+  eventBody: Record<string, unknown>
 ): Promise<void> {
   const db = getDb();
-  const ws = db.prepare("SELECT * FROM workspace LIMIT 1").get() as
+  const ws = db.prepare('SELECT * FROM workspace LIMIT 1').get() as
     | { id: string; name: string }
     | undefined;
-  const teamId = ws?.id ?? "W001";
+  const teamId = ws?.id ?? 'W001';
 
   const eventId = makeEventId();
   const eventTime = Math.floor(Date.now() / 1000);
@@ -188,7 +188,7 @@ export async function dispatchEventToApp(
       team: teamId,
       event_ts: String(eventBody.event_ts ?? eventBody.ts ?? eventTime),
     },
-    type: "event_callback",
+    type: 'event_callback',
     event_id: eventId,
     event_time: eventTime,
     authorizations: [
@@ -204,44 +204,44 @@ export async function dispatchEventToApp(
 
   const logBase: Omit<
     LogEntry,
-    "transport" | "status" | "durationMs" | "error"
+    'transport' | 'status' | 'durationMs' | 'error'
   > = {
     id: eventId,
     ts: Date.now(),
     appId: app.id,
     appName: app.name,
-    direction: "outbound",
+    direction: 'outbound',
     eventType,
     payload: envelope,
   };
 
   if (app.socketModeEnabled) {
-    const { enqueueSocketModeEvent } = await import("./socketModeServer");
+    const { enqueueSocketModeEvent } = await import('./socketModeServer');
     const acked = await enqueueSocketModeEvent(app.id, eventId, envelope);
     addLog({
       ...logBase,
-      transport: "socket_mode",
+      transport: 'socket_mode',
       status: acked ? 200 : 0,
-      error: acked ? undefined : "no_ack",
+      error: acked ? undefined : 'no_ack',
     });
   } else if (app.requestUrl) {
     const timestamp = Math.floor(Date.now() / 1000);
     const body = JSON.stringify(envelope);
     const headers: Record<string, string> = {
-      "Content-Type": "application/json",
-      "X-Slack-Signature": sign(app.signingSecret, timestamp, body),
-      "X-Slack-Request-Timestamp": String(timestamp),
-      "X-Slack-Retry-Num": "0",
-      "X-Slack-Retry-Reason": "none",
+      'Content-Type': 'application/json',
+      'X-Slack-Signature': sign(app.signingSecret, timestamp, body),
+      'X-Slack-Request-Timestamp': String(timestamp),
+      'X-Slack-Retry-Num': '0',
+      'X-Slack-Retry-Reason': 'none',
     };
     const start = Date.now();
     const { status, ok } = await postWithRetry(app.requestUrl, body, headers);
     addLog({
       ...logBase,
-      transport: "http",
+      transport: 'http',
       status,
       durationMs: Date.now() - start,
-      error: ok ? undefined : `HTTP ${status || "network_error"}`,
+      error: ok ? undefined : `HTTP ${status || 'network_error'}`,
     });
   }
 }
@@ -252,16 +252,16 @@ export function logInbound(
   appName: string,
   method: string,
   payload: unknown,
-  status: number,
+  status: number
 ) {
   addLog({
     id: `in_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
     ts: Date.now(),
     appId,
     appName,
-    direction: "inbound",
+    direction: 'inbound',
     eventType: method,
-    transport: "api",
+    transport: 'api',
     status,
     payload,
   });

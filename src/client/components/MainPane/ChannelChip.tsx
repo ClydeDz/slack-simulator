@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import ReactDOM from "react-dom";
-import Avatar from "../Avatar";
-import type { Channel, User, App } from "@shared/types";
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
+import Avatar from '../Avatar';
+import type { Channel, User, App } from '@shared/types';
 
 interface Props {
   label: string;
@@ -26,7 +26,7 @@ export default function ChannelChip({
   const [pos, setPos] = useState<{
     top: number;
     left: number;
-    placement: "above" | "below";
+    placement: 'above' | 'below';
   } | null>(null);
   const ref = React.useRef<HTMLSpanElement>(null);
 
@@ -36,12 +36,12 @@ export default function ChannelChip({
   function handleMouseEnter() {
     const r = ref.current?.getBoundingClientRect();
     if (!r) return;
-    const placement = r.top - TOOLTIP_HEIGHT - MARGIN < 0 ? "below" : "above";
-    const top = placement === "above" ? r.top - MARGIN : r.bottom + MARGIN;
+    const placement = r.top - TOOLTIP_HEIGHT - MARGIN < 0 ? 'below' : 'above';
+    const top = placement === 'above' ? r.top - MARGIN : r.bottom + MARGIN;
     setPos({ top, left: r.left + r.width / 2, placement });
   }
 
-  const isIm = channel.type === "im" || channel.type === "mpim";
+  const isIm = channel.type === 'im' || channel.type === 'mpim';
 
   // Human members from channel.members
   const resolvedHumans = channel.members
@@ -56,7 +56,7 @@ export default function ChannelChip({
         : null;
     })
     .filter(
-      (m): m is { seed: string; name: string; url: string | undefined } => !!m,
+      (m): m is { seed: string; name: string; url: string | undefined } => !!m
     );
 
   // All apps are available in every channel
@@ -73,34 +73,34 @@ export default function ChannelChip({
   const botCount = apps.length;
   const memberCountLabel =
     humanCount > 0 && botCount > 0
-      ? `${humanCount} ${humanCount === 1 ? "member" : "members"} and ${botCount} ${botCount === 1 ? "app" : "apps"}`
+      ? `${humanCount} ${humanCount === 1 ? 'member' : 'members'} and ${botCount} ${botCount === 1 ? 'app' : 'apps'}`
       : humanCount > 0
-        ? `${humanCount} ${humanCount === 1 ? "member" : "members"}`
-        : `${botCount} ${botCount === 1 ? "app" : "apps"}`;
+        ? `${humanCount} ${humanCount === 1 ? 'member' : 'members'}`
+        : `${botCount} ${botCount === 1 ? 'app' : 'apps'}`;
 
   // Tooltip title: for DMs show comma-separated names; for channels show #name
   const tooltipTitle = isIm
-    ? resolvedHumans.map((m) => m.name).join(", ")
+    ? resolvedHumans.map((m) => m.name).join(', ')
     : `#${channel.name}`;
 
   return (
     <>
       <span
         ref={ref}
-        className={plain ? undefined : "ss-mention"}
+        className={plain ? undefined : 'ss-mention'}
         onClick={onClick}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={() => setPos(null)}
         style={{
-          cursor: onClick ? "pointer" : "default",
-          display: "inline-flex",
-          alignItems: "center",
+          cursor: onClick ? 'pointer' : 'default',
+          display: 'inline-flex',
+          alignItems: 'center',
           gap: 3,
           ...(plain
             ? {
-                fontSize: "var(--slacksim-font-size-sm)",
-                color: "var(--slacksim-color-fg-muted)",
-                textDecoration: "underline dotted",
+                fontSize: 'var(--slacksim-font-size-sm)',
+                color: 'var(--slacksim-color-fg-muted)',
+                textDecoration: 'underline dotted',
                 textUnderlineOffset: 3,
               }
             : {}),
@@ -110,7 +110,7 @@ export default function ChannelChip({
           label
         ) : (
           <>
-            {channel.type === "private" ? (
+            {channel.type === 'private' ? (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="11"
@@ -129,7 +129,7 @@ export default function ChannelChip({
             ) : (
               <span
                 style={{
-                  fontWeight: "var(--slacksim-font-weight-bold)",
+                  fontWeight: 'var(--slacksim-font-weight-bold)',
                   lineHeight: 1,
                 }}
               >
@@ -145,35 +145,35 @@ export default function ChannelChip({
         ReactDOM.createPortal(
           <div
             style={{
-              position: "fixed",
+              position: 'fixed',
               top: pos.top,
               left: pos.left,
               transform:
-                pos.placement === "above"
-                  ? "translate(-50%, -100%)"
-                  : "translate(-50%, 0)",
+                pos.placement === 'above'
+                  ? 'translate(-50%, -100%)'
+                  : 'translate(-50%, 0)',
               zIndex: 2000,
-              pointerEvents: "none",
+              pointerEvents: 'none',
             }}
           >
             <div
               style={{
-                background: "var(--slacksim-color-modal-bg)",
-                border: "1px solid var(--slacksim-color-modal-border)",
-                borderRadius: "var(--slacksim-radius-md)",
-                boxShadow: "var(--slacksim-shadow-md)",
-                padding: "10px 14px",
+                background: 'var(--slacksim-color-modal-bg)',
+                border: '1px solid var(--slacksim-color-modal-border)',
+                borderRadius: 'var(--slacksim-radius-md)',
+                boxShadow: 'var(--slacksim-shadow-md)',
+                padding: '10px 14px',
                 minWidth: 200,
               }}
             >
               {/* Title: member names for DMs, #channel-name for channels */}
               <div
                 style={{
-                  fontWeight: "var(--slacksim-font-weight-bold)",
-                  fontSize: "var(--slacksim-font-size-lg)",
-                  color: "var(--slacksim-color-fg)",
+                  fontWeight: 'var(--slacksim-font-weight-bold)',
+                  fontSize: 'var(--slacksim-font-size-lg)',
+                  color: 'var(--slacksim-color-fg)',
                   marginBottom: 8,
-                  whiteSpace: "nowrap",
+                  whiteSpace: 'nowrap',
                 }}
               >
                 {tooltipTitle}
@@ -182,13 +182,13 @@ export default function ChannelChip({
               {/* Avatars + member count */}
               <div
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "var(--slacksim-space-2)",
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 'var(--slacksim-space-2)',
                 }}
               >
                 {avatarsToShow.length > 0 && (
-                  <div style={{ display: "flex" }}>
+                  <div style={{ display: 'flex' }}>
                     {avatarsToShow.map((m, idx) => (
                       <div
                         key={m.seed}
@@ -209,9 +209,9 @@ export default function ChannelChip({
                 )}
                 <span
                   style={{
-                    fontSize: "var(--slacksim-font-size-sm)",
-                    color: "var(--slacksim-color-fg-muted)",
-                    whiteSpace: "nowrap",
+                    fontSize: 'var(--slacksim-font-size-sm)',
+                    color: 'var(--slacksim-color-fg-muted)',
+                    whiteSpace: 'nowrap',
                   }}
                 >
                   {memberCountLabel}
@@ -219,7 +219,7 @@ export default function ChannelChip({
               </div>
             </div>
           </div>,
-          document.body,
+          document.body
         )}
     </>
   );

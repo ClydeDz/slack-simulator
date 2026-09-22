@@ -1,10 +1,10 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { renderHook, cleanup } from "@testing-library/react";
-import { useRealtimeWS } from "./useRealtimeWS";
-import { useStore } from "../store";
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { renderHook, cleanup } from '@testing-library/react';
+import { useRealtimeWS } from './useRealtimeWS';
+import { useStore } from '../store';
 
 // Mock the store at the top level
-vi.mock("../store");
+vi.mock('../store');
 
 // Mock WebSocket
 class MockWebSocket {
@@ -34,9 +34,9 @@ class MockWebSocket {
   }
 }
 
-describe("useRealtimeWS", () => {
+describe('useRealtimeWS', () => {
   beforeEach(() => {
-    vi.stubGlobal("WebSocket", MockWebSocket);
+    vi.stubGlobal('WebSocket', MockWebSocket);
     MockWebSocket.reset();
   });
 
@@ -45,17 +45,17 @@ describe("useRealtimeWS", () => {
     vi.unstubAllGlobals();
   });
 
-  it("should establish WebSocket connection on mount", () => {
+  it('should establish WebSocket connection on mount', () => {
     const mockApplyWsEvent = vi.fn();
     vi.mocked(useStore).mockReturnValue(mockApplyWsEvent);
 
     renderHook(() => useRealtimeWS());
 
     expect(MockWebSocket.instances).toHaveLength(1);
-    expect(MockWebSocket.instances[0].url).toBe("ws://localhost:3000/_ws");
+    expect(MockWebSocket.instances[0].url).toBe('ws://localhost:3000/_ws');
   });
 
-  it("should call applyWsEvent when message received", () => {
+  it('should call applyWsEvent when message received', () => {
     const mockApplyWsEvent = vi.fn();
     vi.mocked(useStore).mockReturnValue(mockApplyWsEvent);
 
@@ -63,8 +63,8 @@ describe("useRealtimeWS", () => {
 
     const ws = MockWebSocket.instances[0];
     const testEvent = {
-      type: "message_new",
-      message: { id: "M001", text: "test" },
+      type: 'message_new',
+      message: { id: 'M001', text: 'test' },
     };
 
     if (ws.onmessage) {
@@ -74,7 +74,7 @@ describe("useRealtimeWS", () => {
     expect(mockApplyWsEvent).toHaveBeenCalledWith(testEvent);
   });
 
-  it("should ignore malformed messages", () => {
+  it('should ignore malformed messages', () => {
     const mockApplyWsEvent = vi.fn();
     vi.mocked(useStore).mockReturnValue(mockApplyWsEvent);
 
@@ -83,13 +83,13 @@ describe("useRealtimeWS", () => {
     const ws = MockWebSocket.instances[0];
 
     if (ws.onmessage) {
-      ws.onmessage({ data: "invalid json" } as MessageEvent);
+      ws.onmessage({ data: 'invalid json' } as MessageEvent);
     }
 
     expect(mockApplyWsEvent).not.toHaveBeenCalled();
   });
 
-  it("should reconnect on connection close", () => {
+  it('should reconnect on connection close', () => {
     const mockApplyWsEvent = vi.fn();
     vi.mocked(useStore).mockReturnValue(mockApplyWsEvent);
     vi.useFakeTimers();
@@ -110,7 +110,7 @@ describe("useRealtimeWS", () => {
     vi.useRealTimers();
   });
 
-  it("should not reconnect after unmount", () => {
+  it('should not reconnect after unmount', () => {
     const mockApplyWsEvent = vi.fn();
     vi.mocked(useStore).mockReturnValue(mockApplyWsEvent);
     vi.useFakeTimers();
@@ -133,7 +133,7 @@ describe("useRealtimeWS", () => {
     vi.useRealTimers();
   });
 
-  it("should close WebSocket on unmount", () => {
+  it('should close WebSocket on unmount', () => {
     const mockApplyWsEvent = vi.fn();
     vi.mocked(useStore).mockReturnValue(mockApplyWsEvent);
 

@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useStore } from "../../store";
-import { controlApi } from "../../lib/api";
-import Avatar from "../Avatar";
+import React, { useState, useRef, useEffect } from 'react';
+import { useStore } from '../../store';
+import { controlApi } from '../../lib/api';
+import Avatar from '../Avatar';
 
 interface Props {
   channelId: string;
@@ -10,7 +10,7 @@ interface Props {
 }
 
 export default function Composer({ channelId, threadTs, placeholder }: Props) {
-  const [text, setText] = useState("");
+  const [text, setText] = useState('');
   const [sending, setSending] = useState(false);
   const [sendError, setSendError] = useState<string | null>(null);
   const [mentionQuery, setMentionQuery] = useState<string | null>(null);
@@ -23,8 +23,8 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
   const { channels, users, apps, actingUserId, workspace } = useStore();
 
   const channel = channels.find((c) => c.id === channelId);
-  const isPrivateChannel = channel?.type === "private";
-  const isIm = channel?.type === "im" || channel?.type === "mpim";
+  const isPrivateChannel = channel?.type === 'private';
+  const isIm = channel?.type === 'im' || channel?.type === 'mpim';
 
   const dmName = isIm
     ? (channel?.members ?? [])
@@ -34,14 +34,14 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
           const a = apps.find((a) => a.botUserId === id);
           return u?.fullName ?? a?.name ?? id;
         })
-        .join(", ") || "them"
+        .join(', ') || 'them'
     : null;
 
   // ── Slash command detection ────────────────────────────────────
   // Active when text starts with / and no space yet (still typing command name)
   const slashQuery: string | null = (() => {
-    if (!text.startsWith("/")) return null;
-    if (text.includes(" ")) return null;
+    if (!text.startsWith('/')) return null;
+    if (text.includes(' ')) return null;
     return text.slice(1); // partial command name after /
   })();
 
@@ -58,7 +58,7 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
       ? apps.flatMap((a) =>
           (a.slashCommands || [])
             .filter((sc) =>
-              sc.command.slice(1).startsWith(slashQuery.toLowerCase()),
+              sc.command.slice(1).startsWith(slashQuery.toLowerCase())
             )
             .map((sc) => ({
               command: sc.command,
@@ -67,12 +67,12 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
               appName: a.name,
               avatarSeed: a.botUserName,
               avatarUrl: a.avatarUrl,
-            })),
+            }))
         )
       : [];
 
   function selectSlashCommand(command: string) {
-    setText(command + " ");
+    setText(command + ' ');
     setTimeout(() => {
       const el = textareaRef.current;
       if (el) {
@@ -87,7 +87,7 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
   // Unified mention list: users + apps (bots)
   type MentionEntry =
     | {
-        kind: "user";
+        kind: 'user';
         id: string;
         username: string;
         fullName: string;
@@ -95,7 +95,7 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
         avatarUrl?: string;
       }
     | {
-        kind: "app";
+        kind: 'app';
         id: string;
         username: string;
         fullName: string;
@@ -112,10 +112,10 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
                 a.botUserName
                   .toLowerCase()
                   .startsWith(mentionQuery!.toLowerCase()) ||
-                a.name.toLowerCase().includes(mentionQuery!.toLowerCase()),
+                a.name.toLowerCase().includes(mentionQuery!.toLowerCase())
             )
             .map((a) => ({
-              kind: "app" as const,
+              kind: 'app' as const,
               id: a.id,
               username: a.botUserName,
               fullName: a.name,
@@ -128,11 +128,11 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
                 u.username
                   .toLowerCase()
                   .startsWith(mentionQuery!.toLowerCase()) ||
-                u.fullName.toLowerCase().includes(mentionQuery!.toLowerCase()),
+                u.fullName.toLowerCase().includes(mentionQuery!.toLowerCase())
             )
             .slice(0, 5)
             .map((u) => ({
-              kind: "user" as const,
+              kind: 'user' as const,
               id: u.id,
               username: u.username,
               fullName: u.fullName,
@@ -146,9 +146,9 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
   const channelMatches =
     channelQuery !== null
       ? channels
-          .filter((c) => c.type !== "im" && c.type !== "mpim" && c.name)
+          .filter((c) => c.type !== 'im' && c.type !== 'mpim' && c.name)
           .filter((c) =>
-            c.name.toLowerCase().startsWith(channelQuery.toLowerCase()),
+            c.name.toLowerCase().startsWith(channelQuery.toLowerCase())
           )
           .slice(0, 8)
       : [];
@@ -159,7 +159,7 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
     emojiQuery !== null
       ? Object.entries(emojiMap)
           .filter(([name]) =>
-            name.toLowerCase().startsWith(emojiQuery.toLowerCase()),
+            name.toLowerCase().startsWith(emojiQuery.toLowerCase())
           )
           .map(([name, char]) => ({ name, char }))
       : [];
@@ -240,7 +240,7 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
     setText(val);
     setSendError(null);
     // Suppress all dropdown detection for any slash command input (name or args)
-    if (val.startsWith("/")) {
+    if (val.startsWith('/')) {
       setMentionQuery(null);
       setChannelQuery(null);
       setEmojiQuery(null);
@@ -250,7 +250,7 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
     // Auto-grow
     const el = textareaRef.current;
     if (el) {
-      el.style.height = "auto";
+      el.style.height = 'auto';
       el.style.height = `${Math.min(el.scrollHeight, 120)}px`;
     }
   }
@@ -278,33 +278,33 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
 
     setSending(true);
     setSendError(null);
-    console.log("[Composer] handleSend called, text:", trimmed);
+    console.log('[Composer] handleSend called, text:', trimmed);
     try {
-      if (trimmed.startsWith("/")) {
+      if (trimmed.startsWith('/')) {
         // Slash command: split into command + args
-        const spaceIdx = trimmed.indexOf(" ");
+        const spaceIdx = trimmed.indexOf(' ');
         const command = spaceIdx === -1 ? trimmed : trimmed.slice(0, spaceIdx);
-        const args = spaceIdx === -1 ? "" : trimmed.slice(spaceIdx + 1).trim();
+        const args = spaceIdx === -1 ? '' : trimmed.slice(spaceIdx + 1).trim();
         console.log(
-          "[Composer] dispatching slash command:",
+          '[Composer] dispatching slash command:',
           command,
-          "args:",
-          args,
+          'args:',
+          args
         );
         await controlApi.postSlashCommand(channelId, command, args);
-        console.log("[Composer] slash command dispatched ok");
+        console.log('[Composer] slash command dispatched ok');
       } else {
         await controlApi.postMessage(channelId, trimmed, threadTs);
       }
-      setText("");
+      setText('');
       setMentionQuery(null);
       setEmojiQuery(null);
       const el = textareaRef.current;
-      if (el) el.style.height = "auto";
+      if (el) el.style.height = 'auto';
     } catch (e) {
-      const msg = e instanceof Error ? e.message : "Failed to send";
+      const msg = e instanceof Error ? e.message : 'Failed to send';
       setSendError(msg);
-      console.error("[Composer] Failed to send:", e);
+      console.error('[Composer] Failed to send:', e);
     } finally {
       setSending(false);
     }
@@ -312,16 +312,16 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
     // When composing slash command args (e.g. /vote "a" "b"), Enter always sends — never intercepted by dropdowns
-    const isSlashCommandArgs = text.startsWith("/") && text.includes(" ");
+    const isSlashCommandArgs = text.startsWith('/') && text.includes(' ');
 
     // Slash command dropdown navigation
     if (slashQuery !== null && slashMatches.length > 0) {
-      if (e.key === "Escape") {
+      if (e.key === 'Escape') {
         e.preventDefault();
-        setText("");
+        setText('');
         return;
       }
-      if (e.key === "Tab" || e.key === "ArrowDown") {
+      if (e.key === 'Tab' || e.key === 'ArrowDown') {
         e.preventDefault();
         selectSlashCommand(slashMatches[0].command);
         return;
@@ -334,12 +334,12 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
       channelQuery !== null &&
       channelMatches.length > 0
     ) {
-      if (e.key === "Escape") {
+      if (e.key === 'Escape') {
         e.preventDefault();
         setChannelQuery(null);
         return;
       }
-      if (e.key === "Tab" || e.key === "Enter") {
+      if (e.key === 'Tab' || e.key === 'Enter') {
         e.preventDefault();
         insertChannelMention(channelMatches[0].id, channelMatches[0].name); // id unused, kept for signature clarity
         return;
@@ -352,12 +352,12 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
       mentionQuery !== null &&
       mentionMatches.length > 0
     ) {
-      if (e.key === "Escape") {
+      if (e.key === 'Escape') {
         e.preventDefault();
         setMentionQuery(null);
         return;
       }
-      if (e.key === "Tab" || (e.key === "Enter" && mentionQuery !== null)) {
+      if (e.key === 'Tab' || (e.key === 'Enter' && mentionQuery !== null)) {
         e.preventDefault();
         insertMention(mentionMatches[0].username);
         return;
@@ -366,19 +366,19 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
 
     // Emoji dropdown navigation
     if (!isSlashCommandArgs && emojiQuery !== null && emojiMatches.length > 0) {
-      if (e.key === "Escape") {
+      if (e.key === 'Escape') {
         e.preventDefault();
         setEmojiQuery(null);
         return;
       }
-      if (e.key === "Tab" || e.key === "Enter") {
+      if (e.key === 'Tab' || e.key === 'Enter') {
         e.preventDefault();
         insertEmoji(emojiMatches[0].name, emojiMatches[0].char);
         return;
       }
     }
 
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSend();
     }
@@ -389,14 +389,14 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
     function handler(e: MouseEvent) {
       if (
         !textareaRef.current
-          ?.closest(".ss-composer")
+          ?.closest('.ss-composer')
           ?.contains(e.target as Node)
       ) {
         setMentionQuery(null);
       }
     }
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
   }, []);
 
   const canSend = text.trim().length > 0 && !sending;
@@ -405,25 +405,25 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
     <div
       className="ss-composer"
       style={{
-        padding: "0 var(--slacksim-space-5) var(--slacksim-space-4)",
+        padding: '0 var(--slacksim-space-5) var(--slacksim-space-4)',
         flexShrink: 0,
-        position: "relative",
+        position: 'relative',
       }}
     >
       {/* Slash command dropdown */}
       {slashQuery !== null && slashMatches.length > 0 && (
         <div
           style={{
-            position: "absolute",
-            bottom: "100%",
-            left: "var(--slacksim-space-5)",
-            right: "var(--slacksim-space-5)",
+            position: 'absolute',
+            bottom: '100%',
+            left: 'var(--slacksim-space-5)',
+            right: 'var(--slacksim-space-5)',
             marginBottom: 4,
-            background: "var(--slacksim-color-modal-bg)",
-            border: "1px solid var(--slacksim-color-modal-border)",
-            borderRadius: "var(--slacksim-radius-md)",
-            boxShadow: "var(--slacksim-shadow-md)",
-            overflow: "hidden",
+            background: 'var(--slacksim-color-modal-bg)',
+            border: '1px solid var(--slacksim-color-modal-border)',
+            borderRadius: 'var(--slacksim-radius-md)',
+            boxShadow: 'var(--slacksim-shadow-md)',
+            overflow: 'hidden',
             zIndex: 100,
           }}
         >
@@ -436,47 +436,47 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
               }}
               className="ss-mention-item"
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "var(--slacksim-space-3)",
-                width: "100%",
-                padding: "8px 12px",
-                background: "transparent",
-                border: "none",
-                cursor: "pointer",
-                textAlign: "left",
-                transition: "background 0.1s ease",
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--slacksim-space-3)',
+                width: '100%',
+                padding: '8px 12px',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                textAlign: 'left',
+                transition: 'background 0.1s ease',
               }}
             >
               <Avatar seed={entry.avatarSeed} size={28} url={entry.avatarUrl} />
-              <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <span
                   style={{
-                    fontSize: "var(--slacksim-font-size-md)",
-                    color: "var(--slacksim-color-fg)",
+                    fontSize: 'var(--slacksim-font-size-md)',
+                    color: 'var(--slacksim-color-fg)',
                   }}
                 >
                   <span
-                    style={{ fontWeight: "var(--slacksim-font-weight-bold)" }}
+                    style={{ fontWeight: 'var(--slacksim-font-weight-bold)' }}
                   >
                     {entry.command}
                   </span>
                   {entry.usage && (
                     <span
                       style={{
-                        fontWeight: "var(--slacksim-font-weight-normal, 400)",
-                        color: "var(--slacksim-color-fg-muted)",
+                        fontWeight: 'var(--slacksim-font-weight-normal, 400)',
+                        color: 'var(--slacksim-color-fg-muted)',
                       }}
                     >
-                      {" "}
+                      {' '}
                       {entry.usage}
                     </span>
                   )}
                 </span>
                 <span
                   style={{
-                    fontSize: "var(--slacksim-font-size-sm)",
-                    color: "var(--slacksim-color-fg-muted)",
+                    fontSize: 'var(--slacksim-font-size-sm)',
+                    color: 'var(--slacksim-color-fg-muted)',
                   }}
                 >
                   App · {entry.appName} · {entry.description}
@@ -491,16 +491,16 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
       {channelQuery !== null && channelMatches.length > 0 && (
         <div
           style={{
-            position: "absolute",
-            bottom: "100%",
-            left: "var(--slacksim-space-5)",
-            right: "var(--slacksim-space-5)",
+            position: 'absolute',
+            bottom: '100%',
+            left: 'var(--slacksim-space-5)',
+            right: 'var(--slacksim-space-5)',
             marginBottom: 4,
-            background: "var(--slacksim-color-modal-bg)",
-            border: "1px solid var(--slacksim-color-modal-border)",
-            borderRadius: "var(--slacksim-radius-md)",
-            boxShadow: "var(--slacksim-shadow-md)",
-            overflow: "hidden",
+            background: 'var(--slacksim-color-modal-bg)',
+            border: '1px solid var(--slacksim-color-modal-border)',
+            borderRadius: 'var(--slacksim-radius-md)',
+            boxShadow: 'var(--slacksim-shadow-md)',
+            overflow: 'hidden',
             zIndex: 100,
           }}
         >
@@ -513,44 +513,44 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
               }}
               className="ss-mention-item"
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "var(--slacksim-space-2)",
-                width: "100%",
-                padding: "8px 12px",
-                background: "transparent",
-                border: "none",
-                cursor: "pointer",
-                textAlign: "left",
-                transition: "background 0.1s ease",
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--slacksim-space-2)',
+                width: '100%',
+                padding: '8px 12px',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                textAlign: 'left',
+                transition: 'background 0.1s ease',
               }}
             >
               <span
                 style={{
-                  fontSize: "var(--slacksim-font-size-md)",
-                  color: "var(--slacksim-color-fg-muted)",
-                  fontWeight: "var(--slacksim-font-weight-bold)",
+                  fontSize: 'var(--slacksim-font-size-md)',
+                  color: 'var(--slacksim-color-fg-muted)',
+                  fontWeight: 'var(--slacksim-font-weight-bold)',
                 }}
               >
                 #
               </span>
               <span
                 style={{
-                  fontWeight: "var(--slacksim-font-weight-bold)",
-                  fontSize: "var(--slacksim-font-size-md)",
-                  color: "var(--slacksim-color-fg)",
+                  fontWeight: 'var(--slacksim-font-weight-bold)',
+                  fontSize: 'var(--slacksim-font-size-md)',
+                  color: 'var(--slacksim-color-fg)',
                 }}
               >
                 {c.name}
               </span>
               <span
                 style={{
-                  fontSize: "var(--slacksim-font-size-sm)",
-                  color: "var(--slacksim-color-fg-muted)",
-                  marginLeft: "auto",
+                  fontSize: 'var(--slacksim-font-size-sm)',
+                  color: 'var(--slacksim-color-fg-muted)',
+                  marginLeft: 'auto',
                 }}
               >
-                {c.type === "private" ? "Private" : "Channel"}
+                {c.type === 'private' ? 'Private' : 'Channel'}
               </span>
             </button>
           ))}
@@ -561,16 +561,16 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
       {emojiQuery !== null && emojiMatches.length > 0 && (
         <div
           style={{
-            position: "absolute",
-            bottom: "100%",
-            left: "var(--slacksim-space-5)",
-            right: "var(--slacksim-space-5)",
+            position: 'absolute',
+            bottom: '100%',
+            left: 'var(--slacksim-space-5)',
+            right: 'var(--slacksim-space-5)',
             marginBottom: 4,
-            background: "var(--slacksim-color-modal-bg)",
-            border: "1px solid var(--slacksim-color-modal-border)",
-            borderRadius: "var(--slacksim-radius-md)",
-            boxShadow: "var(--slacksim-shadow-md)",
-            overflow: "hidden",
+            background: 'var(--slacksim-color-modal-bg)',
+            border: '1px solid var(--slacksim-color-modal-border)',
+            borderRadius: 'var(--slacksim-radius-md)',
+            boxShadow: 'var(--slacksim-shadow-md)',
+            overflow: 'hidden',
             zIndex: 100,
           }}
         >
@@ -583,24 +583,24 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
               }}
               className="ss-mention-item"
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "var(--slacksim-space-3)",
-                width: "100%",
-                padding: "8px 12px",
-                background: "transparent",
-                border: "none",
-                cursor: "pointer",
-                textAlign: "left",
-                transition: "background 0.1s ease",
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--slacksim-space-3)',
+                width: '100%',
+                padding: '8px 12px',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                textAlign: 'left',
+                transition: 'background 0.1s ease',
               }}
             >
               <span style={{ fontSize: 20, lineHeight: 1 }}>{entry.char}</span>
               <span
                 style={{
-                  fontWeight: "var(--slacksim-font-weight-bold)",
-                  fontSize: "var(--slacksim-font-size-md)",
-                  color: "var(--slacksim-color-fg)",
+                  fontWeight: 'var(--slacksim-font-weight-bold)',
+                  fontSize: 'var(--slacksim-font-size-md)',
+                  color: 'var(--slacksim-color-fg)',
                 }}
               >
                 :{entry.name}:
@@ -614,16 +614,16 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
       {mentionQuery !== null && mentionMatches.length > 0 && (
         <div
           style={{
-            position: "absolute",
-            bottom: "100%",
-            left: "var(--slacksim-space-5)",
-            right: "var(--slacksim-space-5)",
+            position: 'absolute',
+            bottom: '100%',
+            left: 'var(--slacksim-space-5)',
+            right: 'var(--slacksim-space-5)',
             marginBottom: 4,
-            background: "var(--slacksim-color-modal-bg)",
-            border: "1px solid var(--slacksim-color-modal-border)",
-            borderRadius: "var(--slacksim-radius-md)",
-            boxShadow: "var(--slacksim-shadow-md)",
-            overflow: "hidden",
+            background: 'var(--slacksim-color-modal-bg)',
+            border: '1px solid var(--slacksim-color-modal-border)',
+            borderRadius: 'var(--slacksim-radius-md)',
+            boxShadow: 'var(--slacksim-shadow-md)',
+            overflow: 'hidden',
             zIndex: 100,
           }}
         >
@@ -636,38 +636,38 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
               }}
               className="ss-mention-item"
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "var(--slacksim-space-2)",
-                width: "100%",
-                padding: "8px 12px",
-                background: "transparent",
-                border: "none",
-                cursor: "pointer",
-                textAlign: "left",
-                transition: "background 0.1s ease",
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--slacksim-space-2)',
+                width: '100%',
+                padding: '8px 12px',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                textAlign: 'left',
+                transition: 'background 0.1s ease',
               }}
             >
               <Avatar seed={entry.avatarSeed} size={20} url={entry.avatarUrl} />
               <span
                 style={{
-                  fontWeight: "var(--slacksim-font-weight-bold)",
-                  fontSize: "var(--slacksim-font-size-md)",
-                  color: "var(--slacksim-color-fg)",
+                  fontWeight: 'var(--slacksim-font-weight-bold)',
+                  fontSize: 'var(--slacksim-font-size-md)',
+                  color: 'var(--slacksim-color-fg)',
                 }}
               >
                 {entry.fullName}
               </span>
-              {entry.kind === "app" && (
+              {entry.kind === 'app' && (
                 <span
                   style={{
                     fontSize: 10,
                     fontWeight: 500,
-                    color: "var(--slacksim-color-fg)",
-                    background: "var(--slacksim-color-divider)",
-                    borderRadius: "var(--slacksim-radius-sm)",
-                    padding: "1px 5px",
-                    letterSpacing: "0.04em",
+                    color: 'var(--slacksim-color-fg)',
+                    background: 'var(--slacksim-color-divider)',
+                    borderRadius: 'var(--slacksim-radius-sm)',
+                    padding: '1px 5px',
+                    letterSpacing: '0.04em',
                   }}
                 >
                   APP
@@ -675,9 +675,9 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
               )}
               <span
                 style={{
-                  fontSize: "var(--slacksim-font-size-sm)",
-                  color: "var(--slacksim-color-fg-muted)",
-                  marginLeft: "auto",
+                  fontSize: 'var(--slacksim-font-size-sm)',
+                  color: 'var(--slacksim-color-fg-muted)',
+                  marginLeft: 'auto',
                 }}
               >
                 @{entry.username}
@@ -690,16 +690,16 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
       {sendError && (
         <div
           style={{
-            marginBottom: "var(--slacksim-space-2)",
-            padding: "6px 10px",
-            background: "var(--slacksim-color-danger-subtle, #fff0f0)",
-            border: "1px solid var(--slacksim-color-danger, #e01e5a)",
-            borderRadius: "var(--slacksim-radius-sm)",
-            color: "var(--slacksim-color-danger, #e01e5a)",
-            fontSize: "var(--slacksim-font-size-sm)",
-            display: "flex",
-            alignItems: "center",
-            gap: "var(--slacksim-space-2)",
+            marginBottom: 'var(--slacksim-space-2)',
+            padding: '6px 10px',
+            background: 'var(--slacksim-color-danger-subtle, #fff0f0)',
+            border: '1px solid var(--slacksim-color-danger, #e01e5a)',
+            borderRadius: 'var(--slacksim-radius-sm)',
+            color: 'var(--slacksim-color-danger, #e01e5a)',
+            fontSize: 'var(--slacksim-font-size-sm)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--slacksim-space-2)',
           }}
         >
           <svg
@@ -725,33 +725,33 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
 
       <div
         style={{
-          border: `1px solid ${canSend ? "var(--slacksim-color-composer-border-focus)" : "var(--slacksim-color-composer-border)"}`,
-          borderRadius: "var(--slacksim-radius-md)",
-          background: "var(--slacksim-color-composer-bg)",
-          display: "flex",
-          alignItems: "flex-end",
-          padding: "var(--slacksim-space-2) var(--slacksim-space-3)",
-          gap: "var(--slacksim-space-2)",
-          transition: "border-color 0.15s ease",
+          border: `1px solid ${canSend ? 'var(--slacksim-color-composer-border-focus)' : 'var(--slacksim-color-composer-border)'}`,
+          borderRadius: 'var(--slacksim-radius-md)',
+          background: 'var(--slacksim-color-composer-bg)',
+          display: 'flex',
+          alignItems: 'flex-end',
+          padding: 'var(--slacksim-space-2) var(--slacksim-space-3)',
+          gap: 'var(--slacksim-space-2)',
+          transition: 'border-color 0.15s ease',
         }}
       >
-        <div style={{ flex: 1, position: "relative" }}>
+        <div style={{ flex: 1, position: 'relative' }}>
           {/* Custom placeholder — shown when empty, supports icon for private channels */}
           {!text && !placeholder && channel && (
             <div
               style={{
-                position: "absolute",
+                position: 'absolute',
                 top: 0,
                 left: 0,
-                display: "flex",
-                alignItems: "center",
+                display: 'flex',
+                alignItems: 'center',
                 gap: 4,
-                pointerEvents: "none",
-                fontFamily: "var(--slacksim-font-body)",
-                fontSize: "var(--slacksim-font-size-md)",
-                color: "var(--slacksim-color-fg-placeholder)",
+                pointerEvents: 'none',
+                fontFamily: 'var(--slacksim-font-body)',
+                fontSize: 'var(--slacksim-font-size-md)',
+                color: 'var(--slacksim-color-fg-placeholder)',
                 lineHeight: 1.46,
-                userSelect: "none",
+                userSelect: 'none',
               }}
             >
               {isIm ? (
@@ -777,7 +777,7 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
                     </svg>
                   ) : (
                     <span
-                      style={{ fontWeight: "var(--slacksim-font-weight-bold)" }}
+                      style={{ fontWeight: 'var(--slacksim-font-weight-bold)' }}
                     >
                       #
                     </span>
@@ -795,17 +795,17 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
             placeholder={placeholder}
             rows={1}
             style={{
-              display: "block",
-              width: "100%",
-              border: "none",
-              outline: "none",
-              resize: "none",
-              background: "transparent",
-              fontFamily: "var(--slacksim-font-body)",
-              fontSize: "var(--slacksim-font-size-md)",
-              color: "var(--slacksim-color-fg)",
+              display: 'block',
+              width: '100%',
+              border: 'none',
+              outline: 'none',
+              resize: 'none',
+              background: 'transparent',
+              fontFamily: 'var(--slacksim-font-body)',
+              fontSize: 'var(--slacksim-font-size-md)',
+              color: 'var(--slacksim-color-fg)',
               lineHeight: 1.46,
-              overflowY: "hidden",
+              overflowY: 'hidden',
             }}
           />
         </div>
@@ -815,22 +815,22 @@ export default function Composer({ channelId, threadTs, placeholder }: Props) {
           className="ss-btn-primary"
           style={{
             background: canSend
-              ? "var(--slacksim-color-primary)"
-              : "var(--slacksim-color-primary-disabled)",
-            color: canSend ? "#fff" : "#888",
-            border: "none",
-            borderRadius: "var(--slacksim-radius-sm)",
-            cursor: canSend ? "pointer" : "default",
-            padding: "5px 14px",
-            fontFamily: "var(--slacksim-font-body)",
-            fontSize: "var(--slacksim-font-size-sm)",
-            fontWeight: "var(--slacksim-font-weight-bold)",
+              ? 'var(--slacksim-color-primary)'
+              : 'var(--slacksim-color-primary-disabled)',
+            color: canSend ? '#fff' : '#888',
+            border: 'none',
+            borderRadius: 'var(--slacksim-radius-sm)',
+            cursor: canSend ? 'pointer' : 'default',
+            padding: '5px 14px',
+            fontFamily: 'var(--slacksim-font-body)',
+            fontSize: 'var(--slacksim-font-size-sm)',
+            fontWeight: 'var(--slacksim-font-weight-bold)',
             flexShrink: 0,
-            transition: "background 0.1s ease",
+            transition: 'background 0.1s ease',
             minWidth: 60,
           }}
         >
-          {sending ? "Sending…" : "Send"}
+          {sending ? 'Sending…' : 'Send'}
         </button>
       </div>
     </div>

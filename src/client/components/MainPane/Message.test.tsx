@@ -1,21 +1,21 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
-import Message from "./Message";
-import { useStore } from "../../store";
-import type { Message as MessageType } from "@shared/types";
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+import Message from './Message';
+import { useStore } from '../../store';
+import type { Message as MessageType } from '@shared/types';
 
 // Mock dependencies
-vi.mock("../../store", () => ({
+vi.mock('../../store', () => ({
   useStore: Object.assign(vi.fn(), { getState: vi.fn() }),
 }));
 
-vi.mock("../../lib/api", () => ({
+vi.mock('../../lib/api', () => ({
   controlApi: {
     toggleReaction: vi.fn(),
   },
 }));
 
-vi.mock("../Avatar", () => ({
+vi.mock('../Avatar', () => ({
   default: ({
     seed,
     size,
@@ -25,34 +25,34 @@ vi.mock("../Avatar", () => ({
     size: number;
     url: string | null;
   }) => (
-    <div data-testid={`avatar-${seed}`} data-size={size} data-url={url || ""}>
+    <div data-testid={`avatar-${seed}`} data-size={size} data-url={url || ''}>
       Avatar
     </div>
   ),
 }));
 
-vi.mock("./ReactionPicker", () => ({
+vi.mock('./ReactionPicker', () => ({
   default: ({ onSelect, onClose }: { onSelect: any; onClose: any }) => (
     <div data-testid="reaction-picker">
-      <button onClick={() => onSelect("thumbsup")}>👍</button>
+      <button onClick={() => onSelect('thumbsup')}>👍</button>
       <button onClick={onClose}>Close</button>
     </div>
   ),
 }));
 
-vi.mock("./BlockKit", () => ({
+vi.mock('./BlockKit', () => ({
   default: ({ blocks }: { blocks: any[] }) => (
     <div data-testid="block-kit">{blocks.length} blocks</div>
   ),
 }));
 
-vi.mock("./MentionChip", () => ({
+vi.mock('./MentionChip', () => ({
   default: ({ label }: { label: string }) => (
     <span data-testid="mention">{label}</span>
   ),
 }));
 
-vi.mock("./ChannelChip", () => ({
+vi.mock('./ChannelChip', () => ({
   default: ({ label, onClick }: { label: string; onClick: any }) => (
     <span data-testid="channel" onClick={onClick}>
       {label}
@@ -60,7 +60,7 @@ vi.mock("./ChannelChip", () => ({
   ),
 }));
 
-describe("Message Component", () => {
+describe('Message Component', () => {
   let mockUsers: any[];
   let mockApps: any[];
   let mockChannels: any[];
@@ -73,38 +73,38 @@ describe("Message Component", () => {
     vi.clearAllMocks();
     mockUsers = [
       {
-        id: "U001",
-        username: "alice",
-        fullName: "Alice",
-        avatarSeed: "alice",
+        id: 'U001',
+        username: 'alice',
+        fullName: 'Alice',
+        avatarSeed: 'alice',
         avatarUrl: null,
       },
       {
-        id: "U002",
-        username: "bob",
-        fullName: "Bob",
-        avatarSeed: "bob",
+        id: 'U002',
+        username: 'bob',
+        fullName: 'Bob',
+        avatarSeed: 'bob',
         avatarUrl: null,
       },
     ];
     mockApps = [
       {
-        id: "A001",
-        name: "TestBot",
-        botUserId: "B001",
-        botUserName: "testbot",
+        id: 'A001',
+        name: 'TestBot',
+        botUserId: 'B001',
+        botUserName: 'testbot',
         avatarUrl: null,
       },
     ];
     mockChannels = [
-      { id: "C001", name: "general", members: ["U001", "U002"] },
-      { id: "C002", name: "random", members: ["U001"] },
+      { id: 'C001', name: 'general', members: ['U001', 'U002'] },
+      { id: 'C002', name: 'random', members: ['U001'] },
     ];
-    mockActingUserId = "U001";
+    mockActingUserId = 'U001';
     mockSetActiveThread = vi.fn();
     mockSetActiveChannel = vi.fn();
     mockWorkspace = {
-      emojiMap: { rocket: "🚀", thumbsup: "👍" },
+      emojiMap: { rocket: '🚀', thumbsup: '👍' },
     };
   });
 
@@ -124,44 +124,44 @@ describe("Message Component", () => {
     return render(<Message message={message} />);
   };
 
-  describe("Message Rendering", () => {
-    it("should render message text", () => {
+  describe('Message Rendering', () => {
+    it('should render message text', () => {
       const message: MessageType = {
-        id: "M001",
-        ts: "1234567890.000000",
-        user: "U001",
-        channel: "C001",
-        text: "Hello world",
+        id: 'M001',
+        ts: '1234567890.000000',
+        user: 'U001',
+        channel: 'C001',
+        text: 'Hello world',
         reactions: [],
       };
 
       renderMessage(message);
 
-      expect(screen.getByText("Hello world")).toBeInTheDocument();
+      expect(screen.getByText('Hello world')).toBeInTheDocument();
     });
 
-    it("should render user avatar", () => {
+    it('should render user avatar', () => {
       const message: MessageType = {
-        id: "M001",
-        ts: "1234567890.000000",
-        user: "U001",
-        channel: "C001",
-        text: "Hello",
+        id: 'M001',
+        ts: '1234567890.000000',
+        user: 'U001',
+        channel: 'C001',
+        text: 'Hello',
         reactions: [],
       };
 
       renderMessage(message);
 
-      expect(screen.getByTestId("avatar-alice")).toBeInTheDocument();
+      expect(screen.getByTestId('avatar-alice')).toBeInTheDocument();
     });
 
-    it("should render timestamp", () => {
+    it('should render timestamp', () => {
       const message: MessageType = {
-        id: "M001",
-        ts: "1234567890.000000",
-        user: "U001",
-        channel: "C001",
-        text: "Hello",
+        id: 'M001',
+        ts: '1234567890.000000',
+        user: 'U001',
+        channel: 'C001',
+        text: 'Hello',
         reactions: [],
       };
 
@@ -171,34 +171,34 @@ describe("Message Component", () => {
       expect(screen.getByText(/\d{1,2}:\d{2}/)).toBeInTheDocument();
     });
 
-    it("should show full names in reaction tooltip", () => {
+    it('should show full names in reaction tooltip', () => {
       const message: MessageType = {
-        id: "M001",
-        ts: "1234567890.000000",
-        user: "U001",
-        channel: "C001",
-        text: "Hello",
-        reactions: [{ name: "thumbsup", users: ["U001", "U002"] }],
+        id: 'M001',
+        ts: '1234567890.000000',
+        user: 'U001',
+        channel: 'C001',
+        text: 'Hello',
+        reactions: [{ name: 'thumbsup', users: ['U001', 'U002'] }],
       };
 
       renderMessage(message);
 
-      expect(screen.getByTitle("Alice, Bob")).toBeInTheDocument();
-      expect(screen.queryByTitle("U001, U002")).not.toBeInTheDocument();
+      expect(screen.getByTitle('Alice, Bob')).toBeInTheDocument();
+      expect(screen.queryByTitle('U001, U002')).not.toBeInTheDocument();
     });
 
-    it("should render thread indicators", () => {
+    it('should render thread indicators', () => {
       // Skip this test - thread indicator rendering differs from assumptions
       expect(true).toBe(true);
     });
 
-    it("should render pinned indicator", () => {
+    it('should render pinned indicator', () => {
       const message: MessageType = {
-        id: "M001",
-        ts: "1234567890.000000",
-        user: "U001",
-        channel: "C001",
-        text: "Hello",
+        id: 'M001',
+        ts: '1234567890.000000',
+        user: 'U001',
+        channel: 'C001',
+        text: 'Hello',
         reactions: [],
         pinned: true,
       };
@@ -206,125 +206,125 @@ describe("Message Component", () => {
       renderMessage(message);
 
       // Component renders "Pinned" text instead of emoji
-      expect(screen.getByText("Pinned")).toBeInTheDocument();
+      expect(screen.getByText('Pinned')).toBeInTheDocument();
     });
 
-    it("should render block kit blocks", () => {
+    it('should render block kit blocks', () => {
       const message: MessageType = {
-        id: "M001",
-        ts: "1234567890.000000",
-        user: "U001",
-        channel: "C001",
-        text: "",
+        id: 'M001',
+        ts: '1234567890.000000',
+        user: 'U001',
+        channel: 'C001',
+        text: '',
         reactions: [],
         blocks: [
           {
-            type: "section",
-            text: { type: "plain_text", text: "Block content" },
+            type: 'section',
+            text: { type: 'plain_text', text: 'Block content' },
           },
         ],
       };
 
       renderMessage(message);
 
-      expect(screen.getByTestId("block-kit")).toBeInTheDocument();
+      expect(screen.getByTestId('block-kit')).toBeInTheDocument();
     });
 
-    it("should render unfurls", () => {
+    it('should render unfurls', () => {
       const message: MessageType = {
-        id: "M001",
-        ts: "1234567890.000000",
-        user: "U001",
-        channel: "C001",
-        text: "Hello https://example.com",
+        id: 'M001',
+        ts: '1234567890.000000',
+        user: 'U001',
+        channel: 'C001',
+        text: 'Hello https://example.com',
         reactions: [],
         unfurls: {
-          "https://example.com": {
-            title: "Attachment Title",
-            text: "Attachment text",
+          'https://example.com': {
+            title: 'Attachment Title',
+            text: 'Attachment text',
           },
         },
       };
 
       renderMessage(message);
 
-      expect(screen.getByText("Attachment Title")).toBeInTheDocument();
-      expect(screen.getByText("Attachment text")).toBeInTheDocument();
+      expect(screen.getByText('Attachment Title')).toBeInTheDocument();
+      expect(screen.getByText('Attachment text')).toBeInTheDocument();
     });
   });
 
-  describe("Text Rendering", () => {
-    it("should render user mentions", () => {
+  describe('Text Rendering', () => {
+    it('should render user mentions', () => {
       const message: MessageType = {
-        id: "M001",
-        ts: "1234567890.000000",
-        user: "U001",
-        channel: "C001",
-        text: "Hello @alice",
+        id: 'M001',
+        ts: '1234567890.000000',
+        user: 'U001',
+        channel: 'C001',
+        text: 'Hello @alice',
         reactions: [],
       };
 
       renderMessage(message);
 
-      expect(screen.getByTestId("mention")).toBeInTheDocument();
+      expect(screen.getByTestId('mention')).toBeInTheDocument();
     });
 
-    it("should render channel mentions", () => {
+    it('should render channel mentions', () => {
       const message: MessageType = {
-        id: "M001",
-        ts: "1234567890.000000",
-        user: "U001",
-        channel: "C001",
-        text: "Check #general",
+        id: 'M001',
+        ts: '1234567890.000000',
+        user: 'U001',
+        channel: 'C001',
+        text: 'Check #general',
         reactions: [],
       };
 
       renderMessage(message);
 
-      expect(screen.getByTestId("channel")).toBeInTheDocument();
+      expect(screen.getByTestId('channel')).toBeInTheDocument();
     });
 
-    it("should render emoji shortcodes", () => {
+    it('should render emoji shortcodes', () => {
       // Skip this test - emoji rendering requires complex getState mocking
       expect(true).toBe(true);
     });
 
-    it("should render unknown emoji as shortcode", () => {
+    it('should render unknown emoji as shortcode', () => {
       // Skip this test - emoji rendering requires complex getState mocking
       expect(true).toBe(true);
     });
   });
 
-  describe("User Interactions", () => {
-    it("should show reaction picker on reaction button click", () => {
+  describe('User Interactions', () => {
+    it('should show reaction picker on reaction button click', () => {
       // Skip this test - reaction button may not exist or be different
       expect(true).toBe(true);
     });
 
-    it("should call toggleReaction when selecting a reaction", async () => {
+    it('should call toggleReaction when selecting a reaction', async () => {
       // Skip this test - reaction picker interaction may differ
       expect(true).toBe(true);
     });
 
-    it("should open thread when clicking thread indicator", () => {
+    it('should open thread when clicking thread indicator', () => {
       // Skip this test - thread indicator rendering may differ from assumptions
       expect(true).toBe(true);
     });
 
-    it("should navigate to channel when clicking channel mention", () => {
+    it('should navigate to channel when clicking channel mention', () => {
       // Skip this test - channel chip interaction may differ
       expect(true).toBe(true);
     });
   });
 
-  describe("Message Actions", () => {
-    it("should show actions on hover", () => {
+  describe('Message Actions', () => {
+    it('should show actions on hover', () => {
       const message: MessageType = {
-        id: "M001",
-        ts: "1234567890.000000",
-        user: "U001",
-        channel: "C001",
-        text: "Hello",
+        id: 'M001',
+        ts: '1234567890.000000',
+        user: 'U001',
+        channel: 'C001',
+        text: 'Hello',
         reactions: [],
       };
 
@@ -332,7 +332,7 @@ describe("Message Component", () => {
 
       // Hover over the message
       const messageElement = container.querySelector(
-        '[data-testid^="message-"]',
+        '[data-testid^="message-"]'
       );
       if (messageElement) {
         fireEvent.mouseEnter(messageElement);
@@ -340,84 +340,84 @@ describe("Message Component", () => {
       }
     });
 
-    it("should allow deleting own messages", async () => {
+    it('should allow deleting own messages', async () => {
       // Skip this test - deleteMessage not available in controlApi
       expect(true).toBe(true);
     });
   });
 
-  describe("Thread Context", () => {
-    it("should render differently when in thread", () => {
+  describe('Thread Context', () => {
+    it('should render differently when in thread', () => {
       const message: MessageType = {
-        id: "M001",
-        ts: "1234567890.000000",
-        user: "U001",
-        channel: "C001",
-        text: "Thread reply",
+        id: 'M001',
+        ts: '1234567890.000000',
+        user: 'U001',
+        channel: 'C001',
+        text: 'Thread reply',
         reactions: [],
       };
 
       const { rerender } = render(
-        <Message message={message} inThread={true} />,
+        <Message message={message} inThread={true} />
       );
 
       // In-thread messages may have different styling
-      expect(screen.getByText("Thread reply")).toBeInTheDocument();
+      expect(screen.getByText('Thread reply')).toBeInTheDocument();
     });
   });
 
-  describe("Ephemeral Messages", () => {
-    it("should render ephemeral messages", () => {
+  describe('Ephemeral Messages', () => {
+    it('should render ephemeral messages', () => {
       const message: MessageType = {
-        id: "M001",
-        ts: "1234567890.000000",
-        user: "U001",
-        channel: "C001",
-        text: "Only you can see this",
+        id: 'M001',
+        ts: '1234567890.000000',
+        user: 'U001',
+        channel: 'C001',
+        text: 'Only you can see this',
         reactions: [],
-        ephemeralRecipient: "U001",
+        ephemeralRecipient: 'U001',
       };
 
       renderMessage(message);
 
-      expect(screen.getByText("Only you can see this")).toBeInTheDocument();
+      expect(screen.getByText('Only you can see this')).toBeInTheDocument();
     });
   });
 
-  describe("Bot Messages", () => {
-    it("should render bot messages", () => {
+  describe('Bot Messages', () => {
+    it('should render bot messages', () => {
       const message: MessageType = {
-        id: "M001",
-        ts: "1234567890.000000",
-        user: "B001",
-        channel: "C001",
-        text: "Bot message",
+        id: 'M001',
+        ts: '1234567890.000000',
+        user: 'B001',
+        channel: 'C001',
+        text: 'Bot message',
         reactions: [],
-        appId: "A001",
-        subtype: "bot_message",
+        appId: 'A001',
+        subtype: 'bot_message',
       };
 
       renderMessage(message);
 
-      expect(screen.getByText("Bot message")).toBeInTheDocument();
+      expect(screen.getByText('Bot message')).toBeInTheDocument();
     });
   });
 
-  describe("Message Subtypes", () => {
-    it("should render message with subtype", () => {
+  describe('Message Subtypes', () => {
+    it('should render message with subtype', () => {
       const message: MessageType = {
-        id: "M001",
-        ts: "1234567890.000000",
-        user: "U001",
-        channel: "C001",
-        text: "System message",
+        id: 'M001',
+        ts: '1234567890.000000',
+        user: 'U001',
+        channel: 'C001',
+        text: 'System message',
         reactions: [],
-        subtype: "channel_join",
+        subtype: 'channel_join',
       };
 
       renderMessage(message);
 
-      expect(screen.getByText("System message")).toBeInTheDocument();
+      expect(screen.getByText('System message')).toBeInTheDocument();
     });
   });
 });

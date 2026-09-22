@@ -172,7 +172,7 @@ All colours, spacing, font sizes, and radii are exposed as **CSS custom properti
     --slacksim-color-border: #dddddd;
     --slacksim-color-accent: #1264a3;
     --slacksim-color-mention: #f8e71c;
-    --slacksim-font-body: "Lato", "Slack-Lato", system-ui, sans-serif;
+    --slacksim-font-body: 'Lato', 'Slack-Lato', system-ui, sans-serif;
     --slacksim-space-1: 4px;
     --slacksim-space-2: 8px;
     --slacksim-space-3: 12px;
@@ -207,14 +207,14 @@ Default app credentials (also written to ./.slack-simulator/credentials.json):
 ### Bolt configuration
 
 ```ts
-import { App } from "@slack/bolt";
+import { App } from '@slack/bolt';
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
   signingSecret: process.env.SLACK_SIGNING_SECRET,
   socketMode: true,
   appToken: process.env.SLACK_APP_TOKEN,
-  clientOptions: { slackApiUrl: "http://localhost:4500/api/" },
+  clientOptions: { slackApiUrl: 'http://localhost:4500/api/' },
 });
 ```
 
@@ -232,23 +232,23 @@ Everything else (signed payload shape, retry-on-non-2xx behavior, `response_url`
 
 ### Phases at a glance
 
-| Phase | Title | Status |
-|-------|-------|--------|
-| 1 | Workspace shell + Web API (messages, channels, DMs, identity switching) | ✅ Complete |
-| 2 | Events API outbound + Socket Mode | ✅ Complete |
-| 2.5 | Database inspector tab | ✅ Complete |
-| 2.6 | UX polish, bug fixes, and QoL improvements | ✅ Complete |
-| 3 | Interactivity: slash commands, buttons, modals, Block Kit rendering | ✅ Complete — Slices A/B/C/D all delivered |
-| 4 | `member_joined_channel` event + Join/Leave Channel UI | ✅ Complete |
-| 5 | Incoming Webhooks | ✅ Complete |
-| 6 | Emoji text rendering + pin/unpin events | ✅ Complete — Slices A/B both delivered |
-| 7 | Channel lifecycle events (created / archived / renamed) | 🔶 Partial — archive/unarchive done; rename deferred |
-| 8 | Link unfurling | ✅ Complete |
-| 9 | App Home tab (`app_home_opened` + `views.publish`) | 🔲 Planned |
-| 10 | Additional Block Kit elements: date/time pickers, checkboxes & radio buttons, rich text input | 🔲 Planned |
-| 11 | Message shortcuts | 🔲 Planned (investigation phase) |
-| 12 | Polish, fidelity, and developer ergonomics | 🔲 Planned |
-| 13 | Accessibility: keyboard navigation & screen reader support | 🔲 Planned |
+| Phase | Title                                                                                         | Status                                               |
+| ----- | --------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| 1     | Workspace shell + Web API (messages, channels, DMs, identity switching)                       | ✅ Complete                                          |
+| 2     | Events API outbound + Socket Mode                                                             | ✅ Complete                                          |
+| 2.5   | Database inspector tab                                                                        | ✅ Complete                                          |
+| 2.6   | UX polish, bug fixes, and QoL improvements                                                    | ✅ Complete                                          |
+| 3     | Interactivity: slash commands, buttons, modals, Block Kit rendering                           | ✅ Complete — Slices A/B/C/D all delivered           |
+| 4     | `member_joined_channel` event + Join/Leave Channel UI                                         | ✅ Complete                                          |
+| 5     | Incoming Webhooks                                                                             | ✅ Complete                                          |
+| 6     | Emoji text rendering + pin/unpin events                                                       | ✅ Complete — Slices A/B both delivered              |
+| 7     | Channel lifecycle events (created / archived / renamed)                                       | 🔶 Partial — archive/unarchive done; rename deferred |
+| 8     | Link unfurling                                                                                | ✅ Complete                                          |
+| 9     | App Home tab (`app_home_opened` + `views.publish`)                                            | 🔲 Planned                                           |
+| 10    | Additional Block Kit elements: date/time pickers, checkboxes & radio buttons, rich text input | 🔲 Planned                                           |
+| 11    | Message shortcuts                                                                             | 🔲 Planned (investigation phase)                     |
+| 12    | Polish, fidelity, and developer ergonomics                                                    | 🔲 Planned                                           |
+| 13    | Accessibility: keyboard navigation & screen reader support                                    | 🔲 Planned                                           |
 
 ---
 
@@ -787,9 +787,11 @@ Frontend:
 #### Date & time pickers
 
 **Backend:**
+
 - `block_actions` dispatch extended to fire on `datepicker` and `timepicker` change events, passing `selected_date` / `selected_time` in the action payload.
 
 **Frontend:**
+
 - `datepicker` element renderer — renders a native `<input type="date">` styled to match Slack's picker appearance. Fires `block_actions` on change.
 - `timepicker` element renderer — `<input type="time">` with the same styling + dispatch.
 - Both work as standalone `actions` block elements and as modal `input` block elements (value collected in `state.values` on submit).
@@ -797,9 +799,11 @@ Frontend:
 #### Checkboxes & radio buttons
 
 **Backend:**
+
 - `block_actions` dispatch extended for `checkboxes` (multi-select, fires on every check/uncheck) and `radio_buttons` (single-select, fires on change). Both pass `selected_options` arrays in the action payload.
 
 **Frontend:**
+
 - `checkboxes` element renderer — a styled list of labelled checkboxes. Each check/uncheck fires `block_actions`.
 - `radio_buttons` element renderer — a styled list of radio inputs. Change fires `block_actions`.
 - Both work in `actions` blocks and as modal `input` elements.
@@ -807,9 +811,11 @@ Frontend:
 #### Rich text input
 
 **Backend:**
+
 - `rich_text_input` element in a modal `input` block — value submitted as a `rich_text` block object in `state.values` (matching Slack's actual submission format).
 
 **Frontend:**
+
 - `rich_text_input` element renderer — a multiline `<textarea>` that accepts plain text and basic mrkdwn (bold, italic, code). On submit, converts the text to a minimal `rich_text` block with a single `rich_text_section` element.
 - No WYSIWYG editor — plain text + mrkdwn shortcodes is sufficient for simulating the bot round-trip without a full rich-text editor library.
 
@@ -833,10 +839,12 @@ Before committing to implementation, answer:
 #### Planned implementation (pending investigation sign-off)
 
 **Backend:**
+
 - `messageShortcuts` array added to `apps.json` schema, `App` type, and `apps` SQLite table (idempotent migration).
 - `POST /_control/message_shortcut` — resolves owning app by `callback_id`, generates `trigger_id`, dispatches full Slack-spec `shortcut` payload via HTTP or Socket Mode `interactive` envelope.
 
 **Frontend:**
+
 - ⚡ icon in the message hover action row (beside the existing reaction and thread buttons). Clicking opens a small dropdown listing all registered message shortcuts across all apps.
 - Selecting a shortcut dispatches `message_shortcut` to the owning app.
 - Admin page **Message Shortcuts** section per app — table of `callback_id → name → description`.
@@ -863,6 +871,7 @@ Before committing to implementation, answer:
 **Rationale:** Accessibility is a developer ergonomics concern, not a Slack API emulation concern. The simulator's job is to let bot developers test their bots efficiently, and many developers are keyboard-first. A lack of keyboard support also blocks screen-reader users entirely, which conflicts with inclusive development practices.
 
 **Backend:**
+
 - No backend changes required.
 
 **Frontend:**

@@ -16,15 +16,15 @@ function ThemeLoader() {
 
   useEffect(() => {
     const body = document.body;
-    body.setAttribute("data-theme", theme === "Slack Dark" ? "dark" : "light");
+    body.setAttribute('data-theme', theme === 'Slack Dark' ? 'dark' : 'light');
   }, [theme]);
 
   return null;
 }
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+ReactDOM.createRoot(document.getElementById('root')!).render(
   <QueryClientProvider client={queryClient}>
     <ThemeLoader />
     <App />
-  </QueryClientProvider>,
+  </QueryClientProvider>
 );

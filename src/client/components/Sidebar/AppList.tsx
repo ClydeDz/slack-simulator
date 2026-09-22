@@ -1,7 +1,7 @@
-import React from "react";
-import { useStore } from "../../store";
-import { controlApi } from "../../lib/api";
-import Avatar from "../Avatar";
+import React from 'react';
+import { useStore } from '../../store';
+import { controlApi } from '../../lib/api';
+import Avatar from '../Avatar';
 
 export default function AppList() {
   const {
@@ -16,9 +16,9 @@ export default function AppList() {
   function getDmChannelId(botUserId: string): string | null {
     const dm = channels.find(
       (c) =>
-        c.type === "im" &&
+        c.type === 'im' &&
         c.members.includes(actingUserId) &&
-        c.members.includes(botUserId),
+        c.members.includes(botUserId)
     );
     return dm?.id ?? null;
   }
@@ -39,18 +39,18 @@ export default function AppList() {
   }
 
   return (
-    <div style={{ marginTop: "var(--slacksim-space-4)" }}>
+    <div style={{ marginTop: 'var(--slacksim-space-4)' }}>
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "var(--slacksim-space-2)",
-          margin: "1px 8px",
-          padding: "5px 8px",
-          fontSize: "var(--slacksim-font-size-sm)",
-          fontWeight: "var(--slacksim-font-weight-bold)",
-          color: "var(--slacksim-color-sidebar-fg)",
-          letterSpacing: "0.01em",
+          display: 'flex',
+          alignItems: 'center',
+          gap: 'var(--slacksim-space-2)',
+          margin: '1px 8px',
+          padding: '5px 8px',
+          fontSize: 'var(--slacksim-font-size-sm)',
+          fontWeight: 'var(--slacksim-font-weight-bold)',
+          color: 'var(--slacksim-color-sidebar-fg)',
+          letterSpacing: '0.01em',
         }}
       >
         <svg
@@ -89,25 +89,25 @@ export default function AppList() {
           <button
             key={app.id}
             onClick={() => handleClick(app.botUserId)}
-            className={`ss-sidebar-item${isActive ? " ss-sidebar-item--active" : ""}`}
+            className={`ss-sidebar-item${isActive ? ' ss-sidebar-item--active' : ''}`}
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "var(--slacksim-space-2)",
-              width: "calc(100% - 16px)",
-              margin: "1px 8px",
-              padding: "5px 8px 5px 28px",
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--slacksim-space-2)',
+              width: 'calc(100% - 16px)',
+              margin: '1px 8px',
+              padding: '5px 8px 5px 28px',
               background: isActive
-                ? "var(--slacksim-color-sidebar-active-bg)"
-                : "transparent",
-              border: "none",
-              cursor: "pointer",
-              textAlign: "left",
+                ? 'var(--slacksim-color-sidebar-active-bg)'
+                : 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              textAlign: 'left',
               color: isActive
-                ? "var(--slacksim-color-sidebar-active-fg)"
-                : "var(--slacksim-color-sidebar-fg)",
-              fontSize: "var(--slacksim-font-size-md)",
-              borderRadius: "var(--slacksim-radius-sm)",
+                ? 'var(--slacksim-color-sidebar-active-fg)'
+                : 'var(--slacksim-color-sidebar-fg)',
+              fontSize: 'var(--slacksim-font-size-md)',
+              borderRadius: 'var(--slacksim-radius-sm)',
             }}
           >
             <Avatar seed={app.botUserName} size={20} url={app.avatarUrl} />
@@ -115,10 +115,10 @@ export default function AppList() {
               style={{
                 flex: 1,
                 fontWeight: hasUnread
-                  ? "var(--slacksim-font-weight-bold)"
+                  ? 'var(--slacksim-font-weight-bold)'
                   : undefined,
                 color: hasUnread
-                  ? "var(--slacksim-color-sidebar-fg-active)"
+                  ? 'var(--slacksim-color-sidebar-fg-active)'
                   : undefined,
               }}
             >
@@ -130,19 +130,19 @@ export default function AppList() {
                   flexShrink: 0,
                   minWidth: 18,
                   height: 18,
-                  padding: "0 5px",
-                  background: "var(--slacksim-color-sidebar-badge-bg)",
-                  color: "#fff",
-                  borderRadius: "var(--slacksim-radius-pill)",
+                  padding: '0 5px',
+                  background: 'var(--slacksim-color-sidebar-badge-bg)',
+                  color: '#fff',
+                  borderRadius: 'var(--slacksim-radius-pill)',
                   fontSize: 11,
-                  fontWeight: "var(--slacksim-font-weight-bold)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  fontWeight: 'var(--slacksim-font-weight-bold)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   lineHeight: 1,
                 }}
               >
-                {unread > 99 ? "99+" : unread}
+                {unread > 99 ? '99+' : unread}
               </span>
             )}
           </button>
