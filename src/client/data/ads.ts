@@ -325,6 +325,27 @@ const ADS: Ad[] = [
       'Build websites with conversational AI, payments, lead capture, and automated optimisation. Try Wegic',
     link: 'https://try.wegic.ai/8wlhdjr92v60',
   },
+  {
+    id: 47,
+    name: 'X ClydeDz',
+    description:
+      "Follow me on X.com for thoughts, projects, and things I'm building.",
+    link: 'https://x.com/ClydeDz',
+  },
+  {
+    id: 48,
+    name: "Ko-fi Clyde D'Souza",
+    description:
+      'Enjoyed my work? Buy me a coffee and help support the next project.',
+    link: 'https://ko-fi.com/clydedsouza',
+  },
+  {
+    id: 49,
+    name: 'Udemy Demystifying Markdown',
+    description:
+      'Learn GitHub Flavored Markdown and explore markdown in the AI era. Buy my class from Udemy.',
+    link: 'https://www.udemy.com/course/demystifying-markdown/?referralCode=094FC640B252651808D0',
+  },
 ];
 
 export default ADS;
