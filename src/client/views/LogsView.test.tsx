@@ -108,7 +108,7 @@ describe('LogsView Component', () => {
     it('should render refresh button', () => {
       renderLogsView();
 
-      expect(screen.getByText('↺ Refresh')).toBeInTheDocument();
+      expect(screen.getByText('Refresh')).toBeInTheDocument();
     });
 
     it('should render column headers', () => {
@@ -169,7 +169,7 @@ describe('LogsView Component', () => {
     it('should call getLogs on refresh click', async () => {
       renderLogsView(mockLogs);
 
-      fireEvent.click(screen.getByText('↺ Refresh'));
+      fireEvent.click(screen.getByText('Refresh'));
 
       expect(controlApi.getLogs).toHaveBeenCalled();
     });
