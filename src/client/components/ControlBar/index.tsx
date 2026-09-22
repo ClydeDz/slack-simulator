@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
-import TabSwitcher from "./TabSwitcher";
-import { controlApi } from "../../lib/api";
-import { useStore } from "../../store";
+import React, { useState, useRef, useEffect } from 'react';
+import TabSwitcher from './TabSwitcher';
+import { controlApi } from '../../lib/api';
+import { useStore } from '../../store';
 
 export default function ControlBar() {
   const { theme, setTheme } = useStore();
@@ -11,10 +11,10 @@ export default function ControlBar() {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
 
-  const themes = ["Slack Light", "Slack Dark"] as const;
+  const themes = ['Slack Light', 'Slack Dark'] as const;
 
   const handleReset = async () => {
-    if (confirm("Reset workspace to seed data?")) {
+    if (confirm('Reset workspace to seed data?')) {
       await controlApi.resetWorkspace();
       window.location.reload();
     }
@@ -22,7 +22,7 @@ export default function ControlBar() {
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!themeOpen) {
-      if (e.key === "Enter" || e.key === " ") {
+      if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         setThemeOpen(true);
         setFocusedIndex(0);
@@ -31,16 +31,16 @@ export default function ControlBar() {
     }
 
     switch (e.key) {
-      case "ArrowDown":
+      case 'ArrowDown':
         e.preventDefault();
         setFocusedIndex((prev) => (prev < themes.length - 1 ? prev + 1 : 0));
         break;
-      case "ArrowUp":
+      case 'ArrowUp':
         e.preventDefault();
         setFocusedIndex((prev) => (prev > 0 ? prev - 1 : themes.length - 1));
         break;
-      case "Enter":
-      case " ":
+      case 'Enter':
+      case ' ':
         e.preventDefault();
         if (focusedIndex >= 0) {
           setTheme(themes[focusedIndex]);
@@ -49,7 +49,7 @@ export default function ControlBar() {
           triggerRef.current?.focus();
         }
         break;
-      case "Escape":
+      case 'Escape':
         e.preventDefault();
         setThemeOpen(false);
         setFocusedIndex(-1);
@@ -69,8 +69,8 @@ export default function ControlBar() {
         setFocusedIndex(-1);
       }
     }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   // Focus the first item when dropdown opens
@@ -83,12 +83,12 @@ export default function ControlBar() {
   return (
     <div
       style={{
-        height: "var(--slacksim-control-bar-height)",
-        background: "var(--slacksim-color-control-bar-bg)",
-        borderBottom: "1px solid var(--slacksim-color-bar-border)",
-        display: "flex",
-        alignItems: "center",
-        padding: "0 20px 0 16px",
+        height: 'var(--slacksim-control-bar-height)',
+        background: 'var(--slacksim-color-control-bar-bg)',
+        borderBottom: '1px solid var(--slacksim-color-bar-border)',
+        display: 'flex',
+        alignItems: 'center',
+        padding: '0 20px 0 16px',
         flexShrink: 0,
       }}
     >
@@ -96,9 +96,9 @@ export default function ControlBar() {
       <div
         style={{
           flex: 1,
-          display: "flex",
-          alignItems: "center",
-          gap: "var(--slacksim-space-2)",
+          display: 'flex',
+          alignItems: 'center',
+          gap: 'var(--slacksim-space-2)',
         }}
       >
         <svg
@@ -113,7 +113,7 @@ export default function ControlBar() {
           strokeLinejoin="round"
           aria-hidden="true"
           style={{
-            color: "var(--slacksim-color-sidebar-fg-active)",
+            color: 'var(--slacksim-color-sidebar-fg-active)',
             flexShrink: 0,
           }}
         >
@@ -125,10 +125,10 @@ export default function ControlBar() {
         </svg>
         <span
           style={{
-            fontSize: "var(--slacksim-font-size-md)",
-            fontWeight: "var(--slacksim-font-weight-bold)",
-            color: "var(--slacksim-color-sidebar-fg-active)",
-            letterSpacing: "0.01em",
+            fontSize: 'var(--slacksim-font-size-md)',
+            fontWeight: 'var(--slacksim-font-weight-bold)',
+            color: 'var(--slacksim-color-sidebar-fg-active)',
+            letterSpacing: '0.01em',
           }}
         >
           Slack Simulator
@@ -142,31 +142,31 @@ export default function ControlBar() {
       <div
         style={{
           flex: 1,
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          gap: "var(--slacksim-space-2)",
+          display: 'flex',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+          gap: 'var(--slacksim-space-2)',
         }}
       >
         {/* Theme switcher */}
-        <div ref={themeRef} style={{ position: "relative" }}>
+        <div ref={themeRef} style={{ position: 'relative' }}>
           <button
             ref={triggerRef}
             onClick={() => setThemeOpen(!themeOpen)}
             onKeyDown={handleKeyDown}
             className="ss-toolbar-btn"
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "var(--slacksim-space-2)",
-              border: "none",
-              color: "var(--slacksim-color-sidebar-fg)",
-              cursor: "pointer",
-              borderRadius: "var(--slacksim-radius-sm)",
-              padding: "6px 10px",
-              fontSize: "var(--slacksim-font-size-sm)",
-              width: "130px",
-              justifyContent: "flex-start",
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--slacksim-space-2)',
+              border: 'none',
+              color: 'var(--slacksim-color-sidebar-fg)',
+              cursor: 'pointer',
+              borderRadius: 'var(--slacksim-radius-sm)',
+              padding: '6px 10px',
+              fontSize: 'var(--slacksim-font-size-sm)',
+              width: '130px',
+              justifyContent: 'flex-start',
             }}
             aria-haspopup="true"
             aria-expanded={themeOpen}
@@ -190,11 +190,11 @@ export default function ControlBar() {
             </svg>
             <span
               style={{
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
                 flex: 1,
-                textAlign: "left",
+                textAlign: 'left',
               }}
             >
               {theme}
@@ -211,8 +211,8 @@ export default function ControlBar() {
               strokeLinejoin="round"
               style={{
                 flexShrink: 0,
-                transform: themeOpen ? "rotate(180deg)" : "rotate(0deg)",
-                transition: "transform 0.2s ease",
+                transform: themeOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                transition: 'transform 0.2s ease',
               }}
             >
               <path d="m6 9 6 6 6-6" />
@@ -223,15 +223,15 @@ export default function ControlBar() {
               role="menu"
               onKeyDown={handleKeyDown}
               style={{
-                position: "absolute",
-                top: "100%",
+                position: 'absolute',
+                top: '100%',
                 right: 0,
-                marginTop: "4px",
-                background: "var(--slacksim-color-bg)",
-                border: "1px solid var(--slacksim-color-border)",
-                borderRadius: "var(--slacksim-radius-sm)",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                minWidth: "160px",
+                marginTop: '4px',
+                background: 'var(--slacksim-color-bg)',
+                border: '1px solid var(--slacksim-color-border)',
+                borderRadius: 'var(--slacksim-radius-sm)',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                minWidth: '160px',
                 zIndex: 1000,
               }}
             >
@@ -248,17 +248,17 @@ export default function ControlBar() {
                     triggerRef.current?.focus();
                   }}
                   style={{
-                    padding: "8px 12px",
-                    cursor: "pointer",
-                    fontSize: "var(--slacksim-font-size-sm)",
-                    color: "var(--slacksim-color-fg)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
+                    padding: '8px 12px',
+                    cursor: 'pointer',
+                    fontSize: 'var(--slacksim-font-size-sm)',
+                    color: 'var(--slacksim-color-fg)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
                     background:
                       focusedIndex === index
-                        ? "var(--slacksim-color-bg-secondary)"
-                        : "transparent",
+                        ? 'var(--slacksim-color-bg-secondary)'
+                        : 'transparent',
                   }}
                   onMouseEnter={() => setFocusedIndex(index)}
                   onMouseLeave={() => setFocusedIndex(-1)}
@@ -275,7 +275,7 @@ export default function ControlBar() {
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      style={{ color: "var(--slacksim-color-accent)" }}
+                      style={{ color: 'var(--slacksim-color-accent)' }}
                     >
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
@@ -291,16 +291,16 @@ export default function ControlBar() {
           rel="noreferrer"
           className="ss-toolbar-btn"
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "var(--slacksim-space-2)",
-            border: "none",
-            color: "var(--slacksim-color-sidebar-fg)",
-            cursor: "pointer",
-            borderRadius: "var(--slacksim-radius-sm)",
-            padding: "6px 10px",
-            fontSize: "var(--slacksim-font-size-sm)",
-            textDecoration: "none",
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--slacksim-space-2)',
+            border: 'none',
+            color: 'var(--slacksim-color-sidebar-fg)',
+            cursor: 'pointer',
+            borderRadius: 'var(--slacksim-radius-sm)',
+            padding: '6px 10px',
+            fontSize: 'var(--slacksim-font-size-sm)',
+            textDecoration: 'none',
           }}
         >
           <svg
@@ -325,15 +325,15 @@ export default function ControlBar() {
           onClick={handleReset}
           className="ss-toolbar-btn"
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "var(--slacksim-space-2)",
-            border: "none",
-            color: "var(--slacksim-color-sidebar-fg)",
-            cursor: "pointer",
-            borderRadius: "var(--slacksim-radius-sm)",
-            padding: "6px 10px",
-            fontSize: "var(--slacksim-font-size-sm)",
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--slacksim-space-2)',
+            border: 'none',
+            color: 'var(--slacksim-color-sidebar-fg)',
+            cursor: 'pointer',
+            borderRadius: 'var(--slacksim-radius-sm)',
+            padding: '6px 10px',
+            fontSize: 'var(--slacksim-font-size-sm)',
           }}
         >
           <svg
