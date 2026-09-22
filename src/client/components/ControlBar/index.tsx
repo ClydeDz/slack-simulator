@@ -174,6 +174,7 @@ export default function ControlBar() {
               fontSize: 'var(--slacksim-font-size-sm)',
               width: '130px',
               justifyContent: 'flex-start',
+              height: '28px',
             }}
             aria-haspopup="true"
             aria-expanded={themeOpen}
@@ -341,6 +342,7 @@ export default function ControlBar() {
             borderRadius: 'var(--slacksim-radius-sm)',
             padding: '6px 10px',
             fontSize: 'var(--slacksim-font-size-sm)',
+            height: '28px',
           }}
         >
           <svg

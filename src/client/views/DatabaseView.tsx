@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { controlApi } from "../lib/api";
-import SidebarAd from "../components/Sidebar/SidebarAd";
+import React, { useState, useEffect, useCallback } from 'react';
+import { controlApi } from '../lib/api';
+import SidebarAd from '../components/Sidebar/SidebarAd';
 
 interface ColumnMeta {
   name: string;
@@ -31,9 +31,9 @@ const PAGE_SIZE = 50;
 // ── Helpers ────────────────────────────────────────────────────
 
 function isJsonString(val: unknown): val is string {
-  if (typeof val !== "string") return false;
+  if (typeof val !== 'string') return false;
   const s = val.trim();
-  return s.startsWith("{") || s.startsWith("[");
+  return s.startsWith('{') || s.startsWith('[');
 }
 
 function CellValue({
@@ -46,7 +46,7 @@ function CellValue({
   if (value === null || value === undefined) {
     return (
       <span
-        style={{ color: "var(--slacksim-color-fg-muted)", fontStyle: "italic" }}
+        style={{ color: 'var(--slacksim-color-fg-muted)', fontStyle: 'italic' }}
       >
         null
       </span>
@@ -57,24 +57,24 @@ function CellValue({
       <span
         onClick={() => onExpand(value as string)}
         style={{
-          cursor: "pointer",
-          color: "var(--slacksim-color-accent)",
-          textDecoration: "underline dotted",
-          fontFamily: "var(--slacksim-font-mono)",
+          cursor: 'pointer',
+          color: 'var(--slacksim-color-accent)',
+          textDecoration: 'underline dotted',
+          fontFamily: 'var(--slacksim-font-mono)',
           fontSize: 11,
         }}
         title="Click to expand JSON"
       >
         {(value as string).length > 40
-          ? (value as string).slice(0, 40) + "…"
+          ? (value as string).slice(0, 40) + '…'
           : (value as string)}
       </span>
     );
   }
   const str = String(value);
   return (
-    <span style={{ fontFamily: "var(--slacksim-font-mono)", fontSize: 11 }}>
-      {str.length > 60 ? str.slice(0, 60) + "…" : str}
+    <span style={{ fontFamily: 'var(--slacksim-font-mono)', fontSize: 11 }}>
+      {str.length > 60 ? str.slice(0, 60) + '…' : str}
     </span>
   );
 }
@@ -93,42 +93,42 @@ function JsonModal({ value, onClose }: { value: string; onClose: () => void }) {
     <div
       onClick={onClose}
       style={{
-        position: "fixed",
+        position: 'fixed',
         inset: 0,
         zIndex: 2000,
-        background: "rgba(0,0,0,0.45)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        background: 'rgba(0,0,0,0.45)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
     >
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
-          background: "var(--slacksim-color-bg)",
-          border: "1px solid var(--slacksim-color-border)",
-          borderRadius: "var(--slacksim-radius-md)",
-          boxShadow: "var(--slacksim-shadow-lg)",
+          background: 'var(--slacksim-color-bg)',
+          border: '1px solid var(--slacksim-color-border)',
+          borderRadius: 'var(--slacksim-radius-md)',
+          boxShadow: 'var(--slacksim-shadow-lg)',
           width: 560,
-          maxHeight: "70vh",
-          display: "flex",
-          flexDirection: "column",
+          maxHeight: '70vh',
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
         <div
           style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: "10px 16px",
-            borderBottom: "1px solid var(--slacksim-color-border)",
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '10px 16px',
+            borderBottom: '1px solid var(--slacksim-color-border)',
           }}
         >
           <span
             style={{
-              fontSize: "var(--slacksim-font-size-sm)",
-              fontWeight: "var(--slacksim-font-weight-bold)",
-              color: "var(--slacksim-color-fg)",
+              fontSize: 'var(--slacksim-font-size-sm)',
+              fontWeight: 'var(--slacksim-font-weight-bold)',
+              color: 'var(--slacksim-color-fg)',
             }}
           >
             JSON value
@@ -136,11 +136,11 @@ function JsonModal({ value, onClose }: { value: string; onClose: () => void }) {
           <button
             onClick={onClose}
             style={{
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
               fontSize: 16,
-              color: "var(--slacksim-color-fg-muted)",
+              color: 'var(--slacksim-color-fg-muted)',
             }}
           >
             ×
@@ -149,14 +149,14 @@ function JsonModal({ value, onClose }: { value: string; onClose: () => void }) {
         <pre
           style={{
             margin: 0,
-            padding: "12px 16px",
-            overflowY: "auto",
+            padding: '12px 16px',
+            overflowY: 'auto',
             flex: 1,
             fontSize: 12,
             lineHeight: 1.6,
-            fontFamily: "var(--slacksim-font-mono)",
-            color: "var(--slacksim-color-fg)",
-            background: "var(--slacksim-color-bg-secondary)",
+            fontFamily: 'var(--slacksim-font-mono)',
+            color: 'var(--slacksim-color-fg)',
+            background: 'var(--slacksim-color-bg-secondary)',
           }}
         >
           {pretty}
@@ -174,7 +174,7 @@ export default function DatabaseView() {
   const [tableData, setTableData] = useState<TableData | null>(null);
   const [loading, setLoading] = useState(false);
   const [orderBy, setOrderBy] = useState<string | undefined>(undefined);
-  const [order, setOrder] = useState<"asc" | "desc">("asc");
+  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [offset, setOffset] = useState(0);
   const [expandedJson, setExpandedJson] = useState<string | null>(null);
   const [tablesLoading, setTablesLoading] = useState(true);
@@ -192,7 +192,7 @@ export default function DatabaseView() {
       }
     } catch (err) {
       setTablesError(
-        err instanceof Error ? err.message : "Failed to load tables",
+        err instanceof Error ? err.message : 'Failed to load tables'
       );
     } finally {
       setTablesLoading(false);
@@ -219,7 +219,7 @@ export default function DatabaseView() {
         setLoading(false);
       }
     },
-    [offset, orderBy, order],
+    [offset, orderBy, order]
   );
 
   useEffect(() => {
@@ -232,16 +232,16 @@ export default function DatabaseView() {
     setSelectedTable(name);
     setOffset(0);
     setOrderBy(undefined);
-    setOrder("asc");
+    setOrder('asc');
     setTableData(null);
   }
 
   function toggleSort(col: string) {
     if (orderBy === col) {
-      setOrder((o) => (o === "asc" ? "desc" : "asc"));
+      setOrder((o) => (o === 'asc' ? 'desc' : 'asc'));
     } else {
       setOrderBy(col);
-      setOrder("asc");
+      setOrder('asc');
     }
     setOffset(0);
   }
@@ -251,51 +251,51 @@ export default function DatabaseView() {
   const currentPage = Math.floor(offset / PAGE_SIZE) + 1;
 
   const sidebarStyle: React.CSSProperties = {
-    width: "var(--slacksim-sidebar-width)",
+    width: 'var(--slacksim-sidebar-width)',
     flexShrink: 0,
-    borderRight: "1px solid var(--slacksim-color-border)",
-    overflowY: "auto",
-    background: "var(--slacksim-color-bg-secondary)",
-    display: "flex",
-    flexDirection: "column",
+    borderRight: '1px solid var(--slacksim-color-border)',
+    overflowY: 'auto',
+    background: 'var(--slacksim-color-bg-secondary)',
+    display: 'flex',
+    flexDirection: 'column',
   };
 
   const thStyle = (col: string): React.CSSProperties => ({
-    padding: "6px 12px",
-    textAlign: "left",
+    padding: '6px 12px',
+    textAlign: 'left',
     fontSize: 11,
-    fontWeight: "var(--slacksim-font-weight-bold)",
-    color: "var(--slacksim-color-fg-muted)",
-    background: "var(--slacksim-color-bg-secondary)",
-    borderBottom: "2px solid var(--slacksim-color-border)",
-    cursor: "pointer",
-    whiteSpace: "nowrap",
-    userSelect: "none",
-    fontFamily: "var(--slacksim-font-mono)",
+    fontWeight: 'var(--slacksim-font-weight-bold)',
+    color: 'var(--slacksim-color-fg-muted)',
+    background: 'var(--slacksim-color-bg-secondary)',
+    borderBottom: '2px solid var(--slacksim-color-border)',
+    cursor: 'pointer',
+    whiteSpace: 'nowrap',
+    userSelect: 'none',
+    fontFamily: 'var(--slacksim-font-mono)',
   });
 
   return (
     <div
       style={{
         flex: 1,
-        display: "flex",
-        overflow: "hidden",
-        background: "var(--slacksim-color-bg)",
+        display: 'flex',
+        overflow: 'hidden',
+        background: 'var(--slacksim-color-bg)',
       }}
     >
       {/* Left rail — table list */}
       <div style={sidebarStyle}>
         <div
           style={{
-            padding: "10px 12px 6px",
-            fontSize: "var(--slacksim-font-size-md)",
-            height: "var(--slacksim-header-height)",
-            fontWeight: "var(--slacksim-font-weight-bold)",
-            color: "var(--slacksim-color-fg-muted)",
-            borderBottom: "1px solid var(--slacksim-color-border)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
+            padding: '10px 12px 6px',
+            fontSize: 'var(--slacksim-font-size-md)',
+            height: 'var(--slacksim-header-height)',
+            fontWeight: 'var(--slacksim-font-weight-bold)',
+            color: 'var(--slacksim-color-fg-muted)',
+            borderBottom: '1px solid var(--slacksim-color-border)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
           }}
         >
           <span>Tables</span>
@@ -303,12 +303,12 @@ export default function DatabaseView() {
             onClick={fetchTables}
             title="Refresh table list"
             style={{
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
               fontSize: 13,
-              color: "var(--slacksim-color-fg-muted)",
-              padding: "0 2px",
+              color: 'var(--slacksim-color-fg-muted)',
+              padding: '0 2px',
               lineHeight: 1,
             }}
           >
@@ -333,8 +333,8 @@ export default function DatabaseView() {
           <div
             style={{
               padding: 12,
-              fontSize: "var(--slacksim-font-size-sm)",
-              color: "var(--slacksim-color-fg-muted)",
+              fontSize: 'var(--slacksim-font-size-sm)',
+              color: 'var(--slacksim-color-fg-muted)',
             }}
           >
             Loading…
@@ -343,24 +343,24 @@ export default function DatabaseView() {
           <div
             style={{
               padding: 12,
-              fontSize: "var(--slacksim-font-size-sm)",
-              color: "var(--slacksim-color-danger, #e8283b)",
+              fontSize: 'var(--slacksim-font-size-sm)',
+              color: 'var(--slacksim-color-danger, #e8283b)',
               lineHeight: 1.5,
             }}
           >
             <div
               style={{
-                fontWeight: "var(--slacksim-font-weight-bold)",
+                fontWeight: 'var(--slacksim-font-weight-bold)',
                 marginBottom: 4,
               }}
             >
               Error loading tables
             </div>
-            <div style={{ color: "var(--slacksim-color-fg-muted)" }}>
+            <div style={{ color: 'var(--slacksim-color-fg-muted)' }}>
               {tablesError}
             </div>
             <div
-              style={{ marginTop: 8, color: "var(--slacksim-color-fg-muted)" }}
+              style={{ marginTop: 8, color: 'var(--slacksim-color-fg-muted)' }}
             >
               Try restarting the dev server.
             </div>
@@ -371,39 +371,39 @@ export default function DatabaseView() {
               key={t.name}
               onClick={() => selectTable(t.name)}
               style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                width: "100%",
-                padding: "8px 12px",
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: '100%',
+                padding: '8px 12px',
                 background:
                   selectedTable === t.name
-                    ? "var(--slacksim-color-bg)"
-                    : "transparent",
-                border: "none",
+                    ? 'var(--slacksim-color-bg)'
+                    : 'transparent',
+                border: 'none',
                 borderLeft:
                   selectedTable === t.name
-                    ? "2px solid var(--slacksim-color-accent)"
-                    : "2px solid transparent",
-                cursor: "pointer",
-                textAlign: "left",
+                    ? '2px solid var(--slacksim-color-accent)'
+                    : '2px solid transparent',
+                cursor: 'pointer',
+                textAlign: 'left',
               }}
             >
               <span
                 style={{
-                  display: "flex",
-                  alignItems: "center",
+                  display: 'flex',
+                  alignItems: 'center',
                   gap: 6,
-                  fontSize: "var(--slacksim-font-size-sm)",
+                  fontSize: 'var(--slacksim-font-size-sm)',
                   color:
                     selectedTable === t.name
-                      ? "var(--slacksim-color-fg)"
-                      : "var(--slacksim-color-fg-muted)",
+                      ? 'var(--slacksim-color-fg)'
+                      : 'var(--slacksim-color-fg-muted)',
                   fontWeight:
                     selectedTable === t.name
-                      ? "var(--slacksim-font-weight-bold)"
-                      : "var(--slacksim-font-weight-normal)",
-                  fontFamily: "var(--slacksim-font-mono)",
+                      ? 'var(--slacksim-font-weight-bold)'
+                      : 'var(--slacksim-font-weight-normal)',
+                  fontFamily: 'var(--slacksim-font-mono)',
                 }}
               >
                 <svg
@@ -427,10 +427,10 @@ export default function DatabaseView() {
               <span
                 style={{
                   fontSize: 10,
-                  color: "var(--slacksim-color-fg-muted)",
-                  background: "var(--slacksim-color-border)",
-                  borderRadius: "var(--slacksim-radius-pill)",
-                  padding: "1px 6px",
+                  color: 'var(--slacksim-color-fg-muted)',
+                  background: 'var(--slacksim-color-border)',
+                  borderRadius: 'var(--slacksim-radius-pill)',
+                  padding: '1px 6px',
                   flexShrink: 0,
                 }}
               >
@@ -441,7 +441,7 @@ export default function DatabaseView() {
         )}
 
         <div style={{ flex: 1 }} />
-        <div style={{ marginTop: "var(--slacksim-space-5)", flexShrink: 0 }}>
+        <div style={{ marginTop: 'var(--slacksim-space-5)', flexShrink: 0 }}>
           <SidebarAd />
         </div>
       </div>
@@ -450,19 +450,19 @@ export default function DatabaseView() {
       <div
         style={{
           flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          overflow: "hidden",
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
         }}
       >
         {!selectedTable ? (
           <div
             style={{
               flex: 1,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "var(--slacksim-color-fg-muted)",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'var(--slacksim-color-fg-muted)',
             }}
           >
             Select a table
@@ -472,20 +472,20 @@ export default function DatabaseView() {
             {/* Header */}
             <div
               style={{
-                height: "var(--slacksim-header-height)",
-                padding: "10px 16px",
-                borderBottom: "1px solid var(--slacksim-color-border)",
+                height: 'var(--slacksim-header-height)',
+                padding: '10px 16px',
+                borderBottom: '1px solid var(--slacksim-color-border)',
                 flexShrink: 0,
-                display: "flex",
-                alignItems: "center",
+                display: 'flex',
+                alignItems: 'center',
                 gap: 12,
               }}
             >
               <span
                 style={{
-                  fontWeight: "var(--slacksim-font-weight-bold)",
-                  color: "var(--slacksim-color-fg)",
-                  fontFamily: "var(--slacksim-font-mono)",
+                  fontWeight: 'var(--slacksim-font-weight-bold)',
+                  color: 'var(--slacksim-color-fg)',
+                  fontFamily: 'var(--slacksim-font-mono)',
                 }}
               >
                 {selectedTable}
@@ -493,8 +493,8 @@ export default function DatabaseView() {
               {tableData && (
                 <span
                   style={{
-                    fontSize: "var(--slacksim-font-size-sm)",
-                    color: "var(--slacksim-color-fg-muted)",
+                    fontSize: 'var(--slacksim-font-size-sm)',
+                    color: 'var(--slacksim-color-fg-muted)',
                   }}
                 >
                   {tableData.total} rows
@@ -503,8 +503,8 @@ export default function DatabaseView() {
               <span style={{ flex: 1 }} />
               <span
                 style={{
-                  fontSize: "var(--slacksim-font-size-sm)",
-                  color: "var(--slacksim-color-fg-muted)",
+                  fontSize: 'var(--slacksim-font-size-sm)',
+                  color: 'var(--slacksim-color-fg-muted)',
                 }}
               >
                 Read-only
@@ -512,16 +512,15 @@ export default function DatabaseView() {
               <button
                 onClick={() => selectedTable && fetchRows(selectedTable)}
                 style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  padding: "3px 10px",
-                  background: "transparent",
-                  border: "1px solid var(--slacksim-color-border)",
-                  borderRadius: "var(--slacksim-radius-sm)",
-                  cursor: "pointer",
-                  fontSize: "var(--slacksim-font-size-sm)",
-                  color: "var(--slacksim-color-fg-muted)",
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  padding: '3px 10px',
+                  border: '1px solid var(--slacksim-color-border)',
+                  borderRadius: 'var(--slacksim-radius-sm)',
+                  cursor: 'pointer',
+                  fontSize: 'var(--slacksim-font-size-sm)',
                 }}
+                className={'ss-secondary-btn'}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -546,38 +545,38 @@ export default function DatabaseView() {
             {selectedMeta && (
               <div
                 style={{
-                  padding: "6px 16px",
-                  borderBottom: "1px solid var(--slacksim-color-border)",
+                  padding: '6px 16px',
+                  borderBottom: '1px solid var(--slacksim-color-border)',
                   flexShrink: 0,
-                  display: "flex",
-                  flexWrap: "wrap",
+                  display: 'flex',
+                  flexWrap: 'wrap',
                   gap: 6,
-                  background: "var(--slacksim-color-bg-secondary)",
+                  background: 'var(--slacksim-color-bg-secondary)',
                 }}
               >
                 {selectedMeta.columns.map((col) => (
                   <span
                     key={col.name}
                     style={{
-                      display: "inline-flex",
-                      alignItems: "center",
+                      display: 'inline-flex',
+                      alignItems: 'center',
                       gap: 4,
                       fontSize: 11,
-                      fontFamily: "var(--slacksim-font-mono)",
-                      padding: "2px 8px",
-                      background: "var(--slacksim-color-bg)",
-                      border: "1px solid var(--slacksim-color-border)",
-                      borderRadius: "var(--slacksim-radius-sm)",
-                      color: "var(--slacksim-color-fg)",
+                      fontFamily: 'var(--slacksim-font-mono)',
+                      padding: '2px 8px',
+                      background: 'var(--slacksim-color-bg)',
+                      border: '1px solid var(--slacksim-color-border)',
+                      borderRadius: 'var(--slacksim-radius-sm)',
+                      color: 'var(--slacksim-color-fg)',
                     }}
                   >
                     {col.pk && (
-                      <span style={{ color: "#F5C518", fontSize: 9 }}>PK</span>
+                      <span style={{ color: '#F5C518', fontSize: 9 }}>PK</span>
                     )}
                     {col.notnull && !col.pk && (
                       <span
                         style={{
-                          color: "var(--slacksim-color-fg-muted)",
+                          color: 'var(--slacksim-color-fg-muted)',
                           fontSize: 9,
                         }}
                       >
@@ -587,7 +586,7 @@ export default function DatabaseView() {
                     {selectedMeta.fks[col.name] && (
                       <span
                         style={{
-                          color: "var(--slacksim-color-accent)",
+                          color: 'var(--slacksim-color-accent)',
                           fontSize: 9,
                         }}
                       >
@@ -595,8 +594,8 @@ export default function DatabaseView() {
                       </span>
                     )}
                     <span>{col.name}</span>
-                    <span style={{ color: "var(--slacksim-color-fg-muted)" }}>
-                      {col.type || "TEXT"}
+                    <span style={{ color: 'var(--slacksim-color-fg-muted)' }}>
+                      {col.type || 'TEXT'}
                     </span>
                   </span>
                 ))}
@@ -604,13 +603,13 @@ export default function DatabaseView() {
             )}
 
             {/* Grid */}
-            <div style={{ flex: 1, overflowY: "auto", overflowX: "auto" }}>
+            <div style={{ flex: 1, overflowY: 'auto', overflowX: 'auto' }}>
               {loading ? (
                 <div
                   style={{
                     padding: 24,
-                    color: "var(--slacksim-color-fg-muted)",
-                    fontSize: "var(--slacksim-font-size-sm)",
+                    color: 'var(--slacksim-color-fg-muted)',
+                    fontSize: 'var(--slacksim-font-size-sm)',
                   }}
                 >
                   Loading…
@@ -618,12 +617,12 @@ export default function DatabaseView() {
               ) : !tableData || tableData.rows.length === 0 ? (
                 <div
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     height: 120,
-                    color: "var(--slacksim-color-fg-muted)",
-                    fontSize: "var(--slacksim-font-size-md)",
+                    color: 'var(--slacksim-color-fg-muted)',
+                    fontSize: 'var(--slacksim-font-size-md)',
                   }}
                 >
                   No rows in {selectedTable}
@@ -631,8 +630,8 @@ export default function DatabaseView() {
               ) : (
                 <table
                   style={{
-                    width: "100%",
-                    borderCollapse: "collapse",
+                    width: '100%',
+                    borderCollapse: 'collapse',
                     fontSize: 12,
                   }}
                 >
@@ -647,7 +646,7 @@ export default function DatabaseView() {
                           {col}
                           {orderBy === col && (
                             <span style={{ marginLeft: 4 }}>
-                              {order === "asc" ? "↑" : "↓"}
+                              {order === 'asc' ? '↑' : '↓'}
                             </span>
                           )}
                         </th>
@@ -661,20 +660,20 @@ export default function DatabaseView() {
                         style={{
                           background:
                             ri % 2 === 0
-                              ? "var(--slacksim-color-bg)"
-                              : "var(--slacksim-color-bg-secondary)",
+                              ? 'var(--slacksim-color-bg)'
+                              : 'var(--slacksim-color-bg-secondary)',
                         }}
                       >
                         {tableData.columns.map((col) => (
                           <td
                             key={col}
                             style={{
-                              padding: "5px 12px",
+                              padding: '5px 12px',
                               borderBottom:
-                                "1px solid var(--slacksim-color-border)",
+                                '1px solid var(--slacksim-color-border)',
                               maxWidth: 280,
-                              overflow: "hidden",
-                              verticalAlign: "top",
+                              overflow: 'hidden',
+                              verticalAlign: 'top',
                             }}
                           >
                             <CellValue
@@ -694,35 +693,35 @@ export default function DatabaseView() {
             {tableData && tableData.total > PAGE_SIZE && (
               <div
                 style={{
-                  padding: "8px 16px",
-                  borderTop: "1px solid var(--slacksim-color-border)",
+                  padding: '8px 16px',
+                  borderTop: '1px solid var(--slacksim-color-border)',
                   flexShrink: 0,
-                  display: "flex",
-                  alignItems: "center",
+                  display: 'flex',
+                  alignItems: 'center',
                   gap: 8,
-                  background: "var(--slacksim-color-bg-secondary)",
+                  background: 'var(--slacksim-color-bg-secondary)',
                 }}
               >
                 <button
                   disabled={offset === 0}
                   onClick={() => setOffset(Math.max(0, offset - PAGE_SIZE))}
                   style={{
-                    padding: "3px 10px",
-                    cursor: offset === 0 ? "default" : "pointer",
+                    padding: '3px 10px',
+                    cursor: offset === 0 ? 'default' : 'pointer',
                     opacity: offset === 0 ? 0.4 : 1,
-                    background: "transparent",
-                    border: "1px solid var(--slacksim-color-border)",
-                    borderRadius: "var(--slacksim-radius-sm)",
-                    fontSize: "var(--slacksim-font-size-sm)",
-                    color: "var(--slacksim-color-fg)",
+                    background: 'transparent',
+                    border: '1px solid var(--slacksim-color-border)',
+                    borderRadius: 'var(--slacksim-radius-sm)',
+                    fontSize: 'var(--slacksim-font-size-sm)',
+                    color: 'var(--slacksim-color-fg)',
                   }}
                 >
                   ← Prev
                 </button>
                 <span
                   style={{
-                    fontSize: "var(--slacksim-font-size-sm)",
-                    color: "var(--slacksim-color-fg-muted)",
+                    fontSize: 'var(--slacksim-font-size-sm)',
+                    color: 'var(--slacksim-color-fg-muted)',
                   }}
                 >
                   Page {currentPage} of {totalPages}
@@ -731,17 +730,17 @@ export default function DatabaseView() {
                   disabled={offset + PAGE_SIZE >= tableData.total}
                   onClick={() => setOffset(offset + PAGE_SIZE)}
                   style={{
-                    padding: "3px 10px",
+                    padding: '3px 10px',
                     cursor:
                       offset + PAGE_SIZE >= tableData.total
-                        ? "default"
-                        : "pointer",
+                        ? 'default'
+                        : 'pointer',
                     opacity: offset + PAGE_SIZE >= tableData.total ? 0.4 : 1,
-                    background: "transparent",
-                    border: "1px solid var(--slacksim-color-border)",
-                    borderRadius: "var(--slacksim-radius-sm)",
-                    fontSize: "var(--slacksim-font-size-sm)",
-                    color: "var(--slacksim-color-fg)",
+                    background: 'transparent',
+                    border: '1px solid var(--slacksim-color-border)',
+                    borderRadius: 'var(--slacksim-radius-sm)',
+                    fontSize: 'var(--slacksim-font-size-sm)',
+                    color: 'var(--slacksim-color-fg)',
                   }}
                 >
                   Next →

@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { useStore } from "../store";
-import { controlApi } from "../lib/api";
-import type { LogEntry } from "@shared/types";
-import SidebarAd from "../components/Sidebar/SidebarAd";
+import React, { useState, useEffect } from 'react';
+import { useStore } from '../store';
+import { controlApi } from '../lib/api';
+import type { LogEntry } from '@shared/types';
+import SidebarAd from '../components/Sidebar/SidebarAd';
 
 function badge(entry: LogEntry) {
-  if (entry.direction === "inbound")
-    return { label: "IN", bg: "var(--slacksim-color-accent)", color: "#fff" };
-  if (entry.error) return { label: "ERR", bg: "#E01E5A", color: "#fff" };
-  return { label: "OUT", bg: "var(--slacksim-color-primary)", color: "#fff" };
+  if (entry.direction === 'inbound')
+    return { label: 'IN', bg: 'var(--slacksim-color-accent)', color: '#fff' };
+  if (entry.error) return { label: 'ERR', bg: '#E01E5A', color: '#fff' };
+  return { label: 'OUT', bg: 'var(--slacksim-color-primary)', color: '#fff' };
 }
 
 function formatTime(ts: number) {
   return new Date(ts).toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
   });
 }
 
@@ -26,22 +26,22 @@ function LogRow({ entry }: { entry: LogEntry }) {
   return (
     <div
       style={{
-        borderBottom: "1px solid var(--slacksim-color-border)",
-        fontFamily: "var(--slacksim-font-mono)",
+        borderBottom: '1px solid var(--slacksim-color-border)',
+        fontFamily: 'var(--slacksim-font-mono)',
       }}
     >
       <button
         onClick={() => setExpanded((e) => !e)}
         style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "var(--slacksim-space-3)",
-          width: "100%",
-          padding: "8px 16px",
-          background: "transparent",
-          border: "none",
-          cursor: "pointer",
-          textAlign: "left",
+          display: 'flex',
+          alignItems: 'center',
+          gap: 'var(--slacksim-space-3)',
+          width: '100%',
+          padding: '8px 16px',
+          background: 'transparent',
+          border: 'none',
+          cursor: 'pointer',
+          textAlign: 'left',
         }}
       >
         {/* Direction badge */}
@@ -49,11 +49,11 @@ function LogRow({ entry }: { entry: LogEntry }) {
           style={{
             flexShrink: 0,
             width: 32,
-            textAlign: "center",
-            padding: "1px 4px",
-            borderRadius: "var(--slacksim-radius-sm)",
+            textAlign: 'center',
+            padding: '1px 4px',
+            borderRadius: 'var(--slacksim-radius-sm)',
             fontSize: 10,
-            fontWeight: "var(--slacksim-font-weight-bold)",
+            fontWeight: 'var(--slacksim-font-weight-bold)',
             background: b.bg,
             color: b.color,
           }}
@@ -66,8 +66,8 @@ function LogRow({ entry }: { entry: LogEntry }) {
           style={{
             flexShrink: 0,
             width: 80,
-            fontSize: "var(--slacksim-font-size-sm)",
-            color: "var(--slacksim-color-fg-muted)",
+            fontSize: 'var(--slacksim-font-size-sm)',
+            color: 'var(--slacksim-color-fg-muted)',
           }}
         >
           {entry.transport}
@@ -77,9 +77,9 @@ function LogRow({ entry }: { entry: LogEntry }) {
         <span
           style={{
             flex: 1,
-            fontSize: "var(--slacksim-font-size-sm)",
-            color: "var(--slacksim-color-fg)",
-            fontWeight: "var(--slacksim-font-weight-bold)",
+            fontSize: 'var(--slacksim-font-size-sm)',
+            color: 'var(--slacksim-color-fg)',
+            fontWeight: 'var(--slacksim-font-weight-bold)',
           }}
         >
           {entry.eventType}
@@ -90,11 +90,11 @@ function LogRow({ entry }: { entry: LogEntry }) {
           <span
             style={{
               flexShrink: 0,
-              fontSize: "var(--slacksim-font-size-sm)",
-              color: entry.error ? "#E01E5A" : "var(--slacksim-color-primary)",
+              fontSize: 'var(--slacksim-font-size-sm)',
+              color: entry.error ? '#E01E5A' : 'var(--slacksim-color-primary)',
             }}
           >
-            {entry.status || "no_conn"}
+            {entry.status || 'no_conn'}
           </span>
         )}
 
@@ -103,10 +103,10 @@ function LogRow({ entry }: { entry: LogEntry }) {
           <span
             style={{
               flexShrink: 0,
-              fontSize: "var(--slacksim-font-size-sm)",
-              color: "var(--slacksim-color-fg-muted)",
+              fontSize: 'var(--slacksim-font-size-sm)',
+              color: 'var(--slacksim-color-fg-muted)',
               width: 60,
-              textAlign: "right",
+              textAlign: 'right',
             }}
           >
             {entry.durationMs}ms
@@ -117,10 +117,10 @@ function LogRow({ entry }: { entry: LogEntry }) {
         <span
           style={{
             flexShrink: 0,
-            fontSize: "var(--slacksim-font-size-sm)",
-            color: "var(--slacksim-color-fg-muted)",
+            fontSize: 'var(--slacksim-font-size-sm)',
+            color: 'var(--slacksim-color-fg-muted)',
             width: 80,
-            textAlign: "right",
+            textAlign: 'right',
           }}
         >
           {formatTime(entry.ts)}
@@ -131,9 +131,9 @@ function LogRow({ entry }: { entry: LogEntry }) {
           style={{
             flexShrink: 0,
             fontSize: 10,
-            color: "var(--slacksim-color-fg-muted)",
-            transform: expanded ? "rotate(90deg)" : "none",
-            transition: "transform 0.15s ease",
+            color: 'var(--slacksim-color-fg-muted)',
+            transform: expanded ? 'rotate(90deg)' : 'none',
+            transition: 'transform 0.15s ease',
           }}
         >
           ▶
@@ -144,14 +144,14 @@ function LogRow({ entry }: { entry: LogEntry }) {
         <pre
           style={{
             margin: 0,
-            padding: "12px 16px 12px 56px",
-            background: "var(--slacksim-color-bg-secondary)",
+            padding: '12px 16px 12px 56px',
+            background: 'var(--slacksim-color-bg-secondary)',
             fontSize: 11,
             lineHeight: 1.5,
-            fontFamily: "var(--slacksim-font-mono)",
-            color: "var(--slacksim-color-fg)",
-            overflowX: "auto",
-            borderTop: "1px solid var(--slacksim-color-border)",
+            fontFamily: 'var(--slacksim-font-mono)',
+            color: 'var(--slacksim-color-fg)',
+            overflowX: 'auto',
+            borderTop: '1px solid var(--slacksim-color-border)',
           }}
         >
           {JSON.stringify(entry.payload, null, 2)}
@@ -164,8 +164,8 @@ function LogRow({ entry }: { entry: LogEntry }) {
 export default function LogsView() {
   const { logs, setLogs } = useStore();
   const [filter, setFilter] = useState<
-    "all" | "outbound" | "inbound" | "errors" | "bot_offline"
-  >("all");
+    'all' | 'outbound' | 'inbound' | 'errors' | 'bot_offline'
+  >('all');
 
   // Initial fetch on mount
   useEffect(() => {
@@ -176,56 +176,54 @@ export default function LogsView() {
   }, []);
 
   const filtered = logs.filter((e) => {
-    if (filter === "outbound") return e.direction === "outbound";
-    if (filter === "inbound") return e.direction === "inbound";
-    if (filter === "errors") return !!e.error;
-    if (filter === "bot_offline")
-      return e.direction === "outbound" && e.status === 0;
+    if (filter === 'outbound') return e.direction === 'outbound';
+    if (filter === 'inbound') return e.direction === 'inbound';
+    if (filter === 'errors') return !!e.error;
+    if (filter === 'bot_offline')
+      return e.direction === 'outbound' && e.status === 0;
     return true;
   });
 
   const btnStyle = (active: boolean): React.CSSProperties => ({
-    padding: "4px 12px",
-    background: active ? "var(--slacksim-color-accent)" : "transparent",
-    color: active ? "#fff" : "var(--slacksim-color-fg-muted)",
+    padding: '4px 12px',
     border:
-      "1px solid " +
+      '1px solid ' +
       (active
-        ? "var(--slacksim-color-accent)"
-        : "var(--slacksim-color-border)"),
-    borderRadius: "var(--slacksim-radius-sm)",
-    cursor: "pointer",
-    fontSize: "var(--slacksim-font-size-sm)",
-    fontFamily: "var(--slacksim-font-body)",
-    transition: "background 0.1s ease",
+        ? 'var(--slacksim-color-accent)'
+        : 'var(--slacksim-color-border)'),
+    borderRadius: 'var(--slacksim-radius-sm)',
+    cursor: 'pointer',
+    fontSize: 'var(--slacksim-font-size-sm)',
+    fontFamily: 'var(--slacksim-font-body)',
+    transition: 'background 0.1s ease',
   });
 
   return (
     <div
       style={{
         flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        overflow: "hidden",
-        background: "var(--slacksim-color-bg)",
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+        background: 'var(--slacksim-color-bg)',
       }}
     >
       {/* Toolbar */}
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "var(--slacksim-space-2)",
-          padding: "10px 16px",
-          borderBottom: "1px solid var(--slacksim-color-border)",
+          display: 'flex',
+          alignItems: 'center',
+          gap: 'var(--slacksim-space-2)',
+          padding: '10px 16px',
+          borderBottom: '1px solid var(--slacksim-color-border)',
           flexShrink: 0,
         }}
       >
         <span
           style={{
-            fontSize: "var(--slacksim-font-size-md)",
-            fontWeight: "var(--slacksim-font-weight-bold)",
-            color: "var(--slacksim-color-fg)",
+            fontSize: 'var(--slacksim-font-size-md)',
+            fontWeight: 'var(--slacksim-font-weight-bold)',
+            color: 'var(--slacksim-color-fg)',
             marginRight: 8,
           }}
         >
@@ -233,17 +231,20 @@ export default function LogsView() {
         </span>
         {(
           [
-            { key: "all", label: "all" },
-            { key: "outbound", label: "outbound" },
-            { key: "inbound", label: "inbound" },
-            { key: "errors", label: "errors" },
-            { key: "bot_offline", label: "bot offline" },
+            { key: 'all', label: 'all' },
+            { key: 'outbound', label: 'outbound' },
+            { key: 'inbound', label: 'inbound' },
+            { key: 'errors', label: 'errors' },
+            { key: 'bot_offline', label: 'bot offline' },
           ] as const
         ).map(({ key, label }) => (
           <button
             key={key}
             onClick={() => setFilter(key)}
             style={btnStyle(filter === key)}
+            className={
+              filter === key ? 'ss-secondary-btn-active' : 'ss-secondary-btn'
+            }
           >
             {label}
           </button>
@@ -251,8 +252,8 @@ export default function LogsView() {
         <span style={{ flex: 1 }} />
         <span
           style={{
-            fontSize: "var(--slacksim-font-size-sm)",
-            color: "var(--slacksim-color-fg-muted)",
+            fontSize: 'var(--slacksim-font-size-sm)',
+            color: 'var(--slacksim-color-fg-muted)',
           }}
         >
           {filtered.length} entries · live
@@ -264,24 +265,44 @@ export default function LogsView() {
               .then(setLogs)
               .catch(() => {})
           }
-          style={{ ...btnStyle(false), padding: "4px 10px" }}
+          style={{
+            ...btnStyle(false),
+            padding: '4px 10px',
+            fontSize: 'var(--slacksim-font-size-sm)',
+          }}
+          className={'ss-secondary-btn'}
         >
-          ↺ Refresh
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            style={{ marginRight: 4, position: 'relative', top: '2px' }}
+          >
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+            <path d="M3 3v5h5" />
+          </svg>
+          Refresh
         </button>
       </div>
 
       {/* Column headers */}
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "var(--slacksim-space-3)",
-          padding: "4px 16px",
-          background: "var(--slacksim-color-bg-secondary)",
-          borderBottom: "1px solid var(--slacksim-color-border)",
+          display: 'flex',
+          alignItems: 'center',
+          gap: 'var(--slacksim-space-3)',
+          padding: '4px 16px',
+          background: 'var(--slacksim-color-bg-secondary)',
+          borderBottom: '1px solid var(--slacksim-color-border)',
           fontSize: 11,
-          color: "var(--slacksim-color-fg-muted)",
-          fontFamily: "var(--slacksim-font-mono)",
+          color: 'var(--slacksim-color-fg-muted)',
+          fontFamily: 'var(--slacksim-font-mono)',
           flexShrink: 0,
         }}
       >
@@ -289,22 +310,22 @@ export default function LogsView() {
         <span style={{ width: 80 }}>transport</span>
         <span style={{ flex: 1 }}>event</span>
         <span style={{ width: 60 }}>status</span>
-        <span style={{ width: 60, textAlign: "right" }}>ms</span>
-        <span style={{ width: 80, textAlign: "right" }}>time</span>
+        <span style={{ width: 60, textAlign: 'right' }}>ms</span>
+        <span style={{ width: 80, textAlign: 'right' }}>time</span>
         <span style={{ width: 16 }} />
       </div>
 
       {/* Log rows */}
-      <div style={{ flex: 1, overflowY: "auto" }}>
+      <div style={{ flex: 1, overflowY: 'auto' }}>
         {filtered.length === 0 ? (
           <div
             style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               height: 200,
-              color: "var(--slacksim-color-fg-muted)",
-              fontSize: "var(--slacksim-font-size-md)",
+              color: 'var(--slacksim-color-fg-muted)',
+              fontSize: 'var(--slacksim-font-size-md)',
             }}
           >
             No log entries yet. Send a message or call the API.

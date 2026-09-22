@@ -24,6 +24,7 @@ body[data-theme='light'] {
   --slacksim-color-bar-border: rgba(255, 255, 255, 0.08);
 
   /* Accent / interactive */
+  --slacksim-color-white: #ffffff;
   --slacksim-color-accent: #1264a3;
   --slacksim-color-accent-hover: #0f4f8a;
   --slacksim-color-mention-bg: #fef7cc;
@@ -152,6 +153,24 @@ body {
 }
 .ss-toolbar-btn:hover {
   background-color: var(--slacksim-color-tab-active-bg) !important;
+}
+
+/* ── Action buttons in Logs tab (all/outbound/inbound/errors/bot offline/refresh) and Database tab (refresh) ───────────── */
+.ss-secondary-btn {
+  background-color: transparent;
+  color: var(--slacksim-color-fg-muted);
+  transition: background-color 0.1s ease;
+}
+.ss-secondary-btn:hover {
+  background-color: var(--slacksim-color-bg-secondary) !important;
+}
+.ss-secondary-btn-active {
+  background-color: var(--slacksim-color-accent);
+  color: var(--slacksim-color-white);
+  transition: background-color 0.1s ease;
+}
+.ss-secondary-btn-active:hover {
+  background-color: var(--slacksim-color-accent-hover) !important;
 }
 
 /* ── Channel header filled buttons (Join / Leave) ───────────── */
